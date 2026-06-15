@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
+    <ProjectReference Include="..\FitnessTracker.DataAccess\FitnessTracker.DataAccess.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
