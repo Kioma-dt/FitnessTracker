@@ -10,6 +10,8 @@ namespace FitnessTracker.Entities
         public string? Name { get; set; }
         public string? PasswordHash { get; set; }
 
+        public List<Workout> Workouts { get; set; } = new();
+
         public User()
         {
             Id = Guid.NewGuid().ToString();
