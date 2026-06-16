@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Entities.Abstractions;
+using FitnessTracker.Shared.Enums;
 
 namespace FitnessTracker.Entities
 {
@@ -84,14 +85,5 @@ namespace FitnessTracker.Entities
             Reps = reps;
             Weight = weight;
         }
-    }
-
-    public enum WorkoutType
-    {
-        Strength,
-        Cardio,
-        Flexibility,
-        HIIT,
-        CrossFit
     }
 }
