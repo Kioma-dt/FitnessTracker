@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +20,12 @@
     <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
     <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="designtime.env">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
