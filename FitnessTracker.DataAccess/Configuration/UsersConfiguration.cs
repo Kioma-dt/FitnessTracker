@@ -22,7 +22,8 @@ namespace FitnessTracker.DataAccess.Configuration
             builder.HasMany(x => x.Workouts)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
 
             builder.HasIndex(x => x.Name)
                 .IsUnique();
