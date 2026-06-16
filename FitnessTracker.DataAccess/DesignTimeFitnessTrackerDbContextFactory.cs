@@ -21,7 +21,7 @@ namespace FitnessTracker.DataAccess
                 user is null ||
                 password is null)
             {
-                throw new EnviormnetVariableNotFound("Can't Find Enviorment Variables for Connection String");
+                throw new EnviormnetVariableNotFoundException("Can't Find Enviorment Variables for Connection String");
             }
 
             var connectionString =

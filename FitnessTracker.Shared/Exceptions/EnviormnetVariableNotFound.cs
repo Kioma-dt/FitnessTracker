@@ -4,14 +4,14 @@ using System.Text;
 
 namespace FitnessTracker.Shared.Exceptions
 {
-    public class EnviormnetVariableNotFound 
+    public class EnviormnetVariableNotFoundException 
         : Exception
     {
-        public EnviormnetVariableNotFound() 
+        public EnviormnetVariableNotFoundException() 
             :base()
         { }
 
-        public EnviormnetVariableNotFound(string message)
+        public EnviormnetVariableNotFoundException(string message)
             : base(message)
         { }
     }
