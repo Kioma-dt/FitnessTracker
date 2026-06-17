@@ -71,9 +71,9 @@ namespace FitnessTracker.API.Controllers
                 }
 
                 var passHash = _passwordHasher.HashPassword(request.Password);
-                if (!_passwordHasher.VerifyPassword(
-                     user.PasswordHash ?? String.Empty,
-                     request.Password))
+                if (!_passwordHasher.VerifyPassword(request.Password,
+                     user.PasswordHash ?? String.Empty
+                     ))
                 {
                     throw new LoginException("Wrong Password");
                 }
