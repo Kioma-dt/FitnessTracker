@@ -43,10 +43,34 @@ namespace FitnessTracker.API.Controllers
         public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromServices] ClaimsPrincipal userInfo,
             [FromBody] WorkoutCreateRequestDTO request)
         {
-            //var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
 
-            //var workout = new Workout(userId,
-            //    request.Title)
+            var workout = new Workout(userId,
+                request.Title,
+                request.Type,
+                TimeSpan.FromMinutes(request.DurationInMinutes),
+                request.CaloriesBurned,
+                request.WorkoutDate,
+                request.Exercises.Select(x => new Exercise(x.Name,
+                x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList());
+
+            await _workoutsRepository.AddAsync(workout);
+
+            return TypedResults.Created("Smth", new WorkoutResponseDTO(
+                workout?.Id ?? String.Empty,
+                workout?.Title ?? String.Empty,
+                workout.Type,
+                workout.Duration.Minutes,
+                workout.CaloriesBurned,
+                workout.WorkoutDate,
+                workout.Exercises.Select(e => new ExerciseResponseDTO
+                (
+                    e?.Name ?? String.Empty,
+                    e.Sets.Select(s => new SetResponseDTO(
+                        s.Weight,
+                        s.Reps)).ToList()
+                )).ToList()
+                ));
         }
 
         [Authorize]
