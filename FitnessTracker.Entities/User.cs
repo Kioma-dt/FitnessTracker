@@ -15,7 +15,7 @@ namespace FitnessTracker.Entities
         public User()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public User(string name, string passwordHash)

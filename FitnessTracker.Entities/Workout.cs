@@ -24,7 +24,7 @@ namespace FitnessTracker.Entities
         public Workout()
         {
             Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public Workout(string userId, 
