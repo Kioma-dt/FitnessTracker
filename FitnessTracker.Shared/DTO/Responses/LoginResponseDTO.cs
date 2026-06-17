@@ -3,6 +3,7 @@
     public record LoginResponseDTO
     (
         string Token,
+        string UserId,
         string UserName
     );
 }

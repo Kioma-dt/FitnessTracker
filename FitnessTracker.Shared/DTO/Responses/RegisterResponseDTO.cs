@@ -6,6 +6,7 @@ namespace FitnessTracker.Shared.DTO.Responses
 {
     public record RegisterResponseDTO
     (
+        string UserId,
         string UserName
     );
 }

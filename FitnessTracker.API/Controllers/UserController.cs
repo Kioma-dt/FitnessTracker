@@ -30,11 +30,12 @@ namespace FitnessTracker.API.Controllers
 
                 var passwordHash = _passwordHasher.HashPassword(request.Password);
 
+                var user = new User(request.UserName, passwordHash);
 
-                await _usersRepository.AddAsync(new User(request.UserName, passwordHash));
+                await _usersRepository.AddAsync(user);
 
-                return TypedResults.Created("",
-                        new RegisterResponseDTO(request.UserName));
+                return TypedResults.Created("None",
+                        new RegisterResponseDTO(user.Id ?? String.Empty, request.UserName));
         }
 
         [HttpPost("login")]
@@ -66,7 +67,7 @@ namespace FitnessTracker.API.Controllers
 
                 return TypedResults.Ok(new SuccessResponse<LoginResponseDTO>(200,
                     "Loged In Successfully",
-                    new LoginResponseDTO(jwtToken, request.UserName)));
+                    new LoginResponseDTO(jwtToken, user.Id ?? String.Empty, request.UserName)));
             }
             catch(LoginException ex)
             {
