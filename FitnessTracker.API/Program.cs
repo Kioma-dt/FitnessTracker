@@ -103,8 +103,6 @@ namespace FitnessTracker.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.MapGet("/", () => "Hello World!");
-
             app.MapControllers();
 
             app.Run();
