@@ -24,7 +24,7 @@ namespace FitnessTracker.Application.JwtTokenFactory
                                 _config.GetSection("JWT_KEY").Value
                                 ?? String.Empty
                                 ));
-            var expiresAfterMinutes = Int32.Parse(authOptions.Value ?? String.Empty);
+            var expiresAfterMinutes = Int32.Parse(authOptions["EnspiresAfterMinutes"] ?? String.Empty);
 
             var jwt = new JwtSecurityToken(
                 issuer: authOptions["Issuer"],
