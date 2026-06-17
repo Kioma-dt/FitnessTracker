@@ -15,9 +15,21 @@ namespace FitnessTracker.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(User user)
+        public async Task AddAsync(User user)
         {
-            throw new NotImplementedException();
+            if (user.Id is not null)
+            {
+                var dbUser = await _dbContext.Users
+                    .FirstOrDefaultAsync(x => x.Id == user.Id);
+
+                if (dbUser is not null)
+                {
+                    throw new EntityAlreadyExistsException($"User with id: {user.Id} alredy exists!");
+                }
+            }
+
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<User?> GetByNameAsync(string userName)
