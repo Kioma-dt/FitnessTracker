@@ -40,9 +40,13 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<Created<WorkoutResponseDTO>> CreatWorkout([FromBody] WorkoutCreateRequestDTO request)
+        public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromServices] ClaimsPrincipal userInfo,
+            [FromBody] WorkoutCreateRequestDTO request)
         {
-            throw new NotImplementedException();
+            //var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+
+            //var workout = new Workout(userId,
+            //    request.Title)
         }
 
         [Authorize]

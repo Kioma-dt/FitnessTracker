@@ -34,7 +34,7 @@ namespace FitnessTracker.Entities
             int caloriesBurned, 
             DateTime workoutDate, 
             List<Exercise> exercises, 
-            List<string> progressPhotos)
+            List<string>? progressPhotos = null)
             : this()
         {
             UserId = userId;
@@ -44,7 +44,7 @@ namespace FitnessTracker.Entities
             CaloriesBurned = caloriesBurned;
             WorkoutDate = workoutDate;
             Exercises = exercises;
-            ProgressPhotos = progressPhotos;
+            ProgressPhotos = progressPhotos ?? new List<string>();
         }
 
         public void AddPhoto(string photo)
