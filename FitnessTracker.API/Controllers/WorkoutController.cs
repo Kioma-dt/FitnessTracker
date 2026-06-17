@@ -1,7 +1,10 @@
 ﻿using FitnessTracker.Application.Repositories;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -13,9 +16,26 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll()
+        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] ClaimsPrincipal userInfo)
         {
-            throw new NotImplementedException();
+            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var workouts = await _workoutsRepository.GetAllByUserIdAsync(userId);
+
+            return TypedResults.Ok(workouts.Select(x => new WorkoutResponseDTO(
+                x?.Id ?? String.Empty,
+                x?.Title ?? String.Empty,
+                x.Type,
+                x.Duration.Minutes,
+                x.CaloriesBurned,
+                x.WorkoutDate,
+                x.Exercises.Select(e => new ExerciseResponseDTO
+                (
+                    e?.Name ?? String.Empty,
+                    e.Sets.Select(s => new SetResponseDTO(
+                        s.Weight,
+                        s.Reps)).ToList()
+                )).ToList()
+                )));
         }
 
         [Authorize]
