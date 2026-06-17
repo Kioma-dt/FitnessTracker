@@ -1,4 +1,5 @@
-﻿using FitnessTracker.Application.PasswordHasher;
+﻿using FitnessTracker.Application.JwtTokenFactory;
+using FitnessTracker.Application.PasswordHasher;
 using Microsoft.Extensions.DependencyInjection;
 namespace FitnessTracker.Application
 {
@@ -8,6 +9,7 @@ namespace FitnessTracker.Application
             IServiceCollection services)
         {
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+            services.AddScoped<IJwtTokenFactory, IdentityJwtTokenFactory>();
             return services;
         }
     }
