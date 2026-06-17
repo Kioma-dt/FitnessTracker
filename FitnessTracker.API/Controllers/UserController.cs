@@ -46,7 +46,7 @@ namespace FitnessTracker.API.Controllers
 
                 if (user is null)
                 {
-                    throw new LoginException($"No User With Name {request.UserName}");
+                    throw new LoginException($"No User With Name: {request.UserName}");
                 }
 
                 var passHash = _passwordHasher.HashPassword(request.Password);

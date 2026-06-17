@@ -2,6 +2,8 @@ using FitnessTracker.API.ExceptionHandler;
 using FitnessTracker.Application;
 using FitnessTracker.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -62,6 +64,37 @@ namespace FitnessTracker.API
                        IssuerSigningKey = key,
                        ValidateIssuerSigningKey = true
                    };
+                   options.Events = new JwtBearerEvents
+                   {
+                       OnChallenge = context =>
+                       {
+                           context.HandleResponse();
+
+                           context.Response.StatusCode = 401;
+                           context.Response.ContentType = "application/json";
+
+                           return context.Response.WriteAsJsonAsync(new ProblemDetails
+                           {
+                               Status = 401,
+                               Title = "Unauthorized",
+                               Detail = "Token is missing or invalid"
+                           });
+                       },
+
+                       OnForbidden = context =>
+                       {
+                           context.Response.StatusCode = 403;
+                           context.Response.ContentType = "application/json";
+
+                           return context.Response.WriteAsJsonAsync(new ProblemDetails
+                           {
+                               Status = 403,
+                               Title = "Forbiden",
+                               Detail = "You don't have access to this resource"
+                           });
+                       }
+                   };
+
                });
 
             builder.Services.AddProblemDetails();
@@ -88,7 +121,25 @@ namespace FitnessTracker.API
             builder.Services.AddDbContext<FitnessTrackerDbContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        var errors = context.ModelState
+                        .Where(x => x.Value?.Errors.Count > 0)
+                        .SelectMany(x => x.Value!.Errors.Select(x => x.ErrorMessage))
+                        .ToList();
+
+                        return new BadRequestObjectResult(new ProblemDetails
+                        {
+                            Status = 400,
+                            Title = "Validation Failed",
+                            Detail = "Errors while validating request",
+                            Extensions = { ["errors"] = errors }
+                        });
+                    };
+                });
 
             builder.Services
                 .AddApplication()
