@@ -15,6 +15,11 @@ namespace FitnessTracker.DataAccess.Repositories
             _dbContext = dbContext;
         }
 
+        public Task AddAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<User?> GetByNameAsync(string userName)
         {
             return await _dbContext.Users
