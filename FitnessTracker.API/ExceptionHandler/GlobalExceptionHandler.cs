@@ -33,6 +33,8 @@ namespace FitnessTracker.API.ExceptionHandler
                 };
             }
 
+            httpContext.Response.StatusCode = problemDetails.Status ?? 500;
+
             return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
             {
                 Exception = exception,

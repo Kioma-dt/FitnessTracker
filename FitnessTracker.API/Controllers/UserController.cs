@@ -17,15 +17,10 @@ namespace FitnessTracker.API.Controllers
         IJwtTokenFactory _jwtTokenFactory = jwtTokenFactory;
 
         [HttpPost("register")]
-        public async Task<
-            Results<Created<SuccessResponse<RegisterResponseDTO>>,
-                BadRequest<StatusResponse>,
-                Conflict<StatusResponse>,
-                InternalServerError<StatusResponse>>
-            > Register([FromBody] RegisterRequestDTO request)
+        public async Task<Created<RegisterResponseDTO>>
+            Register([FromBody] RegisterRequestDTO request)
         {
-            try
-            { 
+
                 var dbUser = await _usersRepository.GetByNameAsync(request.UserName);
 
                 if (dbUser is not null)
@@ -38,19 +33,8 @@ namespace FitnessTracker.API.Controllers
 
                 await _usersRepository.AddAsync(new User(request.UserName, passwordHash));
 
-                return TypedResults.Created("Register",
-                    new SuccessResponse<RegisterResponseDTO>(201,
-                    "User Registered",
-                    new RegisterResponseDTO(request.UserName)));
-            }
-            catch (EntityAlreadyExistsException ex)
-            {
-                return TypedResults.Conflict(new StatusResponse(412, ex.Message));
-            }
-            catch (Exception ex)
-            {
-                return TypedResults.InternalServerError(new StatusResponse(500, ex.Message));
-            }
+                return TypedResults.Created("",
+                        new RegisterResponseDTO(request.UserName));
         }
 
         [HttpPost("login")]

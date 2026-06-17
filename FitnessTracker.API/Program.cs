@@ -108,7 +108,6 @@ namespace FitnessTracker.API
             }
 
             app.UseExceptionHandler();
-            app.UseStatusCodePages();
 
             app.MapControllers();
 
