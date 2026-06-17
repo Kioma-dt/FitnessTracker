@@ -1,14 +1,10 @@
 ﻿namespace FitnessTracker.Shared.Exceptions
 {
     public class EntityNotFoundException
-        : Exception
+        : ApiException
     {
-        public EntityNotFoundException()
-            : base()
-        { }
-
-        public EntityNotFoundException(string message)
-            : base(message)
+        public EntityNotFoundException(string details)
+            : base(404, "No Entity", details)
         { }
     }
 }

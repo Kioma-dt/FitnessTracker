@@ -5,14 +5,11 @@ using System.Text;
 namespace FitnessTracker.Shared.Exceptions
 {
     public class EnviormnetVariableNotFoundException 
-        : Exception
+        : ApiException
     {
-        public EnviormnetVariableNotFoundException() 
-            :base()
-        { }
 
-        public EnviormnetVariableNotFoundException(string message)
-            : base(message)
-        { }
+            public EnviormnetVariableNotFoundException(string details)
+                : base(500, "No Env Variable on Server", details)
+            { }
     }
 }

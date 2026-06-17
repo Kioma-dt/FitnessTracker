@@ -1,14 +1,10 @@
 ﻿namespace FitnessTracker.Shared.Exceptions
 {
     public class EntityAlreadyExistsException
-        : Exception
+        : ApiException
     {
-        public EntityAlreadyExistsException()
-            : base()
-        { }
-
-        public EntityAlreadyExistsException(string message)
-            : base(message)
+        public EntityAlreadyExistsException(string details)
+            : base(412, "Entity Exists", details)
         { }
     }
 }

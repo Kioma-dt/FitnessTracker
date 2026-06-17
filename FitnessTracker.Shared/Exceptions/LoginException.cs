@@ -1,14 +1,10 @@
 ﻿namespace FitnessTracker.Shared.Exceptions
 {
     public class LoginException
-        : Exception
+        : ApiException
     {
-        public LoginException()
-            : base()
-        { }
-
-        public LoginException(string message)
-            : base(message)
+        public LoginException(string details)
+            : base(403, "Can't Log In", details)
         { }
     }
 }
