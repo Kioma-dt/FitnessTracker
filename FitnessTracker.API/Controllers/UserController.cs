@@ -2,16 +2,19 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using FitnessTracker.Application.PasswordHasher;
 using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.JwtTokenFactory;
 
 namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("user")]
     public class UserController(IUsersRepository usersRepository,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        IJwtTokenFactory jwtTokenFactory)
     {
         IUsersRepository _usersRepository = usersRepository;
         IPasswordHasher _passwordHasher = passwordHasher;
+        IJwtTokenFactory _jwtTokenFactory = jwtTokenFactory;
 
         [HttpPost("register")]
         public async Task<
@@ -19,26 +22,26 @@ namespace FitnessTracker.API.Controllers
                 BadRequest<StatusResponse>,
                 Conflict<StatusResponse>,
                 InternalServerError<StatusResponse>>
-            > Register([FromBody] RegisterRequestDTO registerRequestDTO)
+            > Register([FromBody] RegisterRequestDTO request)
         {
             try
             { 
-                var dbUser = await _usersRepository.GetByNameAsync(registerRequestDTO.UserName);
+                var dbUser = await _usersRepository.GetByNameAsync(request.UserName);
 
                 if (dbUser is not null)
                 {
-                    throw new EntityAlreadyExistsException($"User With Name: {registerRequestDTO.UserName} already exists");
+                    throw new EntityAlreadyExistsException($"User With Name: {request.UserName} already exists");
                 }
 
-                var passwordHash = _passwordHasher.HashPassword(registerRequestDTO.Password);
+                var passwordHash = _passwordHasher.HashPassword(request.Password);
 
 
-                await _usersRepository.AddAsync(new User(registerRequestDTO.UserName, passwordHash));
+                await _usersRepository.AddAsync(new User(request.UserName, passwordHash));
 
                 return TypedResults.Created("Register",
                     new SuccessResponse<RegisterResponseDTO>(201,
                     "User Registered",
-                    new RegisterResponseDTO(registerRequestDTO.UserName)));
+                    new RegisterResponseDTO(request.UserName)));
             }
             catch (EntityAlreadyExistsException ex)
             {
@@ -56,9 +59,39 @@ namespace FitnessTracker.API.Controllers
                 BadRequest<StatusResponse>,
                 UnauthorizedHttpResult,
                 InternalServerError<StatusResponse>>
-            > Login([FromBody] LoginRequestDTO registerRequestDTO)
+            > Login([FromBody] LoginRequestDTO request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await _usersRepository.GetByNameAsync(request.UserName);
+
+                if (user is null)
+                {
+                    throw new LoginException($"No User With Name {request.UserName}");
+                }
+
+                var passHash = _passwordHasher.HashPassword(request.Password);
+                if (!_passwordHasher.VerifyPassword(
+                     user.PasswordHash ?? String.Empty,
+                     request.Password))
+                {
+                    throw new LoginException("Wrong Password");
+                }
+
+                var jwtToken = _jwtTokenFactory.Create(user);
+
+                return TypedResults.Ok(new SuccessResponse<LoginResponseDTO>(200,
+                    "Loged In Successfully",
+                    new LoginResponseDTO(jwtToken, request.UserName)));
+            }
+            catch(LoginException ex)
+            {
+                return TypedResults.Unauthorized();
+            }
+            catch(Exception ex)
+            {
+                return TypedResults.InternalServerError(new StatusResponse(500, ex.Message));
+            }
         }
     }
 }
