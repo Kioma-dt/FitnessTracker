@@ -1,3 +1,4 @@
+using FitnessTracker.API.ExceptionHandler;
 using FitnessTracker.Application;
 using FitnessTracker.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,6 +64,9 @@ namespace FitnessTracker.API
                    };
                });
 
+            builder.Services.AddProblemDetails();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
             var host = builder.Configuration.GetValue<string>("DB_HOST");
             var port = builder.Configuration.GetValue<string>("DB_PORT");
             var db = builder.Configuration.GetValue<string>("DB_NAME");
@@ -102,6 +106,9 @@ namespace FitnessTracker.API
                 app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionHandler();
+            app.UseStatusCodePages();
 
             app.MapControllers();
 
