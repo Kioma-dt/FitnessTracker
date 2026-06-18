@@ -57,7 +57,8 @@ namespace FitnessTracker.API.Controllers
                 request.CaloriesBurned,
                 request.WorkoutDate,
                 request.Exercises.Select(x => new Exercise(x.Name,
-                x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList());
+                x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList(),
+                request.ProgressPhotos);
 
             await _workoutsRepository.AddAsync(workout);
 
@@ -141,7 +142,15 @@ namespace FitnessTracker.API.Controllers
                     request.Type,
                     workoutTimeSpan,
                     request.CaloriesBurned,
-                    request.WorkoutDate
+                    request.WorkoutDate,
+                    request.Exercises.Select(e => new ExerciseUpdateDTO
+                            (
+                                e?.Name ?? String.Empty,
+                                e.Sets.Select(s => new SetUpdateDTO(
+                                    s.Weight,
+                                    s.Reps)).ToList()
+                            )).ToList(),
+                    request.ProgressPhotos
                  ));
 
             return TypedResults.Ok(new WorkoutResponseDTO(

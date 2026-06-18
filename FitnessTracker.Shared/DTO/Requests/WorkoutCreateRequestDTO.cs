@@ -28,8 +28,9 @@ namespace FitnessTracker.Shared.DTO.Requests
         [DataType(DataType.Date)]
         DateTime WorkoutDate,
 
+        List<ExerciseCreateRequestDTO> Exercises,
 
-        List<ExerciseCreateRequestDTO> Exercises
+        List<string> ProgressPhotos 
     );
 
     public record ExerciseCreateRequestDTO

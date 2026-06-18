@@ -109,7 +109,7 @@ namespace FitnessTracker.DataAccess.Repositories
                     .Select(x => 
                         new Exercise(
                             x.Name,
-                            x.Sets
+                            x?.Sets?
                                 .Select(s => 
                                 new Set(
                                     s.Reps, 
