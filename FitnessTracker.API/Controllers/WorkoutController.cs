@@ -1,14 +1,16 @@
-﻿using FitnessTracker.Application.Repositories;
+﻿using FitnessTracker.Application.PhotosRemoteStorage;
+using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.StreamImageChecker;
+using FitnessTracker.Application.WorkoutFilters;
+using FitnessTracker.Shared.DTO;
 using FitnessTracker.Shared.DTO.Repositories;
-
+using Imagekit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
-using FitnessTracker.Application.PhotosRemoteStorage;
-using FitnessTracker.Application.StreamImageChecker;
+using System.Security.Claims;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -21,16 +23,20 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll()
+        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
+            [FromQuery] WorkoutFiltersQueryDTO filtersQuery)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
-            var workouts = await _workoutsRepository.GetAllByUserIdAsync(userId);
+
+            var filter = filterExpressionBuilder.BuildFilterExpression(filtersQuery.ToList());
+
+            var workouts = await _workoutsRepository.GetAllByUserIdAsync(userId, filter);
 
             return TypedResults.Ok(workouts.Select(x => new WorkoutResponseDTO(
                 x?.Id ?? String.Empty,
                 x?.Title ?? String.Empty,
                 x.Type,
-                x.Duration.Minutes,
+                (int)x.Duration.TotalMinutes,
                 x.CaloriesBurned,
                 x.WorkoutDate,
                 x.Exercises.Select(e => new ExerciseResponseDTO
@@ -66,7 +72,7 @@ namespace FitnessTracker.API.Controllers
                 workout?.Id ?? String.Empty,
                 workout?.Title ?? String.Empty,
                 workout.Type,
-                workout.Duration.Minutes,
+                (int)workout.Duration.TotalMinutes,
                 workout.CaloriesBurned,
                 workout.WorkoutDate,
                 workout.Exercises.Select(e => new ExerciseResponseDTO
@@ -102,7 +108,7 @@ namespace FitnessTracker.API.Controllers
                 workout?.Id ?? String.Empty,
                 workout?.Title ?? String.Empty,
                 workout.Type,
-                workout.Duration.Minutes,
+                (int)workout.Duration.TotalMinutes,
                 workout.CaloriesBurned,
                 workout.WorkoutDate,
                 workout.Exercises.Select(e => new ExerciseResponseDTO
@@ -146,7 +152,7 @@ namespace FitnessTracker.API.Controllers
                     workout?.Id ?? String.Empty,
                     workout?.Title ?? String.Empty,
                     workout.Type,
-                    workout.Duration.Minutes,
+                    (int)workout.Duration.TotalMinutes,
                     workout.CaloriesBurned,
                     workout.WorkoutDate,
                     workout.Exercises.Select(e => new ExerciseResponseDTO
@@ -188,7 +194,7 @@ namespace FitnessTracker.API.Controllers
                 workoutUpdated?.Id ?? String.Empty,
                 workoutUpdated?.Title ?? String.Empty,
                 workoutUpdated.Type,
-                workoutUpdated.Duration.Minutes,
+                (int)workoutUpdated.Duration.TotalMinutes,
                 workoutUpdated.CaloriesBurned,
                 workoutUpdated.WorkoutDate,
                 workoutUpdated.Exercises.Select(e => new ExerciseResponseDTO
@@ -245,7 +251,7 @@ namespace FitnessTracker.API.Controllers
                 workoutUpdated?.Id ?? String.Empty,
                 workoutUpdated?.Title ?? String.Empty,
                 workoutUpdated.Type,
-                workoutUpdated.Duration.Minutes,
+               (int)workoutUpdated.Duration.TotalMinutes,
                 workoutUpdated.CaloriesBurned,
                 workoutUpdated.WorkoutDate,
                 workoutUpdated.Exercises.Select(e => new ExerciseResponseDTO

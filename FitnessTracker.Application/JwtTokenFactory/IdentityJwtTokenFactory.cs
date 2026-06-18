@@ -30,7 +30,7 @@ namespace FitnessTracker.Application.JwtTokenFactory
                 issuer: authOptions["Issuer"],
                 audience: authOptions["Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.Add(new TimeSpan(expiresAfterMinutes)),
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(expiresAfterMinutes)),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

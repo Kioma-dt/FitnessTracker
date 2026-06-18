@@ -25,7 +25,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                     parameter,
                     nameof(Workout.WorkoutDate));
                 var constant = Expression.Constant(parsedValue);
-                return Expression.GreaterThanOrEqual(parameter, constant);
+                return Expression.GreaterThanOrEqual(property, constant);
             }
             catch (FormatException)
             {
@@ -47,7 +47,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                     parameter,
                     nameof(Workout.WorkoutDate));
                 var constant = Expression.Constant(parsedValue);
-                return Expression.LessThanOrEqual(parameter, constant);
+                return Expression.LessThanOrEqual(property, constant);
             }
             catch (FormatException)
             {
@@ -69,7 +69,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                     parameter,
                     nameof(Workout.Duration));
                 var constant = Expression.Constant(parsedValue);
-                return Expression.GreaterThanOrEqual(parameter, constant);
+                return Expression.GreaterThanOrEqual(property, constant);
             }
             catch (FormatException)
             {
@@ -91,7 +91,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                     parameter,
                     nameof(Workout.Duration));
                 var constant = Expression.Constant(parsedValue);
-                return Expression.LessThanOrEqual(parameter, constant);
+                return Expression.LessThanOrEqual(property, constant);
             }
             catch (FormatException)
             {
@@ -113,7 +113,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                     parameter,
                     nameof(Workout.Type));
                 var constant = Expression.Constant(parsedValue);
-                return Expression.Equal(parameter, constant);
+                return Expression.Equal(property, constant);
             }
             catch (FormatException)
             {
