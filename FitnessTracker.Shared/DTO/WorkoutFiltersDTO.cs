@@ -5,12 +5,9 @@ using System.Text;
 
 namespace FitnessTracker.Shared.DTO
 {
-    public record WorkoutFiltersDTO
+    public record WorkoutFilterDTO
     (
-        DateTime? FromDate,
-        DateTime? ToDate,
-        TimeSpan? MinDuration,
-        TimeSpan? MaxDuration,
-        WorkoutType? Type
+        WorkoutFilterType FilterType,
+        string? FilterValue
     );
 }
