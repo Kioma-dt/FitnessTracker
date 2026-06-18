@@ -20,7 +20,7 @@ namespace FitnessTracker.Application.WorkoutFilters
         {
             try
             {
-                DateTime parsedValue = DateTime.Parse(value);
+                DateTime parsedValue = DateTime.Parse(value).ToUniversalTime();
                 var property = Expression.Property(
                     parameter,
                     nameof(Workout.WorkoutDate));
@@ -42,7 +42,7 @@ namespace FitnessTracker.Application.WorkoutFilters
         {
             try
             {
-                DateTime parsedValue = DateTime.Parse(value);
+                DateTime parsedValue = DateTime.Parse(value).ToUniversalTime();
                 var property = Expression.Property(
                     parameter,
                     nameof(Workout.WorkoutDate));
