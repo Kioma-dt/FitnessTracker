@@ -27,7 +27,7 @@ namespace FitnessTracker.API.ExceptionHandler
                 problemDetails = new ProblemDetails
                 {
                     Status = 500,
-                    Title = "Some Interal Server Error",
+                    Title = "Undefined Interal Server Error",
                     Type = exception.GetType().Name,
                     Detail = exception.Message
                 };

@@ -2,7 +2,7 @@
 using FitnessTracker.Application.Repositories;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Shared.DTO;
+using FitnessTracker.Shared.DTO.Queries;
 using FitnessTracker.Shared.DTO.Repositories;
 using Imagekit.Models;
 using Microsoft.AspNetCore.Authorization;

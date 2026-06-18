@@ -1,4 +1,4 @@
-﻿using FitnessTracker.Shared.DTO.Repositories;
+﻿using FitnessTracker.Shared.DTO;
 using System.Linq.Expressions;
 namespace FitnessTracker.Application.Repositories
 {

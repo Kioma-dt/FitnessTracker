@@ -1,5 +1,5 @@
 ﻿using FitnessTracker.Shared.Enums;
-namespace FitnessTracker.Shared.DTO.Repositories
+namespace FitnessTracker.Shared.DTO
 {
     public record WorkoutUpdateDTO(string? Title = null,
                                    WorkoutType? Type = null,
