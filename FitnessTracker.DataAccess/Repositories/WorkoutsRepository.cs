@@ -1,5 +1,6 @@
 ﻿using FitnessTracker.Application.Repositories;
 using FitnessTracker.Shared.DTO.Repositories;
+using System.Linq.Expressions;
 
 namespace FitnessTracker.DataAccess.Repositories
 {
@@ -74,10 +75,18 @@ namespace FitnessTracker.DataAccess.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId)
+        public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId,
+            Expression<Func<Workout, bool>>? filter = null)
         {
-            return await _dbContext.Workouts
-                .Where(x => x.UserId == userId)
+            IQueryable<Workout> query = _dbContext.Workouts
+                .Where(x => x.UserId == userId);
+
+            if (filter is not null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query                
                 .ToListAsync();
         }
 
