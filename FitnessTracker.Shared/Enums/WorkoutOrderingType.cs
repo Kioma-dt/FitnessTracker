@@ -2,7 +2,7 @@
 {
     public enum WorkoutOrderingType
     {
-        Days,
+        Date,
         BurnedCalories
     }
 }

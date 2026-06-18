@@ -108,7 +108,7 @@ namespace FitnessTracker.Application.WorkoutFilters
         {
             try
             {
-                WorkoutType parsedValue = Enum.Parse<WorkoutType>(value);
+                WorkoutType parsedValue = Enum.Parse<WorkoutType>(value, true);
                 var property = Expression.Property(
                     parameter,
                     nameof(Workout.Type));
