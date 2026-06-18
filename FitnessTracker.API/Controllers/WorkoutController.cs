@@ -111,9 +111,55 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
+        [HttpPut("{id}")]
+        public async Task<Ok<WorkoutResponseDTO>> Update(string id,
+            [FromBody] WorkoutUpdateRequestDTO request)
+        {
+            var workout = await _workoutsRepository.GetByIdAsync(id);
+
+            if (workout is null)
+            {
+                throw new EntityNotFoundException($"No workout with id: {id}");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+
+            if (workout.UserId != userId)
+            {
+                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+            }
+
+            var workoutTimeSpan = TimeSpan.FromMinutes(request.DurationInMinutes);
+
+            var workoutUpdated = await _workoutsRepository.UpdateAsync(id,
+                new WorkoutUpdateDTO(request.Title,
+                    request.Type,
+                    workoutTimeSpan,
+                    request.CaloriesBurned,
+                    request.WorkoutDate
+                 ));
+
+            return TypedResults.Ok(new WorkoutResponseDTO(
+                workoutUpdated?.Id ?? String.Empty,
+                workoutUpdated?.Title ?? String.Empty,
+                workoutUpdated.Type,
+                workoutUpdated.Duration.Minutes,
+                workoutUpdated.CaloriesBurned,
+                workoutUpdated.WorkoutDate,
+                workoutUpdated.Exercises.Select(e => new ExerciseResponseDTO
+                (
+                    e?.Name ?? String.Empty,
+                    e.Sets.Select(s => new SetResponseDTO(
+                        s.Weight,
+                        s.Reps)).ToList()
+                )).ToList()
+                ));
+        }
+
+        [Authorize]
         [HttpPatch("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> UpdateInfo(string id,
-            [FromBody] WorkoutUpdateInfoRequestDTO request)
+        public async Task<Ok<WorkoutResponseDTO>> Patch(string id,
+            [FromBody] WorkoutPatchRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
 
