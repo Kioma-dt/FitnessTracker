@@ -184,9 +184,31 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPatch("{id}/exercises")]
-        public async Task<NoContent> AddExercise(string id, [FromBody] ExerciseCreateRequestDTO request)
+        public async Task<NoContent> AddExercise([FromServices] ClaimsPrincipal userInfo,
+            string id, 
+            [FromBody] ExerciseCreateRequestDTO request)
         {
-            throw new NotImplementedException();
+            var workout = await _workoutsRepository.GetByIdAsync(id);
+
+            if (workout is null)
+            {
+                throw new EntityNotFoundException($"No workout with id: {id}");
+            }
+
+            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+
+            if (workout.UserId != userId)
+            {
+                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+            }
+
+
+            await _workoutsRepository.AddExerciseAsync(id, new Exercise(request.Name ?? String.Empty,
+                    request.Sets.Select(s => new Set(
+                        s.Reps,
+                        s.Weight)).ToList()));
+
+            return TypedResults.NoContent();
         }
     }
 }
