@@ -6,20 +6,22 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 
 namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
     public class WorkoutController(IWorkoutsRepository workoutsRepository)
+        : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] ClaimsPrincipal userInfo)
+        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll()
         {
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
             var workouts = await _workoutsRepository.GetAllByUserIdAsync(userId);
 
             return TypedResults.Ok(workouts.Select(x => new WorkoutResponseDTO(
@@ -41,10 +43,9 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromServices] ClaimsPrincipal userInfo,
-            [FromBody] WorkoutCreateRequestDTO request)
+        public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             var workout = new Workout(userId,
                 request.Title,
@@ -76,8 +77,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> GetById([FromServices] ClaimsPrincipal userInfo,
-            string id)
+        public async Task<Ok<WorkoutResponseDTO>> GetById(string id)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
 
@@ -86,7 +86,7 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout.UserId != userId)
             {
@@ -112,8 +112,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPatch("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> UpdateInfo([FromServices] ClaimsPrincipal userInfo, 
-            string id,
+        public async Task<Ok<WorkoutResponseDTO>> UpdateInfo(string id,
             [FromBody] WorkoutUpdateInfoRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
@@ -123,7 +122,7 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout.UserId != userId)
             {
@@ -161,7 +160,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<NoContent> Delete([FromServices] ClaimsPrincipal userInfo, string id)
+        public async Task<NoContent> Delete(string id)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
 
@@ -170,7 +169,7 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout.UserId != userId)
             {
@@ -184,8 +183,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPatch("{id}/exercises")]
-        public async Task<NoContent> AddExercise([FromServices] ClaimsPrincipal userInfo,
-            string id, 
+        public async Task<NoContent> AddExercise(string id, 
             [FromBody] ExerciseCreateRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
@@ -195,7 +193,7 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout.UserId != userId)
             {

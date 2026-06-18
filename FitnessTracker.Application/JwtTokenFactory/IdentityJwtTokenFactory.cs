@@ -14,7 +14,7 @@ namespace FitnessTracker.Application.JwtTokenFactory
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id ?? String.Empty),
+                new Claim(ClaimTypes.NameIdentifier, user.Id ?? String.Empty),
                 new Claim(ClaimTypes.Name, user.Name ?? String.Empty)
             };
 

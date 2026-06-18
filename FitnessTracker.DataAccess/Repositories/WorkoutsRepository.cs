@@ -100,7 +100,7 @@ namespace FitnessTracker.DataAccess.Repositories
             dbWorkout.Title = workoutUpdateDTO.Title ?? dbWorkout.Title;
             dbWorkout.Duration = workoutUpdateDTO.Duration ?? dbWorkout.Duration;
             dbWorkout.Type = workoutUpdateDTO.Type ?? dbWorkout.Type;
-            dbWorkout.WorkoutDate = workoutUpdateDTO.WorkoutDate ?? dbWorkout.WorkoutDate;
+            dbWorkout.WorkoutDate = workoutUpdateDTO.WorkoutDate?.ToUniversalTime() ?? dbWorkout.WorkoutDate;
 
             if (workoutUpdateDTO.Exercises is not null)
             {

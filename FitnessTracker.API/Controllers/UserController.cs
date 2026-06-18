@@ -11,6 +11,7 @@ namespace FitnessTracker.API.Controllers
     public class UserController(IUsersRepository usersRepository,
         IPasswordHasher passwordHasher,
         IJwtTokenFactory jwtTokenFactory)
+        : ControllerBase
     {
         IUsersRepository _usersRepository = usersRepository;
         IPasswordHasher _passwordHasher = passwordHasher;

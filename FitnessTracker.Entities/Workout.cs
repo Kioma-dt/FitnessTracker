@@ -42,7 +42,7 @@ namespace FitnessTracker.Entities
             Type = type;
             Duration = duration;
             CaloriesBurned = caloriesBurned;
-            WorkoutDate = workoutDate;
+            WorkoutDate = workoutDate.ToUniversalTime();
             Exercises = exercises;
             ProgressPhotos = progressPhotos ?? new List<string>();
         }
