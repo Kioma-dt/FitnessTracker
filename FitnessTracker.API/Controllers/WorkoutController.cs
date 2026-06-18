@@ -265,6 +265,20 @@ namespace FitnessTracker.API.Controllers
             string id, 
             IFormFile file)
         {
+            var workout = await _workoutsRepository.GetByIdAsync(id);
+
+            if (workout is null)
+            {
+                throw new EntityNotFoundException($"No workout with id: {id}");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+
+            if (workout.UserId != userId)
+            {
+                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+            }
+
             if (!file.ContentType.StartsWith("image/"))
             {
                 throw new UnsuportedFileFormatException("File should be image");
@@ -288,11 +302,25 @@ namespace FitnessTracker.API.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("{id}/photos")]
-        public Task<IEnumerable<string>> GetAllPhotos(string id)
-        {
-            throw new NotImplementedException();
-        }
+        //[Authorize]
+        //[HttpGet("{id}/photos")]
+        //public async Task<IEnumerable<string>> GetAllPhotos(string id)
+        //{
+        //    var workout = await _workoutsRepository.GetByIdAsync(id);
+
+        //    if (workout is null)
+        //    {
+        //        throw new EntityNotFoundException($"No workout with id: {id}");
+        //    }
+
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+
+        //    if (workout.UserId != userId)
+        //    {
+        //        throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+        //    }
+
+        //    return workout.ProgressPhotos;
+        //}
     }
 }
