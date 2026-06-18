@@ -118,7 +118,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<Results<Ok<WorkoutResponseDTO>, Created<WorkoutResponseDTO>>> Update(string id,
+        public async Task<Results<Ok<WorkoutResponseDTO>, Created<WorkoutResponseDTO>>> Put(string id,
             [FromBody] WorkoutUpdateRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
