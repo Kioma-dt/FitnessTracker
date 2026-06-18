@@ -39,7 +39,8 @@ namespace FitnessTracker.API.Controllers
                     e.Sets.Select(s => new SetResponseDTO(
                         s.Weight,
                         s.Reps)).ToList()
-                )).ToList()
+                )).ToList(),
+                x.ProgressPhotos
                 )));
         }
 
@@ -73,7 +74,8 @@ namespace FitnessTracker.API.Controllers
                     e.Sets.Select(s => new SetResponseDTO(
                         s.Weight,
                         s.Reps)).ToList()
-                )).ToList()
+                )).ToList(),
+                workout.ProgressPhotos
                 ));
         }
 
@@ -108,7 +110,8 @@ namespace FitnessTracker.API.Controllers
                     e.Sets.Select(s => new SetResponseDTO(
                         s.Weight,
                         s.Reps)).ToList()
-                )).ToList()
+                )).ToList(),
+                workout.ProgressPhotos
                 ));
         }
 
@@ -154,7 +157,8 @@ namespace FitnessTracker.API.Controllers
                     e.Sets.Select(s => new SetResponseDTO(
                         s.Weight,
                         s.Reps)).ToList()
-                )).ToList()
+                )).ToList(),
+                workout.ProgressPhotos
                 ));
         }
 
@@ -202,7 +206,8 @@ namespace FitnessTracker.API.Controllers
                     e.Sets.Select(s => new SetResponseDTO(
                         s.Weight,
                         s.Reps)).ToList()
-                )).ToList()
+                )).ToList(),
+                workoutUpdated.ProgressPhotos
                 ));
         }
 

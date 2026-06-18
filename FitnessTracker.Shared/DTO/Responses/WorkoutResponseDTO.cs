@@ -13,7 +13,8 @@ namespace FitnessTracker.Shared.DTO.Responses
         int DurationInMinutes,
         int CaloriesBurned,
         DateTime WorkoutDate,
-        List<ExerciseResponseDTO> Exercises
+        List<ExerciseResponseDTO> Exercises,
+        List<string> ProgressPhotos
         );
 
     public record ExerciseResponseDTO
