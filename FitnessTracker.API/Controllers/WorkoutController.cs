@@ -161,9 +161,25 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<NoContent> Delete(string id)
+        public async Task<NoContent> Delete([FromServices] ClaimsPrincipal userInfo, string id)
         {
-            throw new NotImplementedException();
+            var workout = await _workoutsRepository.GetByIdAsync(id);
+
+            if (workout is null)
+            {
+                throw new EntityNotFoundException($"No workout with id: {id}");
+            }
+
+            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+
+            if (workout.UserId != userId)
+            {
+                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+            }
+
+            await _workoutsRepository.DeleteAsync(id);
+
+            return TypedResults.NoContent();
         }
 
         [Authorize]
