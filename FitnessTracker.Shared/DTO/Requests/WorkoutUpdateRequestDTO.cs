@@ -6,25 +6,21 @@ using System.Text;
 
 namespace FitnessTracker.Shared.DTO.Requests
 {
-    public record WorkoutUpdateRequestDTO
+    public record WorkoutUpdateInfoRequestDTO
     (
-        [Required]
         [StringLength(128, MinimumLength = 3)]
-        string Title,
+        string? Title,
 
-        [Required]
-        WorkoutType Type,
+        WorkoutType? Type,
 
-        [Required]
         [Range(1, 1440)]            //Maximum minutes in 24 hours
-        int DurationInMinutes,
+        int? DurationInMinutes,
 
-        [Required]
         [Range(1, 6000)]            // Maximum callories burned by human a day
-        int CaloriesBurned,
+        int? CaloriesBurned,
 
         [Required]
         [DataType(DataType.Date)]
-        DateTime WorkoutDate
+        DateTime? WorkoutDate
     );
 }

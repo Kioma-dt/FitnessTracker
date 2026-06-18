@@ -114,7 +114,7 @@ namespace FitnessTracker.API.Controllers
         [HttpPatch("{id}")]
         public async Task<Ok<WorkoutResponseDTO>> UpdateInfo([FromServices] ClaimsPrincipal userInfo, 
             string id,
-            [FromBody] WorkoutUpdateRequestDTO request)
+            [FromBody] WorkoutUpdateInfoRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
 
@@ -130,22 +130,26 @@ namespace FitnessTracker.API.Controllers
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
 
-            await _workoutsRepository.UpdateAsync(id, 
+            TimeSpan? workoutTimeSpan = request.DurationInMinutes is not null
+                ? TimeSpan.FromMinutes(request.DurationInMinutes.Value) 
+                : null;
+
+            var workoutUpdated = await _workoutsRepository.UpdateAsync(id, 
                 new WorkoutUpdateDTO(request.Title, 
-                    request.Type, 
-                    TimeSpan.FromMinutes(request.DurationInMinutes),
+                    request.Type,
+                    workoutTimeSpan,
                     request.CaloriesBurned,
                     request.WorkoutDate
                  ));
 
             return TypedResults.Ok(new WorkoutResponseDTO(
-                workout?.Id ?? String.Empty,
-                workout?.Title ?? String.Empty,
-                workout.Type,
-                workout.Duration.Minutes,
-                workout.CaloriesBurned,
-                workout.WorkoutDate,
-                workout.Exercises.Select(e => new ExerciseResponseDTO
+                workoutUpdated?.Id ?? String.Empty,
+                workoutUpdated?.Title ?? String.Empty,
+                workoutUpdated.Type,
+                workoutUpdated.Duration.Minutes,
+                workoutUpdated.CaloriesBurned,
+                workoutUpdated.WorkoutDate,
+                workoutUpdated.Exercises.Select(e => new ExerciseResponseDTO
                 (
                     e?.Name ?? String.Empty,
                     e.Sets.Select(s => new SetResponseDTO(
