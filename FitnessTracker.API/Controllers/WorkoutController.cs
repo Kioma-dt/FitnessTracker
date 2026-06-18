@@ -254,5 +254,21 @@ namespace FitnessTracker.API.Controllers
 
             return TypedResults.NoContent();
         }
+
+        [Authorize]
+        [HttpPatch("{id}/photos")]
+        public Task<NoContent> AddPhoto(string id, 
+            [FromForm] IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Authorize]
+        [HttpGet("{id}/photos")]
+        public Task<IEnumerable<string>> GetAllPhotos(string id,
+            [FromForm] IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
