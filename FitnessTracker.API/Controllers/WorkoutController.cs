@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
+using FitnessTracker.Application.PhotosRemoteStorage;
+using FitnessTracker.Application.StreamImageChecker;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -257,10 +259,28 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPatch("{id}/photos")]
-        public Task<NoContent> AddPhoto(string id, 
+        public async Task<NoContent> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
+            [FromServices] IStreamImageChecker streamImageChecker,
+            string id, 
             [FromForm] IFormFile file)
         {
-            throw new NotImplementedException();
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                throw new UnsuportedFileFormatException("File should be image");
+            }
+
+            using var stream = file.OpenReadStream();
+
+            if (!(await streamImageChecker.IsSteamImage(stream)))
+            {
+                throw new UnprocessableImageException("Erros occuried while decoding image");
+            }
+
+            var url = await photosRemoteStorage.Upload(stream);
+
+            await _workoutsRepository.AddPhotoAsync(id, url);
+
+            return TypedResults.NoContent();
         }
 
         [Authorize]
