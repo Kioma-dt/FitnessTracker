@@ -199,7 +199,15 @@ namespace FitnessTracker.API.Controllers
                     request.Type,
                     workoutTimeSpan,
                     request.CaloriesBurned,
-                    request.WorkoutDate
+                    request.WorkoutDate,
+                    request?.Exercises?.Select(e => new ExerciseUpdateDTO
+                            (
+                                e?.Name ?? String.Empty,
+                                e?.Sets.Select(s => new SetUpdateDTO(
+                                    s.Weight,
+                                    s.Reps)).ToList()
+                            )).ToList(),
+                    request?.ProgressPhotos
                  ));
 
             return TypedResults.Ok(new WorkoutResponseDTO(
