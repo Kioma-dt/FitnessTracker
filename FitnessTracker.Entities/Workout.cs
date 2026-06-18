@@ -33,7 +33,7 @@ namespace FitnessTracker.Entities
             TimeSpan duration, 
             int caloriesBurned, 
             DateTime workoutDate, 
-            List<Exercise> exercises, 
+            List<Exercise>? exercises = null, 
             List<string>? progressPhotos = null)
             : this()
         {
@@ -43,8 +43,8 @@ namespace FitnessTracker.Entities
             Duration = duration;
             CaloriesBurned = caloriesBurned;
             WorkoutDate = workoutDate.ToUniversalTime();
-            Exercises = exercises;
-            ProgressPhotos = progressPhotos ?? new List<string>();
+            Exercises = exercises ?? Exercises;
+            ProgressPhotos = progressPhotos ?? ProgressPhotos;
         }
 
         public void AddPhoto(string photo)
@@ -65,11 +65,11 @@ namespace FitnessTracker.Entities
 
         public Exercise() { }
 
-        public Exercise(string name, List<Set> sets)
+        public Exercise(string name, List<Set>? sets = null)
             :this()
         {
             Name = name;
-            Sets = sets;
+            Sets = sets ?? Sets;
         }
     }
 
