@@ -2,6 +2,6 @@
 {
     public interface IPhotosRemoteStorage
     {
-        Task<string> Upload(FileStream stream);
+        Task<string> Upload(Stream stream);
     }
 }
