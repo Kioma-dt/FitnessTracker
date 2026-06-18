@@ -17,8 +17,7 @@ namespace FitnessTracker.API.Controllers
         IJwtTokenFactory _jwtTokenFactory = jwtTokenFactory;
 
         [HttpPost("register")]
-        public async Task<Created<RegisterResponseDTO>>
-            Register([FromBody] RegisterRequestDTO request)
+        public async Task<Created<RegisterResponseDTO>> Register([FromBody] RegisterRequestDTO request)
         {
 
                 var dbUser = await _usersRepository.GetByNameAsync(request.UserName);
@@ -39,8 +38,7 @@ namespace FitnessTracker.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<Ok<LoginResponseDTO>>
-            Login([FromBody] LoginRequestDTO request)
+        public async Task<Ok<LoginResponseDTO>> Login([FromBody] LoginRequestDTO request)
         {
                 var user = await _usersRepository.GetByNameAsync(request.UserName);
 
