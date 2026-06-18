@@ -9,8 +9,8 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
     {
         public async Task<string> Upload(Stream stream)
         {
-            var privateKey = Environment.GetEnvironmentVariable("IMAGE_KIT_PRIVATE_KEY") 
-                ?? throw new EnviormnetVariableNotFoundException("IMAGE_KIT_PRIVATE_KEY env variable is not set");
+            var privateKey = Environment.GetEnvironmentVariable("IMAGEKIT_PRIVATE_KEY") 
+                ?? throw new EnviormnetVariableNotFoundException("IMAGEKIT_PRIVATE_KEY env variable is not set");
             ImageKitClient client = new()
             {
                 PrivateKey = privateKey

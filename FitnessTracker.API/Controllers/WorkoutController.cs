@@ -259,34 +259,38 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPatch("{id}/photos")]
+        [Consumes("multipart/form-data")]
         public async Task<NoContent> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
             [FromServices] IStreamImageChecker streamImageChecker,
             string id, 
-            [FromForm] IFormFile file)
+            IFormFile file)
         {
             if (!file.ContentType.StartsWith("image/"))
             {
                 throw new UnsuportedFileFormatException("File should be image");
             }
 
-            using var stream = file.OpenReadStream();
-
-            if (!(await streamImageChecker.IsSteamImage(stream)))
+            using(var streamCheck = file.OpenReadStream()) 
             {
-                throw new UnprocessableImageException("Erros occuried while decoding image");
+                if (!(await streamImageChecker.IsSteamImage(streamCheck)))
+                {
+                    throw new UnprocessableImageException("Erros occuried while decoding image");
+                }
             }
 
-            var url = await photosRemoteStorage.Upload(stream);
+            using(var stream = file.OpenReadStream())          
+            {
+                var url = await photosRemoteStorage.Upload(stream);
 
-            await _workoutsRepository.AddPhotoAsync(id, url);
+                await _workoutsRepository.AddPhotoAsync(id, url);
 
-            return TypedResults.NoContent();
+                return TypedResults.NoContent();
+            }
         }
 
         [Authorize]
         [HttpGet("{id}/photos")]
-        public Task<IEnumerable<string>> GetAllPhotos(string id,
-            [FromForm] IFormFile file)
+        public Task<IEnumerable<string>> GetAllPhotos(string id)
         {
             throw new NotImplementedException();
         }
