@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Repositories;
+using FitnessTracker.Shared.DTO.Repositories;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -110,11 +111,48 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> Update(string id,
+        [HttpPatch("{id}")]
+        public async Task<Ok<WorkoutResponseDTO>> UpdateInfo([FromServices] ClaimsPrincipal userInfo, 
+            string id,
             [FromBody] WorkoutUpdateRequestDTO request)
         {
-            throw new NotImplementedException();
+            var workout = await _workoutsRepository.GetByIdAsync(id);
+
+            if (workout is null)
+            {
+                throw new EntityNotFoundException($"No workout with id: {id}");
+            }
+
+            var userId = userInfo.FindFirstValue(JwtRegisteredClaimNames.Sub) ?? String.Empty;
+
+            if (workout.UserId != userId)
+            {
+                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
+            }
+
+            await _workoutsRepository.UpdateAsync(id, 
+                new WorkoutUpdateDTO(request.Title, 
+                    request.Type, 
+                    TimeSpan.FromMinutes(request.DurationInMinutes),
+                    request.CaloriesBurned,
+                    request.WorkoutDate
+                 ));
+
+            return TypedResults.Ok(new WorkoutResponseDTO(
+                workout?.Id ?? String.Empty,
+                workout?.Title ?? String.Empty,
+                workout.Type,
+                workout.Duration.Minutes,
+                workout.CaloriesBurned,
+                workout.WorkoutDate,
+                workout.Exercises.Select(e => new ExerciseResponseDTO
+                (
+                    e?.Name ?? String.Empty,
+                    e.Sets.Select(s => new SetResponseDTO(
+                        s.Weight,
+                        s.Reps)).ToList()
+                )).ToList()
+                ));
         }
 
         [Authorize]
