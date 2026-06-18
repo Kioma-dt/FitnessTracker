@@ -87,7 +87,7 @@ namespace FitnessTracker.DataAccess.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO)
+        public async Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO)
         {
             var dbWorkout = await _dbContext.Workouts
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -97,12 +97,35 @@ namespace FitnessTracker.DataAccess.Repositories
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            dbWorkout.Title = workoutUpdateDTO.Title;
-            dbWorkout.Duration = workoutUpdateDTO.Duration;
-            dbWorkout.Type = workoutUpdateDTO.Type;
-            dbWorkout.WorkoutDate = workoutUpdateDTO.WorkoutDate;
+            dbWorkout.Title = workoutUpdateDTO.Title ?? dbWorkout.Title;
+            dbWorkout.Duration = workoutUpdateDTO.Duration ?? dbWorkout.Duration;
+            dbWorkout.Type = workoutUpdateDTO.Type ?? dbWorkout.Type;
+            dbWorkout.WorkoutDate = workoutUpdateDTO.WorkoutDate ?? dbWorkout.WorkoutDate;
+
+            if (workoutUpdateDTO.Exercises is not null)
+            {
+                dbWorkout.Exercises.Clear();
+                dbWorkout.Exercises.AddRange(workoutUpdateDTO.Exercises
+                    .Select(x => 
+                        new Exercise(
+                            x.Name,
+                            x.Sets
+                                .Select(s => 
+                                new Set(
+                                    s.Reps, 
+                                    s.Weight)
+                                ).ToList())
+                        ).ToList());
+            }
+
+            if(workoutUpdateDTO.ProgressPhotos is not null)
+            {
+                dbWorkout.ProgressPhotos.Clear();
+                dbWorkout.ProgressPhotos.AddRange(workoutUpdateDTO.ProgressPhotos);
+            }
 
             await _dbContext.SaveChangesAsync();
+            return dbWorkout;
         }
     }
 }
