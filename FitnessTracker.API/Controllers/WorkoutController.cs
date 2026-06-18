@@ -118,17 +118,48 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> Update(string id,
+        public async Task<Results<Ok<WorkoutResponseDTO>, Created<WorkoutResponseDTO>>> Update(string id,
             [FromBody] WorkoutUpdateRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout is null)
             {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+                //throw new EntityNotFoundException($"No workout with id: {id}");
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+                workout = new Workout(userId,
+                    request.Title,
+                    request.Type,
+                    TimeSpan.FromMinutes(request.DurationInMinutes),
+                    request.CaloriesBurned,
+                    request.WorkoutDate,
+                    request.Exercises.Select(x => new Exercise(x.Name,
+                    x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList(),
+                    request.ProgressPhotos);
+
+                workout.Id = id;
+
+                await _workoutsRepository.AddAsync(workout);
+
+                return TypedResults.Created("Smth", new WorkoutResponseDTO(
+                    workout?.Id ?? String.Empty,
+                    workout?.Title ?? String.Empty,
+                    workout.Type,
+                    workout.Duration.Minutes,
+                    workout.CaloriesBurned,
+                    workout.WorkoutDate,
+                    workout.Exercises.Select(e => new ExerciseResponseDTO
+                    (
+                        e?.Name ?? String.Empty,
+                        e.Sets.Select(s => new SetResponseDTO(
+                            s.Weight,
+                            s.Reps)).ToList()
+                    )).ToList(),
+                    workout.ProgressPhotos
+                    ));
+
+            }
 
             if (workout.UserId != userId)
             {
