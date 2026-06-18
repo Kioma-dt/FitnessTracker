@@ -25,6 +25,10 @@ namespace FitnessTracker.Application.WorkoutOrdering
         {
             try
             {
+                if (ordering.OrderBy is null)
+                {
+                    return query;
+                }
                 var parameter = Expression.Parameter(typeof(Workout), "workout");
 
                 WorkoutOrderingType orderingType = Enum.Parse<WorkoutOrderingType>(ordering.OrderBy!, true);
@@ -38,7 +42,9 @@ namespace FitnessTracker.Application.WorkoutOrdering
 
                 var selector = Expression.Lambda(property, parameter);
 
-                var methodName = ordering.Descending
+                bool desc = ordering.Descending ?? false;
+
+                var methodName = desc
                     ? nameof(Queryable.OrderByDescending)
                     : nameof(Queryable.OrderBy);
 

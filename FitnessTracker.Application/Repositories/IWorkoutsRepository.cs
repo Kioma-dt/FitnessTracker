@@ -6,7 +6,9 @@ namespace FitnessTracker.Application.Repositories
     {
         Task<Workout?> GetByIdAsync(string id);
         Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId, 
-            Expression<Func<Workout, bool>>? filter = null);
+            Expression<Func<Workout, bool>>? filter = null,
+            string? orderBy = null,
+            bool? descending = null);
         Task AddAsync(Workout workout);
         Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO);
         Task DeleteAsync(string id);

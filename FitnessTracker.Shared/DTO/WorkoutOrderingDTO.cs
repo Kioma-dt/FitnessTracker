@@ -3,6 +3,6 @@
     public record WorkoutOrderingDTO
     (
         string? OrderBy,
-        bool Descending
+        bool? Descending
     );
 }
