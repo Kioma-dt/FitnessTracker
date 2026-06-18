@@ -1,5 +1,7 @@
 ﻿using FitnessTracker.Application.JwtTokenFactory;
 using FitnessTracker.Application.PasswordHasher;
+using FitnessTracker.Application.PhotosRemoteStorage;
+using FitnessTracker.Application.StreamImageChecker;
 using Microsoft.Extensions.DependencyInjection;
 namespace FitnessTracker.Application
 {
@@ -10,6 +12,8 @@ namespace FitnessTracker.Application
         {
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
             services.AddScoped<IJwtTokenFactory, IdentityJwtTokenFactory>();
+            services.AddScoped<IPhotosRemoteStorage, ImageKitRemoteStorage>();
+            services.AddScoped<IStreamImageChecker, SkiaSharpStreamImageChecker>();
             return services;
         }
     }
