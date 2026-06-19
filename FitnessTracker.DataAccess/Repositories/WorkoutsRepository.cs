@@ -111,6 +111,11 @@ namespace FitnessTracker.DataAccess.Repositories
                 .ToListAsync();
         }
 
+        public async Task<int> GetTotalCountByUser(string userId)
+        {
+            return await _dbContext.Workouts.Where(x => x.UserId == userId).CountAsync();
+        }
+
         public async Task<Workout?> GetByIdAsync(string id)
         {
             return await _dbContext.Workouts

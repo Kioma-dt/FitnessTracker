@@ -11,6 +11,7 @@ namespace FitnessTracker.Application.Repositories
             Expression<Func<Workout, bool>>? filter = null,
             string? orderBy = null,
             bool? descending = null);
+        Task<int> GetTotalCountByUser(string userId);
         Task AddAsync(Workout workout);
         Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO);
         Task DeleteAsync(string id);
