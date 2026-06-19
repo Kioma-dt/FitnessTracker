@@ -119,7 +119,8 @@ namespace FitnessTracker.API
                     $"Host={host};Port={port};Database={db};Username={user};Password={password}";
 
             builder.Services.AddDbContext<FitnessTrackerDbContext>(options =>
-                options.UseNpgsql(connectionString));
+                options.UseNpgsql(connectionString,
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
