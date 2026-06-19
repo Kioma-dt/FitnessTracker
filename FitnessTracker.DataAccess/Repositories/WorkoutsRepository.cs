@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.WorkoutOrdering;
 using FitnessTracker.Shared.DTO;
 using System.Linq.Expressions;
 
@@ -8,10 +9,12 @@ namespace FitnessTracker.DataAccess.Repositories
         : IWorkoutsRepository
     {
         FitnessTrackerDbContext _dbContext;
+        IWorkoutOrderingApllier _orderingApplier;
 
-        public WorkoutsRepository(FitnessTrackerDbContext dbContext)
+        public WorkoutsRepository(FitnessTrackerDbContext dbContext, IWorkoutOrderingApllier orderingApplier)
         {
             _dbContext = dbContext;
+            _orderingApplier = orderingApplier;
         }
 
         public async Task AddAsync(Workout workout)
@@ -76,7 +79,9 @@ namespace FitnessTracker.DataAccess.Repositories
         }
 
         public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId,
-            Expression<Func<Workout, bool>>? filter = null)
+            Expression<Func<Workout, bool>>? filter = null,
+            string? orderBy = null,
+            bool? descending = null)
         {
             IQueryable<Workout> query = _dbContext.Workouts
                 .Where(x => x.UserId == userId);
@@ -85,6 +90,8 @@ namespace FitnessTracker.DataAccess.Repositories
             {
                 query = query.Where(filter);
             }
+
+            query = _orderingApplier.ApplyOrdering(query, new WorkoutOrderingDTO(orderBy, descending));
 
             return await query                
                 .ToListAsync();

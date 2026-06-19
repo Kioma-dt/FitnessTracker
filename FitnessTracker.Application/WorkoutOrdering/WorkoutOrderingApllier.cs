@@ -9,7 +9,8 @@ namespace FitnessTracker.Application.WorkoutOrdering
 {
     public interface IWorkoutOrderingApllier
     {
-        IQueryable<Workout> ApplyOrdering(IQueryable<Workout> query, WorkoutOrderingDTO ordering);
+        IQueryable<Workout> ApplyOrdering(IQueryable<Workout> query, 
+            WorkoutOrderingDTO ordering);
     }
     internal class WorkoutOrderingApllier
         : IWorkoutOrderingApllier
