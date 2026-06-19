@@ -3,7 +3,6 @@ using FitnessTracker.Application.Repositories;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Shared.DTO.Queries;
-using FitnessTracker.Shared.DTO.Repositories;
 using Imagekit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -24,13 +23,18 @@ namespace FitnessTracker.API.Controllers
         [Authorize]
         [HttpGet]
         public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
-            [FromQuery] WorkoutFiltersQueryDTO filtersQuery)
+            [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
+            [FromQuery] WorkoutOrderingQueryDTO orderingQuery)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             var filter = filterExpressionBuilder.BuildFilterExpression(filtersQuery.ToList());
 
-            var workouts = await _workoutsRepository.GetAllByUserIdAsync(userId, filter);
+            var workouts = await _workoutsRepository.GetAllByUserIdAsync(
+                userId, 
+                filter,
+                orderingQuery.OrderBy, 
+                orderingQuery.Descending);
 
             return TypedResults.Ok(workouts.Select(x => new WorkoutResponseDTO(
                 x?.Id ?? String.Empty,
