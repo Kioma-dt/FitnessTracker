@@ -24,7 +24,8 @@ namespace FitnessTracker.API.Controllers
         [HttpGet]
         public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
-            [FromQuery] WorkoutOrderingQueryDTO orderingQuery)
+            [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
+            [FromQuery] WorkoutPagesQueryDTO pagesQuery) 
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
@@ -32,6 +33,8 @@ namespace FitnessTracker.API.Controllers
 
             var workouts = await _workoutsRepository.GetAllByUserIdAsync(
                 userId, 
+                pagesQuery.Page,
+                pagesQuery.PageSize,
                 filter,
                 orderingQuery.OrderBy, 
                 orderingQuery.Descending);
