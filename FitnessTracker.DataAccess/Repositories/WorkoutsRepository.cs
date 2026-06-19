@@ -78,6 +78,8 @@ namespace FitnessTracker.DataAccess.Repositories
         }
 
         public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId,
+            int page = 1,
+            int pageSize = 10,
             Expression<Func<Workout, bool>>? filter = null,
             string? orderBy = null,
             bool? descending = null)
@@ -91,6 +93,19 @@ namespace FitnessTracker.DataAccess.Repositories
             }
 
             query = _orderingApplier.ApplyOrdering(query, new WorkoutOrderingDTO(orderBy, descending));
+
+            if(page <= 0)
+            {
+                throw new WrongWorkoutPageFormat("Page should be positive integer");
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new WrongWorkoutPageFormat("Page size should be positive integer");
+            }
+
+            query = query.Skip((page - 1) * pageSize)
+                .Take(pageSize); 
 
             return await query                
                 .ToListAsync();
