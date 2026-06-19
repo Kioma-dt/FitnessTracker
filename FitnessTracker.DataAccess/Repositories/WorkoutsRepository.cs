@@ -37,7 +37,6 @@ namespace FitnessTracker.DataAccess.Repositories
         public async Task AddExerciseAsync(string id, Exercise exercise)
         {
             var dbWorkout = await _dbContext.Workouts
-                .Include(x => x.Exercises)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (dbWorkout is null)
