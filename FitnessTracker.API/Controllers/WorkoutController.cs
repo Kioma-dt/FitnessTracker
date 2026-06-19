@@ -22,7 +22,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<IEnumerable<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
+        public async Task<Ok<PagedResponseDTO<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
             [FromQuery] WorkoutPagesQueryDTO pagesQuery) 
@@ -39,7 +39,7 @@ namespace FitnessTracker.API.Controllers
                 orderingQuery.OrderBy, 
                 orderingQuery.Descending);
 
-            return TypedResults.Ok(workouts.Select(x => new WorkoutResponseDTO(
+            var wrokoutsResult = workouts.Select(x => new WorkoutResponseDTO(
                 x?.Id ?? String.Empty,
                 x?.Title ?? String.Empty,
                 x.Type,
@@ -54,7 +54,17 @@ namespace FitnessTracker.API.Controllers
                         s.Reps)).ToList()
                 )).ToList(),
                 x.ProgressPhotos
-                )));
+                )).ToList();
+
+            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
+
+
+            return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
+                wrokoutsResult,
+                pagesQuery.Page,
+                pagesQuery.PageSize,
+                totalWorkouts
+                ));
         }
 
         [Authorize]
