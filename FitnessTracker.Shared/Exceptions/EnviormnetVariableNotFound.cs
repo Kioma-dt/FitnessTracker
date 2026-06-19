@@ -9,7 +9,7 @@ namespace FitnessTracker.Shared.Exceptions
     {
 
             public EnviormnetVariableNotFoundException(string details)
-                : base(500, "No Env Variable on Server", details)
+                : base(500, "Enviorment variable not set on server", details)
             { }
     }
 }

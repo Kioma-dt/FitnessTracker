@@ -12,19 +12,41 @@ namespace FitnessTracker.Application.JwtTokenFactory
         IConfiguration _config = config;
         public string Create(User user)
         {
+            if(user.Id is null || user.Name is null)
+            {
+                throw new ArgumentException("User id or user name should not be null when creating jwt token");
+            }
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id ?? String.Empty),
-                new Claim(ClaimTypes.Name, user.Name ?? String.Empty)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.Name)
             };
 
             var authOptions = _config.GetSection("Authentication");
+
+            var expiresAfterMinutesSection = authOptions.GetSection("ExpiresAfterMinutes").Value;
+
+            if (expiresAfterMinutesSection is null)
+            {
+                throw new ConfigurationSectionNotFoundException("ExpiresAfterMinutes should be set in configuration");
+            }
+
+            var jwtKeySection = _config.GetSection("JWT_KEY").Value;
+
+            if (jwtKeySection is null)
+            {
+                throw new EnviormnetVariableNotFoundException("JWT_KEY should be in enviorment variables");
+            }
+
             var key = new SymmetricSecurityKey(
                             Encoding.UTF8.GetBytes(
-                                _config.GetSection("JWT_KEY").Value
-                                ?? String.Empty
+                                jwtKeySection
                                 ));
-            var expiresAfterMinutes = Int32.Parse(authOptions["EnspiresAfterMinutes"] ?? String.Empty);
+
+            if (!UInt32.TryParse(expiresAfterMinutesSection, out var expiresAfterMinutes))
+            {
+                throw new ConfigurationSectionNotFoundException("ExpiresAfterMinutes should be a valid integer");
+            }
 
             var jwt = new JwtSecurityToken(
                 issuer: authOptions["Issuer"],
