@@ -61,7 +61,10 @@ namespace FitnessTracker.Application.WorkoutOrdering
                     Expression.Quote(selector)
                  );
 
-                return query.Provider.CreateQuery<Workout>(call);
+                var result = query.Provider.CreateQuery<Workout>(call);
+
+                return ((IOrderedQueryable<Workout>)result)
+                    .ThenBy(x => x.Id);
             }
             catch (FormatException)
             {
