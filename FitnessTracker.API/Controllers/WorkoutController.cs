@@ -7,6 +7,7 @@ using Imagekit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -30,6 +31,14 @@ namespace FitnessTracker.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             var filter = filterExpressionBuilder.BuildFilterExpression(filtersQuery.ToList());
+
+            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
+            var maxPage = (int)Math.Ceiling((decimal)totalWorkouts / (decimal)pagesQuery.PageSize);
+
+            if (pagesQuery.Page > maxPage)
+            {
+                throw new WrongWorkoutPageFormat($"Page is greater than max: {maxPage}");
+            }
 
             var workouts = await _workoutsRepository.GetAllByUserIdAsync(
                 userId, 
@@ -55,9 +64,6 @@ namespace FitnessTracker.API.Controllers
                 )).ToList(),
                 x.ProgressPhotos
                 )).ToList();
-
-            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
-
 
             return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 wrokoutsResult,
