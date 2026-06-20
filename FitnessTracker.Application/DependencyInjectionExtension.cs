@@ -43,6 +43,7 @@ namespace FitnessTracker.Application
         {
             services.AddSingleton(GetMappingConfig());
             services.AddScoped<IMapper, ServiceMapper>();
+            services.AddScoped<IWorkoutMapper, WorkoutMapper>();
             return services;
         }
 

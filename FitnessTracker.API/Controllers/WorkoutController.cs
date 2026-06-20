@@ -3,15 +3,11 @@ using FitnessTracker.Application.Repositories;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Shared.DTO.Queries;
-using Imagekit.Models;
+
 using Mapster;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing.Printing;
-using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 namespace FitnessTracker.API.Controllers
@@ -19,11 +15,11 @@ namespace FitnessTracker.API.Controllers
     [ApiController]
     [Route("workouts")]
     public class WorkoutController(IWorkoutsRepository workoutsRepository,
-        IMapper mapper)
+        IWorkoutMapper workoutMapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
-        IMapper _mapper = mapper;
+        IWorkoutMapper _workoutMapper = workoutMapper;
 
         [Authorize]
         [HttpGet]
@@ -71,10 +67,10 @@ namespace FitnessTracker.API.Controllers
             //    x.ProgressPhotos
             //    )).ToList();
 
-            var workoutsResult = workouts.Adapt<List<WorkoutResponseDTO>>();
+            var workoutsResult = _workoutMapper.MapTo(workouts);
 
             return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
-                workoutsResult,
+                workoutsResult.ToList(),
                 pagesQuery.Page,
                 pagesQuery.PageSize,
                 totalWorkouts
