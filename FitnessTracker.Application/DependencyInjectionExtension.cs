@@ -1,9 +1,12 @@
 ﻿using FitnessTracker.Application.JwtTokenFactory;
+using FitnessTracker.Application.Mappers;
 using FitnessTracker.Application.PasswordHasher;
 using FitnessTracker.Application.PhotosRemoteStorage;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Application.WorkoutOrdering;
+using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
 namespace FitnessTracker.Application
 {
@@ -33,6 +36,22 @@ namespace FitnessTracker.Application
 
             services.AddScoped<IWorkoutOrderingApllier, WorkoutOrderingApllier>();
             return services;
+        }
+
+        public static IServiceCollection AddMappers(this
+            IServiceCollection services)
+        {
+            services.AddSingleton(GetMappingConfig());
+            services.AddScoped<IMapper, ServiceMapper>();
+            return services;
+        }
+
+        private static TypeAdapterConfig GetMappingConfig()
+        {
+            var config = new TypeAdapterConfig();
+            new RegisterMapper().Register(config);
+
+            return config;
         }
     }
 }

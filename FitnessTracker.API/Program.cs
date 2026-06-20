@@ -144,6 +144,7 @@ namespace FitnessTracker.API
 
             builder.Services
                 .AddApplication()
+                .AddMappers()
                 .AddRepositories();
 
 

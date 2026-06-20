@@ -4,6 +4,8 @@ using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Shared.DTO.Queries;
 using Imagekit.Models;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
-    public class WorkoutController(IWorkoutsRepository workoutsRepository)
+    public class WorkoutController(IWorkoutsRepository workoutsRepository,
+        IMapper mapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
+        IMapper _mapper = mapper;
 
         [Authorize]
         [HttpGet]
@@ -48,25 +52,29 @@ namespace FitnessTracker.API.Controllers
                 orderingQuery.OrderBy, 
                 orderingQuery.Descending);
 
-            var wrokoutsResult = workouts.Select(x => new WorkoutResponseDTO(
-                x?.Id ?? String.Empty,
-                x?.Title ?? String.Empty,
-                x.Type,
-                (int)x.Duration.TotalMinutes,
-                x.CaloriesBurned,
-                x.WorkoutDate,
-                x.Exercises.Select(e => new ExerciseResponseDTO
-                (
-                    e?.Name ?? String.Empty,
-                    e.Sets.Select(s => new SetResponseDTO(
-                        s.Weight,
-                        s.Reps)).ToList()
-                )).ToList(),
-                x.ProgressPhotos
-                )).ToList();
+
+
+            //var workoutsResult = workouts.Select(x => new WorkoutResponseDTO(
+            //    x?.Id ?? String.Empty,
+            //    x?.Title ?? String.Empty,
+            //    x.Type,
+            //    (int)x.Duration.TotalMinutes,
+            //    x.CaloriesBurned,
+            //    x.WorkoutDate,
+            //    x.Exercises.Select(e => new ExerciseResponseDTO
+            //    (
+            //        e?.Name ?? String.Empty,
+            //        e.Sets.Select(s => new SetResponseDTO(
+            //            s.Weight,
+            //            s.Reps)).ToList()
+            //    )).ToList(),
+            //    x.ProgressPhotos
+            //    )).ToList();
+
+            var workoutsResult = workouts.Adapt<List<WorkoutResponseDTO>>();
 
             return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
-                wrokoutsResult,
+                workoutsResult,
                 pagesQuery.Page,
                 pagesQuery.PageSize,
                 totalWorkouts
