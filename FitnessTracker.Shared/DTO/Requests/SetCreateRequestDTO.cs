@@ -3,11 +3,11 @@
 namespace FitnessTracker.Shared.DTO.Requests
 {
     public record SetCreateRequestDTO
-    (
-        [property: Range(0, 2500d)]       // World record for weight is 2422 kg
-        double Weight,
+    {
+        [Range(0, 2500d)]       // World record for weight is 2422 kg
+        public double Weight { get; set; }
 
-        [property: Range(1, 12000)]                 // World record for push ups in a row 10 507 
-        int Reps
-    );
+        [Range(1, 12000)]                 // World record for push ups in a row 10 507 
+        public int Reps { get; set; }
+    }
 }

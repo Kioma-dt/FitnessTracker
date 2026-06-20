@@ -3,8 +3,15 @@
 namespace FitnessTracker.Shared.DTO.Queries
 {
     public record WorkoutOrderingQueryDTO
-        (
-            WorkoutOrderingType? OrderBy,
-            bool? Descending
-        );
+    {
+        //public WorkoutOrderingQueryDTO(WorkoutOrderingType? orderBy,
+        //    bool? descending)
+        //{
+        //    OrderBy = orderBy;
+        //    Descending = descending;
+        //}
+
+        public WorkoutOrderingType? OrderBy { get; set; }
+        public bool? Descending { get; set; }
+    }
 }

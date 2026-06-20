@@ -8,27 +8,45 @@ using System.Text;
 namespace FitnessTracker.Shared.DTO.Requests
 {
     public record WorkoutPatchRequestDTO
-    (
-        [property: StringLength(128, MinimumLength = 3)]
-        string? Title,
+    {
+        public WorkoutPatchRequestDTO(
+            string? title, 
+            WorkoutType? type,
+            int? durationInMinutes,
+            int? caloriesBurned,
+            DateTime? workoutDate,
+            List<ExerciseCreateRequestDTO>? exercises,
+            List<string>? progressPhotos)
+        {
+            Title = title;
+            Type = type;
+            DurationInMinutes = durationInMinutes;
+            CaloriesBurned = caloriesBurned;
+            WorkoutDate = workoutDate;
+            Exercises = exercises;
+            ProgressPhotos = progressPhotos;
+        }
 
-        WorkoutType? Type,
+        [StringLength(128, MinimumLength = 3)]
+        public string? Title { get; set; }
 
-        [property: Range(1, 1440)]            //Maximum minutes in 24 hours
-        int? DurationInMinutes,
+        public WorkoutType? Type { get; set; }
 
-        [property: Range(0, 6000)]            // Maximum callories burned by human a day
-        int? CaloriesBurned,
+        [Range(1, 1440)]            //Maximum minutes in 24 hours
+        public int? DurationInMinutes { get; set; }
 
-        [property: NotFutureDate(
+        [Range(0, 6000)]            // Maximum callories burned by human a day
+        public int? CaloriesBurned { get; set; }
+
+        [NotFutureDate(
             ErrorMessage = "WorkoutDate should not be in future")]
-        DateTime? WorkoutDate,
+        public DateTime? WorkoutDate { get; set; }
 
-        [property: MinLength(1, ErrorMessage = "Workout should have at least one exercise")]
-        [property: MaxLength(1000)]
-        List<ExerciseCreateRequestDTO>? Exercises,
+        [MinLength(1, ErrorMessage = "Workout should have at least one exercise")]
+        [MaxLength(1000)]
+        public List<ExerciseCreateRequestDTO>? Exercises { get; set; }
 
-        [property: MaxLength(1000)]
-        List<string>? ProgressPhotos
-    );
+        [MaxLength(1000)]
+        public List<string>? ProgressPhotos { get; set; }
+    }
 }

@@ -4,24 +4,37 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FitnessTracker.Shared.DTO.Queries
 {
-    public record WorkoutFiltersQueryDTO(
-            [property: NotFutureDate(ErrorMessage = "FromDate sould not be in future")]
-            DateTime? FromDate,
-
-            [property: NotFutureDate(ErrorMessage = "ToDate sould not be in future")]
-            DateTime? ToDate,
-
-            [property: Range(1, 1440, ErrorMessage = "MinDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
-            int? MinDurationMinutes,
-
-            [property: Range(1, 1440, ErrorMessage = "MaxDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
-            int? MaxDurationMinutes,
-
-            WorkoutType? WorkoutType
-        )
+    public record WorkoutFiltersQueryDTO
         : IValidatableObject
         
     {
+        //public WorkoutFiltersQueryDTO(DateTime? fromDate,
+        //    DateTime? toDate,
+        //    int? minDurationMinutes,
+        //    int? maxDurationMinutes,
+        //    WorkoutType? workoutType)
+        //{
+        //    FromDate = fromDate;
+        //    ToDate = toDate;
+        //    MinDurationMinutes = minDurationMinutes;
+        //    MaxDurationMinutes = maxDurationMinutes;
+        //    WorkoutType = workoutType;
+        //}
+
+        [NotFutureDate(ErrorMessage = "FromDate sould not be in future")]
+        public DateTime? FromDate { get; set; }
+
+        [NotFutureDate(ErrorMessage = "ToDate sould not be in future")]
+        public DateTime? ToDate { get; set; }
+
+        [Range(1, 1440, ErrorMessage = "MinDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
+        public int? MinDurationMinutes { get; set; }
+
+        [Range(1, 1440, ErrorMessage = "MaxDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
+        public int? MaxDurationMinutes { get; set; }
+
+        public WorkoutType? WorkoutType { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (FromDate.HasValue && ToDate.HasValue && FromDate > ToDate)

@@ -4,6 +4,12 @@ namespace FitnessTracker.Shared.DTO.Requests
 {
     public record LoginRequestDTO
     {
+        public LoginRequestDTO(string userName, string password)
+        {
+            UserName = userName;
+            Password = password;
+        }
+
         [property: Required]
         [property: StringLength(128)]
         public string UserName { get; set; }

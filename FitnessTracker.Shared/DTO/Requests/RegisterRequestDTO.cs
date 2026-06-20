@@ -7,17 +7,24 @@ using System.Text;
 namespace FitnessTracker.Shared.DTO.Requests
 {
     public record RegisterRequestDTO
-    (
-        [property: Required]
-        [property: StringLength(128, MinimumLength = 3)]
-        [property: NoWhiteSpaces(ErrorMessage = "UserName must not contain whitespaces(replce them with underscores or smth else)")]
-        string UserName,
+    {
+        public RegisterRequestDTO(string userName, 
+            string password)
+        {
+            UserName = userName;
+            Password = password;
+        }
 
-        [property: Required]
-        [property: StringLength(128, MinimumLength = 6)]
-        [property: NoWhiteSpaces(ErrorMessage = "Password must not contain whitespaces(replce them with underscores or smth else)")]
-        [property: RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$",
+        [Required]
+        [StringLength(128, MinimumLength = 3)]
+        [NoWhiteSpaces(ErrorMessage = "UserName should not contain whitespaces(replce them with underscores or smth else)")]
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(128, MinimumLength = 6)]
+        [NoWhiteSpaces(ErrorMessage = "Password should not contain whitespaces(replce them with underscores or smth else)")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).+$",
                             ErrorMessage = "Password should contain lowercase, uppercase, speciacl characters and digit")]
-        string Password
-    );
+        public string Password { get; set; }
+    }
 }

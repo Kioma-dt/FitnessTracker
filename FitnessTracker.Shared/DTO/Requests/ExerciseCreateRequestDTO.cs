@@ -2,14 +2,22 @@
 
 namespace FitnessTracker.Shared.DTO.Requests
 {
-    public record ExerciseCreateRequestDTO(
-        [property: Required]
-        [property: StringLength(128, MinimumLength = 1)]
-        string Name,
+    public record ExerciseCreateRequestDTO
+    {
+        public ExerciseCreateRequestDTO(string name, 
+            List<SetCreateRequestDTO> sets)
+        {
+            Name = name;
+            Sets = sets;
+        }
 
-        [property: Required]
-        [property: MinLength(1, ErrorMessage = "Exercise should contain at least 1 set")]
-        [property: MaxLength(500)]
-        List<SetCreateRequestDTO> Sets
-    );
+        [Required]
+        [StringLength(128, MinimumLength = 1)]
+        public string Name { get; set; }
+
+        [Required]
+        [MinLength(1, ErrorMessage = "Exercise should contain at least 1 set")]
+        [MaxLength(500)]
+        public List<SetCreateRequestDTO> Sets { get; set; }
+    };
 }
