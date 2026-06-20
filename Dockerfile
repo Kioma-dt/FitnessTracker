@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /source
 
-COPY *.sln .
+COPY *.slnx .
 COPY FitnessTracker.API/*.csproj ./FitnessTracker.API/
 COPY FitnessTracker.Application/*.csproj ./FitnessTracker.Application/
 COPY FitnessTracker.DataAccess/*.csproj ./FitnessTracker.DataAccess/
