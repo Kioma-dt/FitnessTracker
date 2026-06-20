@@ -16,16 +16,4 @@ namespace FitnessTracker.Shared.DTO.Responses
         List<ExerciseResponseDTO> Exercises,
         List<string> ProgressPhotos
         );
-
-    public record ExerciseResponseDTO
-    (
-        string Name,
-        List<SetResponseDTO> Sets
-        );
-
-    public record SetResponseDTO
-    (
-        double Weight,
-        int Reps
-        );
 }

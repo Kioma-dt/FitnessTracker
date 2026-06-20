@@ -30,26 +30,21 @@ namespace FitnessTracker.Shared.DTO.Requests
 
         List<ExerciseCreateRequestDTO> Exercises,
 
-        List<string> ProgressPhotos 
-    );
-
-    public record ExerciseCreateRequestDTO
-    (
-        [Required]
-        [StringLength(128, MinimumLength = 3)]
-        string Name,
-
-        List<SetCreateRequestDTO> Sets
-    );
-
-    public record SetCreateRequestDTO
-    (
-        [Required]
-        [Range(0, 2500d)]       // World record for weight is 2422 kg
-        double Weight,
-
-        [Required]
-        [Range(1, 12000)]       // World record for push ups in a row 10 507 
-        int Reps
-    );
+        List<string> ProgressPhotos
+    )
+    {
+        private string? _userId;
+        public void SetUserId(string userId)
+        {
+            _userId = userId;
+        }
+        public string GetUserId()
+        {
+            if (string.IsNullOrEmpty(_userId))
+            {
+                throw new InvalidOperationException("UserId is not set. Please call SetUserId before accessing UserId.");
+            }
+            return _userId;
+        }
+    }
 }

@@ -43,7 +43,7 @@ namespace FitnessTracker.Application
         {
             services.AddSingleton(GetMappingConfig());
             services.AddScoped<IMapper, ServiceMapper>();
-            services.AddScoped<IWorkoutMapper, WorkoutMapper>();
+            //services.AddScoped<IWorkoutMapper, WorkoutMapper>();
             return services;
         }
 
@@ -51,6 +51,8 @@ namespace FitnessTracker.Application
         {
             var config = new TypeAdapterConfig();
             new RegisterMapper().Register(config);
+
+            config.Compile();
 
             return config;
         }

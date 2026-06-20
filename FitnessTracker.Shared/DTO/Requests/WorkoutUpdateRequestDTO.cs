@@ -24,28 +24,8 @@ namespace FitnessTracker.Shared.DTO.Requests
         [DataType(DataType.Date)]
         DateTime WorkoutDate,
 
-        List<ExerciseUpdateRequestDTO> Exercises,
+        List<ExerciseCreateRequestDTO> Exercises,
 
         List<string> ProgressPhotos
-    );
-
-    public record ExerciseUpdateRequestDTO
-    (
-        [Required]
-        [StringLength(128, MinimumLength = 3)]
-        string Name,
-
-        List<SetUpdateRequestDTO> Sets
-    );
-
-    public record SetUpdateRequestDTO
-    (
-        [Required]
-        [Range(0, 2500d)]       // World record for weight is 2422 kg
-        double Weight,
-
-        [Required]
-        [Range(1, 12000)]       // World record for push ups in a row 10 507 
-        int Reps
     );
 }

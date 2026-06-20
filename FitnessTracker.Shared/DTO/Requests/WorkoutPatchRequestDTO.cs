@@ -21,7 +21,7 @@ namespace FitnessTracker.Shared.DTO.Requests
 
         DateTime? WorkoutDate,
 
-        List<ExerciseUpdateRequestDTO>? Exercises,
+        List<ExerciseCreateRequestDTO>? Exercises,
 
         List<string>? ProgressPhotos
     );

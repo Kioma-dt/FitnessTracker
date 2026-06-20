@@ -1,4 +1,6 @@
-﻿using FitnessTracker.Shared.DTO.Responses;
+﻿using FitnessTracker.Shared.DTO;
+using FitnessTracker.Shared.DTO.Requests;
+using FitnessTracker.Shared.DTO.Responses;
 using Mapster;
 using System;
 using System.Collections.Generic;
@@ -6,18 +8,19 @@ using System.Text;
 
 namespace FitnessTracker.Application.Mappers
 {
-    [Mapper]
-    public interface IWorkoutMapper
-    {
-        WorkoutResponseDTO MapTo(Workout workout);
-        WorkoutResponseDTO MapTo(Workout workout, WorkoutResponseDTO workoutResponseDTO);
-        IEnumerable<WorkoutResponseDTO> MapTo(IEnumerable<Workout> workouts)
-        => workouts.Select(MapTo);
+    //[Mapper]
+    //public interface IWorkoutMapper
+    //{
+    //    WorkoutResponseDTO MapTo(Workout workout);
+    //    //IEnumerable<WorkoutResponseDTO> MapTo(IEnumerable<Workout> workouts);
+    //    ExerciseResponseDTO MapTo(Exercise exercise);
+    //    SetResponseDTO MapTo(Set set);
 
-        ExerciseResponseDTO MapTo(Exercise exercise);
-        ExerciseResponseDTO MapTo(Exercise exercise, ExerciseResponseDTO exerciseResponseDTO);
+    //    //Workout MapTo(WorkoutCreateRequestDTO workoutCreateRequest);
+    //    //Exercise MapTo(ExerciseCreateRequestDTO exerciseCreateRequest);
+    //    //Set MapTo(SetCreateRequestDTO setCreateRequest);
 
-        SetResponseDTO MapTo(Set set);
-        SetResponseDTO MapTo(Set set, SetResponseDTO setResponseDTO);
-    }
+    //    //WorkoutUpdateDTO MapTo(WorkoutUpdateRequestDTO workoutUpdateRequest);
+    //    //WorkoutUpdateDTO MapTo(WorkoutPatchRequestDTO workoutUpdateRequest);
+    //}
 }

@@ -14,12 +14,10 @@ namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
-    public class WorkoutController(IWorkoutsRepository workoutsRepository,
-        IWorkoutMapper workoutMapper)
+    public class WorkoutController(IWorkoutsRepository workoutsRepository)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
-        IWorkoutMapper _workoutMapper = workoutMapper;
 
         [Authorize]
         [HttpGet]
@@ -48,26 +46,7 @@ namespace FitnessTracker.API.Controllers
                 orderingQuery.OrderBy, 
                 orderingQuery.Descending);
 
-
-
-            //var workoutsResult = workouts.Select(x => new WorkoutResponseDTO(
-            //    x?.Id ?? String.Empty,
-            //    x?.Title ?? String.Empty,
-            //    x.Type,
-            //    (int)x.Duration.TotalMinutes,
-            //    x.CaloriesBurned,
-            //    x.WorkoutDate,
-            //    x.Exercises.Select(e => new ExerciseResponseDTO
-            //    (
-            //        e?.Name ?? String.Empty,
-            //        e.Sets.Select(s => new SetResponseDTO(
-            //            s.Weight,
-            //            s.Reps)).ToList()
-            //    )).ToList(),
-            //    x.ProgressPhotos
-            //    )).ToList();
-
-            var workoutsResult = _workoutMapper.MapTo(workouts);
+            var workoutsResult = workouts.Adapt<IEnumerable<WorkoutResponseDTO>>();
 
             return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 workoutsResult.ToList(),
@@ -83,34 +62,42 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
-            var workout = new Workout(userId,
-                request.Title,
-                request.Type,
-                TimeSpan.FromMinutes(request.DurationInMinutes),
-                request.CaloriesBurned,
-                request.WorkoutDate,
-                request.Exercises.Select(x => new Exercise(x.Name,
-                x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList(),
-                request.ProgressPhotos);
+            //var workout = new Workout(userId,
+            //    request.Title,
+            //    request.Type,
+            //    TimeSpan.FromMinutes(request.DurationInMinutes),
+            //    request.CaloriesBurned,
+            //    request.WorkoutDate,
+            //    request.Exercises.Select(x => new Exercise(x.Name,
+            //    x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList(),
+            //    request.ProgressPhotos);
+
+            request.SetUserId(userId);
+
+            var workout = request.Adapt<Workout>();
 
             await _workoutsRepository.AddAsync(workout);
 
-            return TypedResults.Created("Smth", new WorkoutResponseDTO(
-                workout?.Id ?? String.Empty,
-                workout?.Title ?? String.Empty,
-                workout.Type,
-                (int)workout.Duration.TotalMinutes,
-                workout.CaloriesBurned,
-                workout.WorkoutDate,
-                workout.Exercises.Select(e => new ExerciseResponseDTO
-                (
-                    e?.Name ?? String.Empty,
-                    e.Sets.Select(s => new SetResponseDTO(
-                        s.Weight,
-                        s.Reps)).ToList()
-                )).ToList(),
-                workout.ProgressPhotos
-                ));
+            //new WorkoutResponseDTO(
+            //   workout?.Id ?? String.Empty,
+            //   workout?.Title ?? String.Empty,
+            //   workout.Type,
+            //   (int)workout.Duration.TotalMinutes,
+            //   workout.CaloriesBurned,
+            //   workout.WorkoutDate,
+            //   workout.Exercises.Select(e => new ExerciseResponseDTO
+            //   (
+            //       e?.Name ?? String.Empty,
+            //       e.Sets.Select(s => new SetResponseDTO(
+            //           s.Weight,
+            //           s.Reps)).ToList()
+            //   )).ToList(),
+            //   workout.ProgressPhotos
+            //   )
+
+            var workoutResponse = workout.Adapt<WorkoutResponseDTO>();
+
+            return TypedResults.Created("Smth", workoutResponse);
         }
 
         [Authorize]
