@@ -19,6 +19,7 @@ namespace FitnessTracker.Shared.DTO.Requests
         [Range(1, 6000)]            // Maximum callories burned by human a day
         int? CaloriesBurned,
 
+        [DataType(DataType.Date)]
         DateTime? WorkoutDate,
 
         List<ExerciseCreateRequestDTO>? Exercises,
