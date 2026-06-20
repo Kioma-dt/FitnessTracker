@@ -123,9 +123,18 @@ namespace FitnessTracker.DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetTotalCountByUserAsync(string userId)
+        public async Task<int> GetTotalCountByUserAsync(string userId,
+            IEnumerable<WorkoutFilterDTO>? filters = null)
         {
-            return await _dbContext.Workouts.Where(x => x.UserId == userId).CountAsync();
+            IQueryable<Workout> query = _dbContext.Workouts
+                .Where(x => x.UserId == userId);
+
+            if (filters is not null)
+            {
+                var filterExpression = _filterExpressionBuilder.BuildFilterExpression(filters);
+                query = query.Where(filterExpression);
+            }
+            return await query.CountAsync();
         }
 
         public async Task<Workout?> GetByIdAsync(string id)

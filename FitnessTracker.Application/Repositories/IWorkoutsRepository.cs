@@ -10,7 +10,8 @@ namespace FitnessTracker.Application.Repositories
             int pageSize = 10,
             IEnumerable<WorkoutFilterDTO>? filters = null,
             WorkoutOrderingDTO? ordeing = null);
-        Task<int> GetTotalCountByUserAsync(string userId);
+        Task<int> GetTotalCountByUserAsync(string userId,
+            IEnumerable<WorkoutFilterDTO>? filters = null);
         Task AddAsync(Workout workout);
         Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO);
         Task DeleteAsync(string id);

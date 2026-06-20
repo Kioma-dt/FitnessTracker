@@ -39,7 +39,7 @@ namespace FitnessTracker.API.Controllers
                     orderingQuery.Descending ?? false);
             }
 
-            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
+            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
 
             var workouts = await _workoutsRepository.GetAllByUserIdAsync(
                 userId, 
