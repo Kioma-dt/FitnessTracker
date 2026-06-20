@@ -33,12 +33,6 @@ namespace FitnessTracker.API.Controllers
             var filter = filterExpressionBuilder.BuildFilterExpression(filtersQuery.ToList());
 
             var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
-            var maxPage = (int)Math.Ceiling((decimal)totalWorkouts / (decimal)pagesQuery.PageSize);
-
-            if (pagesQuery.Page > maxPage)
-            {
-                throw new WrongWorkoutPageFormat($"Page is greater than max: {maxPage}");
-            }
 
             var workouts = await _workoutsRepository.GetAllByUserIdAsync(
                 userId, 
