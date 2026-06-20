@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Application.WorkoutOrdering;
 using FitnessTracker.Shared.DTO;
 using System.Linq.Expressions;
@@ -9,12 +10,16 @@ namespace FitnessTracker.DataAccess.Repositories
         : IWorkoutsRepository
     {
         FitnessTrackerDbContext _dbContext;
-        IWorkoutOrderingApllier _orderingApplier;
+        IWorkoutOrderingApplier _orderingApplier;
+        IWorkoutFilterExpressionBuilder _filterExpressionBuilder;
 
-        public WorkoutsRepository(FitnessTrackerDbContext dbContext, IWorkoutOrderingApllier orderingApplier)
+        public WorkoutsRepository(FitnessTrackerDbContext dbContext, 
+            IWorkoutOrderingApplier orderingApplier,
+            IWorkoutFilterExpressionBuilder filterExpressionBuilder)
         {
             _dbContext = dbContext;
             _orderingApplier = orderingApplier;
+            _filterExpressionBuilder = filterExpressionBuilder;
         }
 
         public async Task AddAsync(Workout workout)
@@ -80,19 +85,26 @@ namespace FitnessTracker.DataAccess.Repositories
         public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId,
             int page = 1,
             int pageSize = 10,
-            Expression<Func<Workout, bool>>? filter = null,
-            string? orderBy = null,
-            bool? descending = null)
+            IEnumerable<WorkoutFilterDTO>? filters = null,
+            WorkoutOrderingDTO? ordeing = null)
         {
             IQueryable<Workout> query = _dbContext.Workouts
                 .Where(x => x.UserId == userId);
 
-            if (filter is not null)
+            if (filters is not null)
             {
-                query = query.Where(filter);
+                var filterExpression = _filterExpressionBuilder.BuildFilterExpression(filters);
+                query = query.Where(filterExpression);
             }
 
-            query = _orderingApplier.ApplyOrdering(query, new WorkoutOrderingDTO(orderBy, descending));
+            if (ordeing is not null)
+            {
+                query = _orderingApplier.ApplyOrdering(query, ordeing);
+            }
+            else
+            {
+                query = query.OrderBy(x => x.Id);
+            }
 
             if(page <= 0)
             {

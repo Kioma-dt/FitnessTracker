@@ -64,7 +64,7 @@ namespace FitnessTracker.Application.WorkoutFilters
         {
             try
             {
-                TimeSpan parsedValue = TimeSpan.FromMinutes(UInt32.Parse(value));
+                TimeSpan parsedValue = TimeSpan.Parse(value);
                 var property = Expression.Property(
                     parameter,
                     nameof(Workout.Duration));
@@ -86,7 +86,7 @@ namespace FitnessTracker.Application.WorkoutFilters
         {
             try
             {
-                TimeSpan parsedValue = TimeSpan.FromMinutes(UInt32.Parse(value));
+                TimeSpan parsedValue = TimeSpan.Parse(value);
                 var property = Expression.Property(
                     parameter,
                     nameof(Workout.Duration));

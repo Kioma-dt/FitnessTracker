@@ -34,7 +34,7 @@ namespace FitnessTracker.Application
             services.AddScoped<IWorkoutOrder, WorkoutOrderByDate>();
             services.AddScoped<IWorkoutOrder, WorkoutOrderByBurnedCalories>();
 
-            services.AddScoped<IWorkoutOrderingApllier, WorkoutOrderingApllier>();
+            services.AddScoped<IWorkoutOrderingApplier, WorkoutOrderingApplier>();
             return services;
         }
 

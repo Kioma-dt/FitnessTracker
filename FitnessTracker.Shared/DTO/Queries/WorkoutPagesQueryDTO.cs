@@ -7,13 +7,13 @@ using System.Text;
 namespace FitnessTracker.Shared.DTO.Queries
 {
     public record WorkoutPagesQueryDTO
-    (
-        [property: DefaultValue(1)]
-        [property: Range(1, int.MaxValue, ErrorMessage = "Page must be greater than or equal to 1")]
-        int Page = 1,
+    {
+        [DefaultValue(1)]
+        [Range(1, int.MaxValue, ErrorMessage = "Page must be greater than or equal to 1")]
+        public int Page { get; set; } = 1;
 
-        [property: DefaultValue(10)]
-        [property: Range(1, int.MaxValue, ErrorMessage = "PageSize must be greater than or equal to 1")]
-        int PageSize = 10
-    );
+        [DefaultValue(10)]
+        [Range(1, int.MaxValue, ErrorMessage = "PageSize must be greater than or equal to 1")]
+        public int PageSize { get; set; } = 10;
+    };
 }

@@ -30,11 +30,8 @@ namespace FitnessTracker.Application.WorkoutFilters
                 {
                     throw new NotImplementedFunctionalityException($"No filter implementation found for filter type {filter.FilterType}");
                 }
-                if (filter.FilterValue is not null)
-                {
-                    var filterExpression = filterImplementation.BuildExpression(parameter, filter.FilterValue ?? string.Empty);
-                    combinedExpression = combinedExpression == null ? filterExpression : Expression.AndAlso(combinedExpression, filterExpression);
-                }
+                var filterExpression = filterImplementation.BuildExpression(parameter, filter.FilterValue);
+                combinedExpression = combinedExpression == null ? filterExpression : Expression.AndAlso(combinedExpression, filterExpression);
             }
             if (combinedExpression == null)
             {

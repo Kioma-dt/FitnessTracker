@@ -30,7 +30,7 @@ namespace FitnessTracker.Application.WorkoutOrdering
     public class WorkoutOrderByBurnedCalories
         : IWorkoutOrder
     {
-        public WorkoutOrderingType WorkoutOrderingType { get; } = WorkoutOrderingType.BurnedCalories;
+        public WorkoutOrderingType WorkoutOrderingType { get; } = WorkoutOrderingType.CaloriesBurned;
 
         public MemberExpression BuildExpression(ParameterExpression parameter)
         {

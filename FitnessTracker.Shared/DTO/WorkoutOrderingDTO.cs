@@ -1,8 +1,10 @@
-﻿namespace FitnessTracker.Shared.DTO
+﻿using FitnessTracker.Shared.Enums;
+
+namespace FitnessTracker.Shared.DTO
 {
     public record WorkoutOrderingDTO
     (
-        string? OrderBy,
-        bool? Descending
+        WorkoutOrderingType OrderBy,
+        bool Descending
     );
 }

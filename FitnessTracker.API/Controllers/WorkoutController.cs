@@ -30,7 +30,14 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
-            var filter = filterExpressionBuilder.BuildFilterExpression(filtersQuery.ToList());
+            var filters = filtersQuery.ToList();
+
+            WorkoutOrderingDTO? ordering = null;
+            if (orderingQuery.OrderBy is not null)
+            {
+                ordering = new WorkoutOrderingDTO(orderingQuery.OrderBy.Value, 
+                    orderingQuery.Descending ?? false);
+            }
 
             var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId);
 
@@ -38,9 +45,8 @@ namespace FitnessTracker.API.Controllers
                 userId, 
                 pagesQuery.Page,
                 pagesQuery.PageSize,
-                filter,
-                orderingQuery.OrderBy.ToString(), 
-                orderingQuery.Descending);
+                filters,
+                ordering);
 
             var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);
 
@@ -102,8 +108,6 @@ namespace FitnessTracker.API.Controllers
 
             if (workout is null)
             {
-                //throw new EntityNotFoundException($"No workout with id: {id}");
-
                 workout = _mapper.Map<Workout>(request);
 
                 workout.Id = id;

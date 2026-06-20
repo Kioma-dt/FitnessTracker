@@ -8,9 +8,8 @@ namespace FitnessTracker.Application.Repositories
         Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId, 
             int page = 1,
             int pageSize = 10,
-            Expression<Func<Workout, bool>>? filter = null,
-            string? orderBy = null,
-            bool? descending = null);
+            IEnumerable<WorkoutFilterDTO>? filters = null,
+            WorkoutOrderingDTO? ordeing = null);
         Task<int> GetTotalCountByUserAsync(string userId);
         Task AddAsync(Workout workout);
         Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO);
