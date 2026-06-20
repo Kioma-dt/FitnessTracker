@@ -4,7 +4,6 @@ using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Shared.DTO.Queries;
 
-using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -65,38 +64,11 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
-            //var workout1 = new Workout(userId,
-            //    request.Title,
-            //    request.Type,
-            //    TimeSpan.FromMinutes(request.DurationInMinutes),
-            //    request.CaloriesBurned,
-            //    request.WorkoutDate,
-            //    request.Exercises.Select(x => new Exercise(x.Name,
-            //    x.Sets.Select(s => new Set(s.Reps, s.Weight)).ToList())).ToList(),
-            //    request.ProgressPhotos);
-
             request.SetUserId(userId);
 
             var workout = _mapper.Map<Workout>(request);
 
             await _workoutsRepository.AddAsync(workout);
-
-            //new WorkoutResponseDTO(
-            //   workout?.Id ?? String.Empty,
-            //   workout?.Title ?? String.Empty,
-            //   workout.Type,
-            //   (int)workout.Duration.TotalMinutes,
-            //   workout.CaloriesBurned,
-            //   workout.WorkoutDate,
-            //   workout.Exercises.Select(e => new ExerciseResponseDTO
-            //   (
-            //       e?.Name ?? String.Empty,
-            //       e.Sets.Select(s => new SetResponseDTO(
-            //           s.Weight,
-            //           s.Reps)).ToList()
-            //   )).ToList(),
-            //   workout.ProgressPhotos
-            //   )
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FitnessTracker.Shared.DTO.Responses
 {
-    public record RegisterResponseDTO
+    public record UserResponseDTO
     (
         string UserId,
         string UserName

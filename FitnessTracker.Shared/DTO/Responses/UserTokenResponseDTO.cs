@@ -1,9 +1,8 @@
 ﻿namespace FitnessTracker.Shared.DTO.Responses
 {
-    public record LoginResponseDTO
+    public record UserTokenResponseDTO
     (
         string Token,
-        string UserId,
-        string UserName
+        UserResponseDTO User
     );
 }
