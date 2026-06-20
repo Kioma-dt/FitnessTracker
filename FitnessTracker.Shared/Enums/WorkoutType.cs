@@ -1,5 +1,8 @@
-﻿namespace FitnessTracker.Shared.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace FitnessTracker.Shared.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum WorkoutType
     {
         Strength,
