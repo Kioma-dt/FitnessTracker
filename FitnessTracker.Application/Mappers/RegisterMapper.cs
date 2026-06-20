@@ -43,6 +43,10 @@ namespace FitnessTracker.Application.Mappers
                     )
                     .RequireDestinationMemberSource(true);
 
+
+            config.NewConfig<User, UserResponseDTO>()
+                .RequireDestinationMemberSource(true);
+
         }
     }
 }
