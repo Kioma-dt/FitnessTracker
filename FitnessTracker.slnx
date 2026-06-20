@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path="Dockerfile" />
+  </Folder>
   <Project Path="FitnessTracker.API/FitnessTracker.API.csproj" />
   <Project Path="FitnessTracker.Application/FitnessTracker.Application.csproj" Id="66d45b2b-76ec-4257-a0ff-6705edfa0eb0" />
   <Project Path="FitnessTracker.DataAccess/FitnessTracker.DataAccess.csproj" Id="5f9cd225-5f00-4885-a8e7-fe905f052aed" />
