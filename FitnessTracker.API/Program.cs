@@ -1,6 +1,7 @@
 using FitnessTracker.API.ExceptionHandler;
 using FitnessTracker.Application;
 using FitnessTracker.DataAccess;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -146,7 +147,6 @@ namespace FitnessTracker.API
                 .AddApplication()
                 .AddMappers()
                 .AddRepositories();
-
 
             var app = builder.Build();
 

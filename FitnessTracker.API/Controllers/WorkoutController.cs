@@ -5,6 +5,7 @@ using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Shared.DTO.Queries;
 
 using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,12 @@ namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
-    public class WorkoutController(IWorkoutsRepository workoutsRepository)
+    public class WorkoutController(IWorkoutsRepository workoutsRepository,
+        IMapper mapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
+        IMapper _mapper = mapper;
 
         [Authorize]
         [HttpGet]
@@ -46,7 +49,7 @@ namespace FitnessTracker.API.Controllers
                 orderingQuery.OrderBy, 
                 orderingQuery.Descending);
 
-            var workoutsResult = workouts.Adapt<IEnumerable<WorkoutResponseDTO>>();
+            var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);
 
             return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 workoutsResult.ToList(),
@@ -62,7 +65,7 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
-            //var workout = new Workout(userId,
+            //var workout1 = new Workout(userId,
             //    request.Title,
             //    request.Type,
             //    TimeSpan.FromMinutes(request.DurationInMinutes),
@@ -74,7 +77,7 @@ namespace FitnessTracker.API.Controllers
 
             request.SetUserId(userId);
 
-            var workout = request.Adapt<Workout>();
+            var workout = _mapper.Map<Workout>(request);
 
             await _workoutsRepository.AddAsync(workout);
 
@@ -95,7 +98,7 @@ namespace FitnessTracker.API.Controllers
             //   workout.ProgressPhotos
             //   )
 
-            var workoutResponse = workout.Adapt<WorkoutResponseDTO>();
+            var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
             return TypedResults.Created("Smth", workoutResponse);
         }

@@ -41,9 +41,8 @@ namespace FitnessTracker.Application
         public static IServiceCollection AddMappers(this
             IServiceCollection services)
         {
-            services.AddSingleton(GetMappingConfig());
+            services.AddSingleton<TypeAdapterConfig>(GetMappingConfig());
             services.AddScoped<IMapper, ServiceMapper>();
-            //services.AddScoped<IWorkoutMapper, WorkoutMapper>();
             return services;
         }
 
