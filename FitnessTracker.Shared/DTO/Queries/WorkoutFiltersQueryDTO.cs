@@ -8,10 +8,10 @@ namespace FitnessTracker.Shared.DTO.Queries
             DateTime? FromDate,
             DateTime? ToDate,
 
-            [Range(0, 1440)]
+            [Range(1, 1440, ErrorMessage = "MinDurationMinutes shoul be greater 0 and fits in 24 hours(less than 1440)")]
             int? MinDurationMinutes,
 
-            [Range(0, 1440)]
+            [Range(1, 1440, ErrorMessage = "MaxDurationMinutes shoul be greater 0 and fits in 24 hours(less than 1440)")]
             int? MaxDurationMinutes,
 
             WorkoutType? WorkoutType
@@ -19,6 +19,23 @@ namespace FitnessTracker.Shared.DTO.Queries
         : IValidatableObject
         
     {
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (FromDate.HasValue && ToDate.HasValue && FromDate > ToDate)
+            {
+                yield return new ValidationResult(
+                    "FromDate must be less than or equal to ToDate",
+                    new[] { nameof(FromDate), nameof(ToDate) });
+            }
+
+            if (MinDurationMinutes.HasValue && MaxDurationMinutes.HasValue && MinDurationMinutes > MaxDurationMinutes)
+            {
+                yield return new ValidationResult(
+                    "MinDurationMinutes must be less than or equal to MaxDuration",
+                    new[] { nameof(MinDurationMinutes), nameof(MaxDurationMinutes) });
+            }
+        }
+
         public List<WorkoutFilterDTO> ToList()
         {
             var list = new List<WorkoutFilterDTO>();
@@ -59,23 +76,6 @@ namespace FitnessTracker.Shared.DTO.Queries
             }
 
             return list;
-        }
-
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (FromDate.HasValue && ToDate.HasValue && FromDate > ToDate)
-            {
-                yield return new ValidationResult(
-                    "FromDate must be less than or equal to ToDate",
-                    new[] { nameof(FromDate), nameof(ToDate) });
-            }
-
-            if (MinDurationMinutes.HasValue && MaxDurationMinutes.HasValue && MinDurationMinutes > MaxDurationMinutes)
-            {
-                yield return new ValidationResult(
-                    "MinDurationMinutes must be less than or equal to MaxDuration",
-                    new[] { nameof(MinDurationMinutes), nameof(MaxDurationMinutes) });
-            }
         }
     }
 }
