@@ -1,17 +1,20 @@
 ﻿using FitnessTracker.Shared.Enums;
+using FitnessTracker.Shared.ValidationAttributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace FitnessTracker.Shared.DTO.Queries
 {
     public record WorkoutFiltersQueryDTO(
-            
+            [property: NotFutureDate(ErrorMessage = "FromDate sould not be in future")]
             DateTime? FromDate,
+
+            [property: NotFutureDate(ErrorMessage = "ToDate sould not be in future")]
             DateTime? ToDate,
 
-            [Range(1, 1440, ErrorMessage = "MinDurationMinutes shoul be greater 0 and fits in 24 hours(less than 1440)")]
+            [property: Range(1, 1440, ErrorMessage = "MinDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
             int? MinDurationMinutes,
 
-            [Range(1, 1440, ErrorMessage = "MaxDurationMinutes shoul be greater 0 and fits in 24 hours(less than 1440)")]
+            [property: Range(1, 1440, ErrorMessage = "MaxDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
             int? MaxDurationMinutes,
 
             WorkoutType? WorkoutType
@@ -72,7 +75,7 @@ namespace FitnessTracker.Shared.DTO.Queries
             {
                 list.Add(new WorkoutFilterDTO(
                     WorkoutFilterType.WorkoutType,
-                    WorkoutType.ToString()));
+                    WorkoutType.Value.ToString()));
             }
 
             return list;

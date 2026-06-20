@@ -1,5 +1,6 @@
 ﻿using FitnessTracker.Shared.DTO.Responses;
 using FitnessTracker.Shared.Enums;
+using FitnessTracker.Shared.ValidationAttributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,29 +10,29 @@ namespace FitnessTracker.Shared.DTO.Requests
 {
     public record WorkoutCreateRequestDTO
     (
-        [Required]
-        [StringLength(128, MinimumLength = 3)]
+        [property: Required]
+        [property: StringLength(128, MinimumLength = 3)]
         string Title,
 
-        [Required]
         WorkoutType Type,
 
-        [Required]
-        [Range(1, 1440)]            //Maximum minutes in 24 hours
+        [property: Range(1, 1440)]                                       //Maximum minutes in 24 hours
         int DurationInMinutes,
 
-        [Required]
-        [Range(1, 6000)]            // Maximum callories burned by human a day
+        [property: Range(0, 6000)]                                       // Maximum callories burned by human a day
         int CaloriesBurned,
 
-        [Required]
-        [DataType(DataType.Date)]
+        [NotFutureDate(
+            ErrorMessage = "WorkoutDate should not be in future")]
         DateTime WorkoutDate,
 
-        [Required]
+        [property: Required]
+        [property: MinLength(1, 
+            ErrorMessage = "Workout must contain at leats 1 Exercise")]
+        [property: MaxLength(1000)]
         List<ExerciseCreateRequestDTO> Exercises,
 
-        [Required]
+        [property: MaxLength(1000)]
         List<string> ProgressPhotos
     )
     {

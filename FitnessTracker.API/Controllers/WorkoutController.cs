@@ -39,7 +39,7 @@ namespace FitnessTracker.API.Controllers
                 pagesQuery.Page,
                 pagesQuery.PageSize,
                 filter,
-                orderingQuery.OrderBy, 
+                orderingQuery.OrderBy.ToString(), 
                 orderingQuery.Descending);
 
             var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);

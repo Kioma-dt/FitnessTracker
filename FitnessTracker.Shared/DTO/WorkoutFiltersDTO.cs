@@ -8,6 +8,6 @@ namespace FitnessTracker.Shared.DTO
     public record WorkoutFilterDTO
     (
         WorkoutFilterType FilterType,
-        string? FilterValue
+        string FilterValue
     );
 }

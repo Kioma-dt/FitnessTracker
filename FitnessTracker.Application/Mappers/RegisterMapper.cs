@@ -22,8 +22,8 @@ namespace FitnessTracker.Application.Mappers
                 .Map(x => x.Duration, dto => TimeSpan.FromMinutes(dto.DurationInMinutes))
                 .Map(x => x.UserId, dto => dto.GetUserId())
                 .Ignore(x => x.CreatedAt)
-                .Ignore(x => x.Id)
-                .Ignore(x => x.User)
+                .Ignore(x => x.Id!)
+                .Ignore(x => x.User!)
                 .RequireDestinationMemberSource(true);
             config.NewConfig<ExerciseCreateRequestDTO, Exercise>()
                 .RequireDestinationMemberSource(true);

@@ -9,7 +9,7 @@ namespace FitnessTracker.Shared.DTO
                                    List<ExerciseUpdateDTO>? Exercises = null,
                                    List<string>? ProgressPhotos = null);
 
-    public record ExerciseUpdateDTO(string Name, List<SetUpdateDTO>? Sets = null);
+    public record ExerciseUpdateDTO(string Name, List<SetUpdateDTO> Sets);
 
     public record SetUpdateDTO(double Weight, int Reps);
 }
