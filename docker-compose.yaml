@@ -16,7 +16,8 @@ services:
         JWT_KEY: ${JWT_KEY}
         IMAGEKIT_PRIVATE_KEY: ${IMAGEKIT_PRIVATE_KEY}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   postgres:
      image: postgres:17
@@ -26,9 +27,16 @@ services:
         POSTGRES_USER: ${DB_USER}
         POSTGRES_PASSWORD: ${DB_PASSWORD}
      ports:     
-      - "${DB_PORT}:5432"
+        - "${DB_PORT}:5432"
      volumes:
-            - postgres-data:/var/lib/postgresql/data
+        - postgres-data:/var/lib/postgresql/data
+     healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+        start_period: 15s
+        
 volumes:
     postgres-data:
 

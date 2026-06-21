@@ -121,7 +121,11 @@ namespace FitnessTracker.API
 
             builder.Services.AddDbContext<FitnessTrackerDbContext>(options =>
                 options.UseNpgsql(connectionString,
-                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+                o =>
+                {
+                    o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    o.EnableRetryOnFailure();
+                }));
 
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(options =>
