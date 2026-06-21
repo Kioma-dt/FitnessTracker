@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using System.Security.Claims;
 using System.Text;
 
 namespace FitnessTracker.API
@@ -77,6 +78,19 @@ namespace FitnessTracker.API
                    };
                    options.Events = new JwtBearerEvents
                    {
+                       OnTokenValidated = context =>
+                       {
+                           var userId = context.Principal?
+                               .FindFirst(ClaimTypes.NameIdentifier)
+                               ?.Value;
+
+                           if (string.IsNullOrEmpty(userId))
+                           {
+                               context.Fail("JWT token does not contain user id");
+                           }
+
+                           return Task.CompletedTask;
+                       },
                        OnChallenge = context =>
                        {
                            context.HandleResponse();

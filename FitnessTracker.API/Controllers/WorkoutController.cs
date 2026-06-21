@@ -30,7 +30,12 @@ namespace FitnessTracker.API.Controllers
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
             [FromQuery] WorkoutPagesQueryDTO pagesQuery) 
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null) 
+            {
+                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
+            }
 
             var filters = filtersQuery.ToList();
 
@@ -64,7 +69,12 @@ namespace FitnessTracker.API.Controllers
         [HttpPost]
         public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
+            }
 
             request.SetUserId(userId);
 
@@ -108,8 +118,14 @@ namespace FitnessTracker.API.Controllers
         public async Task<Results<Ok<WorkoutResponseDTO>, Created<WorkoutResponseDTO>>> Put([FromRoute] string id,
             [FromBody] WorkoutUpdateRequestDTO request)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId is null)
+            {
+                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
+            }
+
             var workout = await _workoutsRepository.GetByIdAsync(id);
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
 
             if (workout is null)
             {
@@ -124,7 +140,6 @@ namespace FitnessTracker.API.Controllers
                 return TypedResults.Created("Smth", workoutResponse);
 
             }
-
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
