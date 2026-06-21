@@ -1,4 +1,5 @@
-﻿using FitnessTracker.Application.PhotosRemoteStorage;
+﻿using FitnessTracker.API.Cache;
+using FitnessTracker.Application.PhotosRemoteStorage;
 using FitnessTracker.Application.Repositories;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
@@ -16,11 +17,13 @@ namespace FitnessTracker.API.Controllers
     [Route("workouts")]
     public class WorkoutController(IWorkoutsRepository workoutsRepository,
         IAuthorizationService authorizationService,
+        IETagGenerator eTagGenerator,
         IMapper mapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
         IAuthorizationService _authorizationService = authorizationService;
+        IETagGenerator _eTagGenerator = eTagGenerator;
         IMapper _mapper = mapper;
 
         [Authorize]
@@ -89,7 +92,9 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<Ok<WorkoutResponseDTO>> GetById([FromRoute] string id)
+        [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        public async Task<IActionResult> GetById([FromRoute] string id)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
 
@@ -110,7 +115,14 @@ namespace FitnessTracker.API.Controllers
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            return TypedResults.Ok(workoutResponse);
+            var currentETag = _eTagGenerator.Generate(workout);
+
+            if (ETagHelper.IsNotModified(Request, currentETag))
+                return StatusCode(StatusCodes.Status304NotModified);
+
+            ETagHelper.SetETag(Response, currentETag);
+
+            return Ok(workoutResponse);
         }
 
         [Authorize]

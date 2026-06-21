@@ -1,5 +1,6 @@
 using FitnessTracker.API.Authorization;
 using FitnessTracker.API.ExceptionHandler;
+using FitnessTracker.API.Cache;
 using FitnessTracker.Application;
 using FitnessTracker.DataAccess;
 using Mapster;
@@ -178,7 +179,8 @@ namespace FitnessTracker.API
                 .AddApplication()
                 .AddMappers()
                 .AddRepositories()
-                .AddAuthorizationRequirmentHandlers();
+                .AddAuthorizationRequirmentHandlers()
+                .AddETagCache();
 
             var app = builder.Build();
 

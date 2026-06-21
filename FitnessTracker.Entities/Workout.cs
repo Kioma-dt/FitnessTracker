@@ -1,10 +1,12 @@
 ﻿using FitnessTracker.Entities.Abstractions;
 using FitnessTracker.Shared.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace FitnessTracker.Entities
 {
     public class Workout 
-        : IDocument
+        : IDocument,
+        IRowVersionEntity
     {
         public string? Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -20,6 +22,9 @@ namespace FitnessTracker.Entities
 
         public List<Exercise> Exercises { get; set; } = new();
         public List<string> ProgressPhotos { get; set; } = new();
+
+        [Timestamp]
+        public uint RowVersion { get; set; }
 
         public Workout()
         {

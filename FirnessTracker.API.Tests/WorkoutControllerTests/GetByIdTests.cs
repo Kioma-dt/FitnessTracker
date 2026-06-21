@@ -6,6 +6,7 @@ using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 
@@ -146,8 +147,8 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
             var result = await controller.GetById(workout.Id);
 
-
-            Assert.Equal(response, result.Value);
+            Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(response, (result as OkObjectResult)!.Value);
 
             authorizationServiceMock.Verify(
                 x => x.AuthorizeAsync(
