@@ -27,9 +27,13 @@ namespace FitnessTracker.API.Controllers
         IMapper _mapper = mapper;
 
         [Authorize]
-        [HttpGet]
+        [HttpGet(Name = "GetAllWorkouts")]
         [ProducesResponseType(typeof(PagedResponseDTO<WorkoutResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAll(
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
@@ -78,8 +82,9 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        public async Task<Created<WorkoutResponseDTO>> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
+        [HttpPost(Name = "CreateWorkout")]
+        [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status201Created)]
+        public async Task<IActionResult> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -96,13 +101,17 @@ namespace FitnessTracker.API.Controllers
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            return TypedResults.Created("Smth", workoutResponse);
+            return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetById")]
         [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);

@@ -154,8 +154,9 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
             var result = await controller.CreateWorkout(request);
 
-
-            Assert.Equal(response, result.Value);
+            Assert.IsType<CreatedAtRouteResult>(result);
+            var resVal = (result as CreatedAtRouteResult)?.Value;
+            Assert.Equal(response, resVal);
 
             mapperMock.Verify(
                 x => x.Map<Workout>(
