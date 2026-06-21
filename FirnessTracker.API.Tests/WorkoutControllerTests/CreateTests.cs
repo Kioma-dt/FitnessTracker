@@ -18,7 +18,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         : WorkoutControllerTestsBase
     {
         [Fact]
-        public async Task CreateWorkout_ShouldThrowNoInfoInJwtTokenException_WhenUserIdClaimMissing()
+        public async Task CreateWorkout_ShouldThrow_WhenUserIdClaimMissing()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
