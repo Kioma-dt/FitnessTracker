@@ -9,6 +9,7 @@ using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 
@@ -213,8 +214,9 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
             var result = await controller.Patch(workoutId, request);
 
-
-            Assert.Equal(response, result.Value);
+            Assert.IsType<OkObjectResult>(result);
+            var resVar = (result as OkObjectResult)?.Value;
+            Assert.Equal(response, resVar);
 
             workoutsRepositoryMock.Verify(
                 x => x.UpdateAsync(workoutId, updateDto),

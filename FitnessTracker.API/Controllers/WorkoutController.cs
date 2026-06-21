@@ -241,7 +241,13 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteWorkout")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<NoContent> Delete([FromRoute] string id)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
@@ -267,8 +273,14 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpPatch("{id}/exercises")]
-        public async Task<NoContent> AddExercise([FromRoute] string id, 
+        [HttpPatch("{id}/exercises", Name = "AddExerciseToWorkout")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AddExercise([FromRoute] string id, 
             [FromBody] ExerciseCreateRequestDTO request)
         {
             var workout = await _workoutsRepository.GetByIdAsync(id);
@@ -292,13 +304,22 @@ namespace FitnessTracker.API.Controllers
 
             await _workoutsRepository.AddExerciseAsync(id, exercise);
 
-            return TypedResults.NoContent();
+            return NoContent();
         }
 
         [Authorize]
         [HttpPatch("{id}/photos")]
         [Consumes("multipart/form-data")]
-        public async Task<NoContent> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status415UnsupportedMediaType)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status502BadGateway)]
+        public async Task<IActionResult> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
             [FromServices] IStreamImageChecker streamImageChecker,
             string id, 
             IFormFile file)
@@ -339,7 +360,7 @@ namespace FitnessTracker.API.Controllers
 
                 await _workoutsRepository.AddPhotoAsync(id, url);
 
-                return TypedResults.NoContent();
+                return NoContent();
             }
         }
     }
