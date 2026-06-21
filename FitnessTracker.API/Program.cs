@@ -18,7 +18,7 @@ namespace FitnessTracker.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //DotNetEnv.Env.Load("enviorment.env");
+            DotNetEnv.Env.Load("enviorment.env");
 
             builder.Configuration.AddEnvironmentVariables();
 

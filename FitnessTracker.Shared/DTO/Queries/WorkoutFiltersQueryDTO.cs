@@ -22,9 +22,11 @@ namespace FitnessTracker.Shared.DTO.Queries
         //}
 
         [NotFutureDate(ErrorMessage = "FromDate sould not be in future")]
+        [UtcDate(ErrorMessage = "FromDate should be in UTC format")]
         public DateTime? FromDate { get; set; }
 
         [NotFutureDate(ErrorMessage = "ToDate sould not be in future")]
+        [UtcDate(ErrorMessage = "FromDate should be in UTC format")]
         public DateTime? ToDate { get; set; }
 
         [Range(1, 1440, ErrorMessage = "MinDurationMinutes should be greater 0 and fits in 24 hours(less than 1440)")]
