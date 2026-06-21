@@ -1,8 +1,6 @@
 ﻿using FitnessTracker.API.Controllers;
 using FitnessTracker.Application.Repositories;
 using FitnessTracker.Entities;
-using FitnessTracker.Shared.DTO.Responses;
-using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -12,20 +10,18 @@ using System.Security.Claims;
 
 namespace FirnessTracker.API.Tests.WorkoutControllerTests
 {
-    public class GetByIdTests
+    public class DeleteTests
     : WorkoutControllerTestsBase
     {
         [Fact]
-        public async Task GetById_ShouldThrow_WhenWorkoutNotExists()
+        public async Task Delete_ShouldThrow_WhenWorkoutNotExists()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
-            var mapperMock = new Mock<IMapper>();
-
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                mapperMock.Object);
+                Mock.Of<IMapper>());
 
             var workoutId = "workout1";
 
@@ -35,33 +31,32 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
 
             await Assert.ThrowsAsync<EntityNotFoundException>(() =>
-                controller.GetById(workoutId));
+                controller.Delete(workoutId));
 
 
-            authorizationServiceMock.Verify(x =>
-                x.AuthorizeAsync(
+            authorizationServiceMock.Verify(
+                x => x.AuthorizeAsync(
                     It.IsAny<ClaimsPrincipal>(),
                     It.IsAny<object>(),
                     It.IsAny<string>()),
                 Times.Never);
 
-            mapperMock.Verify(
-                x => x.Map<WorkoutResponseDTO>(It.IsAny<Workout>()),
+            workoutsRepositoryMock.Verify(
+                x => x.DeleteAsync(It.IsAny<string>()),
                 Times.Never);
         }
 
 
         [Fact]
-        public async Task GetById_ShouldThrow_WhenUserIsNotOwner()
+        public async Task Delete_ShouldThrow_WhenUserIsNotOwner()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
-            var mapperMock = new Mock<IMapper>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                mapperMock.Object);
+                Mock.Of<IMapper>());
 
             var workout = new Workout
             {
@@ -84,48 +79,32 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
 
             await Assert.ThrowsAsync<AccessDeniedException>(() =>
-                controller.GetById(workout.Id));
+                controller.Delete(workout.Id));
 
 
-            mapperMock.Verify(
-                x => x.Map<WorkoutResponseDTO>(It.IsAny<Workout>()),
+            workoutsRepositoryMock.Verify(
+                x => x.DeleteAsync(It.IsAny<string>()),
                 Times.Never);
         }
 
 
         [Fact]
-        public async Task GetById_ShouldReturnWorkoutResponse_WhenUserIsOwner()
+        public async Task Delete_ShouldDeleteWorkoutAndReturnNoContent_WhenUserIsOwner()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
-            var mapperMock = new Mock<IMapper>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                mapperMock.Object);
+                Mock.Of<IMapper>());
 
             var workout = new Workout
             {
                 Id = "workout1",
                 UserId = "user1",
-                Title = "Leg day",
-                Type = WorkoutType.Strength,
-                Duration = TimeSpan.FromMinutes(60),
-                CaloriesBurned = 500,
-                WorkoutDate = DateTime.UtcNow
+                Title = "Leg day"
             };
-
-            var response = new WorkoutResponseDTO(
-                "workout1",
-                "Leg day",
-                WorkoutType.Strength,
-                60,
-                500,
-                workout.WorkoutDate,
-                new List<ExerciseResponseDTO>(),
-                new List<string>()
-            );
 
 
             workoutsRepositoryMock
@@ -139,25 +118,18 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
                     "WorkoutOwner"))
                 .ReturnsAsync(AuthorizationResult.Success());
 
-            mapperMock
-                .Setup(x => x.Map<WorkoutResponseDTO>(workout))
-                .Returns(response);
+            workoutsRepositoryMock
+                .Setup(x => x.DeleteAsync(workout.Id))
+                .Returns(Task.CompletedTask);
 
 
-            var result = await controller.GetById(workout.Id);
+            var result = await controller.Delete(workout.Id);
 
 
-            Assert.Equal(response, result.Value);
+            Assert.NotNull(result);
 
-            authorizationServiceMock.Verify(
-                x => x.AuthorizeAsync(
-                    It.IsAny<ClaimsPrincipal>(),
-                    workout,
-                    "WorkoutOwner"),
-                Times.Once);
-
-            mapperMock.Verify(
-                x => x.Map<WorkoutResponseDTO>(workout),
+            workoutsRepositoryMock.Verify(
+                x => x.DeleteAsync(workout.Id),
                 Times.Once);
         }
     }

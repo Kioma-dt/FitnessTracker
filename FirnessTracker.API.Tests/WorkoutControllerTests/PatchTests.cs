@@ -18,7 +18,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
     : WorkoutControllerTestsBase
     {
         [Fact]
-        public async Task Patch_ShouldThrowEntityNotFoundException_WhenWorkoutNotExists()
+        public async Task Patch_ShouldThrow_WhenWorkoutNotExists()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
@@ -63,7 +63,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
 
         [Fact]
-        public async Task Patch_ShouldThrowAccessDeniedException_WhenUserIsNotOwner()
+        public async Task Patch_ShouldThrow_WhenUserIsNotOwner()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();

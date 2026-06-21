@@ -20,7 +20,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
     : WorkoutControllerTestsBase
     {
         [Fact]
-        public async Task Put_ShouldThrowNoInfoInJwtTokenException_WhenUserIdClaimMissing()
+        public async Task Put_ShouldThrow_WhenUserIdClaimMissing()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
@@ -160,7 +160,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         }
 
         [Fact]
-        public async Task Put_ShouldThrowAccessDeniedException_WhenUserIsNotOwner()
+        public async Task Put_ShouldThrow_WhenUserIsNotOwner()
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
