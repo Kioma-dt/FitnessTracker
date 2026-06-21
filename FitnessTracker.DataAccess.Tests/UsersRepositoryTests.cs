@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FitnessTracker.DataAccess.Repositories;
+﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessTracker.DataAccess.Tests
 {

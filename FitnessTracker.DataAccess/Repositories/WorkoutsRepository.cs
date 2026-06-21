@@ -34,6 +34,10 @@ namespace FitnessTracker.DataAccess.Repositories
                     throw new EntityAlreadyExistsException($"Workout with id: {workout.Id} alredy exists!");
                 }
             }
+            else
+            {
+                workout.Id = Guid.NewGuid().ToString();
+            }
 
             await _dbContext.Workouts.AddAsync(workout);
             await _dbContext.SaveChangesAsync();
