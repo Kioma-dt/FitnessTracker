@@ -4,7 +4,6 @@ using FitnessTracker.Shared.Exceptions;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Xunit;
 
 namespace FitnessTracker.Application.Tests
 {
