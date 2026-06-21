@@ -169,9 +169,15 @@ namespace FirnessTracker.API.Tests.UserControllerTests
 
             var result = await controller.Login(request);
 
-            Assert.Equal(token, result?.Value?.Token);
+            Assert.IsType<OkObjectResult>(result);
+            var resultVal = (result as OkObjectResult)?.Value;
+            Assert.IsType<UserTokenResponseDTO>(resultVal);
+            var tokenRes = (resultVal as UserTokenResponseDTO)?.Token;
+            var userRes = (resultVal as UserTokenResponseDTO)?.User;
 
-            Assert.Equal(userResponse, result?.Value?.User);
+            Assert.Equal(token, tokenRes);
+
+            Assert.Equal(userResponse, userRes);
 
             passwordHasherMock.Verify(
                 x => x.VerifyPassword(request.Password, user.PasswordHash),

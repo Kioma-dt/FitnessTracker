@@ -47,8 +47,12 @@ namespace FitnessTracker.API.Controllers
             return CreatedAtRoute("None", userResonse);
         }
 
-        [HttpPost("login")]
-        public async Task<Ok<UserTokenResponseDTO>> Login([FromBody] LoginRequestDTO request)
+        [HttpPost("login", Name = "Login")]
+        [ProducesResponseType(typeof(UserTokenResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             var user = await _usersRepository.GetByNameAsync(request.UserName);
 
@@ -73,7 +77,7 @@ namespace FitnessTracker.API.Controllers
 
             var userResonse = _mapper.Map<UserResponseDTO>(user);
 
-            return TypedResults.Ok(new UserTokenResponseDTO(jwtToken, userResonse));
+            return Ok(new UserTokenResponseDTO(jwtToken, userResonse));
         }
     }
 }
