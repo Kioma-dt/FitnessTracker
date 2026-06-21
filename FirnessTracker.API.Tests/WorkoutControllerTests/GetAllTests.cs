@@ -19,6 +19,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
     public class GetAllTests
         : WorkoutControllerTestsBase
     {
+
         [Fact]
         public async Task GetAll_ShouldThrow_WhenUserIdClaimMissing()
         {
