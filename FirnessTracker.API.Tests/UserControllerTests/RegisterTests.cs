@@ -1,12 +1,13 @@
-﻿using FitnessTracker.Application.JwtTokenFactory;
-using FitnessTracker.Application.Repositories;
+﻿using FitnessTracker.API.Controllers;
+using FitnessTracker.Application.JwtTokenFactory;
 using FitnessTracker.Application.PasswordHasher;
+using FitnessTracker.Application.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Requests;
 using FitnessTracker.Shared.DTO.Responses;
 using FitnessTracker.Shared.Exceptions;
-using FitnessTracker.API.Controllers;
 using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace FirnessTracker.API.Tests.UserControllerTests
@@ -33,7 +34,7 @@ namespace FirnessTracker.API.Tests.UserControllerTests
 
             var existingUser = new User(
                 "Roman",
-                "password");
+                "hash");
 
             usersRepositoryMock
                 .Setup(x => x.GetByNameAsync(request.UserName))

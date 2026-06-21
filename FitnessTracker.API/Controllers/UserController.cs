@@ -57,7 +57,6 @@ namespace FitnessTracker.API.Controllers
                 throw new LoginException($"User :{request.UserName} has no password");
             }
 
-            var passHash = _passwordHasher.HashPassword(request.Password);
             if (!_passwordHasher.VerifyPassword(request.Password,
                  user.PasswordHash
             ))
