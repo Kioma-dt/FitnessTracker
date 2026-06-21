@@ -7,6 +7,7 @@ using FitnessTracker.Shared.DTO.Queries;
 using FitnessTracker.Shared.DTO.Responses;
 using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.API.Cache;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,10 +27,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var filtersQuery = new WorkoutFiltersQueryDTO();
@@ -60,10 +63,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var userId = "user1";
@@ -138,9 +143,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
                 orderingQuery,
                 pagesQuery);
 
-            Assert.Single(result?.Value?.Items ?? new List<WorkoutResponseDTO>());
+            Assert.IsType<OkObjectResult>(result);
+            var or = result as OkObjectResult;
+            Assert.IsType<PagedResponseDTO<WorkoutResponseDTO>>(or.Value);
+            var resp = or.Value as PagedResponseDTO<WorkoutResponseDTO>;
 
-            Assert.Equal(1, result?.Value?.TotalRecords);
+            Assert.Single(resp?.Items ?? new List<WorkoutResponseDTO>());
+
+            Assert.Equal(1, resp?.TotalRecords);
 
             workoutsRepositoryMock.Verify(
                     x => x.GetAllByUserIdAsync(
@@ -158,10 +168,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var userId = "user1";

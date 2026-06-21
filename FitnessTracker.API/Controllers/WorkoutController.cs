@@ -28,7 +28,9 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<PagedResponseDTO<WorkoutResponseDTO>>> GetAll(
+        [ProducesResponseType(typeof(PagedResponseDTO<WorkoutResponseDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        public async Task<IActionResult> GetAll(
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
             [FromQuery] WorkoutPagesQueryDTO pagesQuery) 
@@ -60,7 +62,14 @@ namespace FitnessTracker.API.Controllers
 
             var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);
 
-            return TypedResults.Ok(new PagedResponseDTO<WorkoutResponseDTO>(
+            var currentETag = _eTagGenerator.Generate(workoutsResult);
+
+            if (ETagHelper.IsNotModified(Request, currentETag))
+                return StatusCode(StatusCodes.Status304NotModified);
+
+            ETagHelper.SetETag(Response, currentETag);
+
+            return Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 workoutsResult.ToList(),
                 pagesQuery.Page,
                 pagesQuery.PageSize,

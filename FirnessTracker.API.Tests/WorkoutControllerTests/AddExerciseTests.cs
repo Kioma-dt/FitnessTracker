@@ -1,4 +1,5 @@
-﻿using FitnessTracker.API.Controllers;
+﻿using FitnessTracker.API.Cache;
+using FitnessTracker.API.Controllers;
 using FitnessTracker.Application.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Requests;
@@ -20,10 +21,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var workoutId = "workout1";
@@ -66,10 +69,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var workout = new Workout
@@ -117,10 +122,12 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
 
             var workout = new Workout
