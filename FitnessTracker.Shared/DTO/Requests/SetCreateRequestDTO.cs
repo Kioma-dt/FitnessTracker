@@ -4,6 +4,12 @@ namespace FitnessTracker.Shared.DTO.Requests
 {
     public record SetCreateRequestDTO
     {
+        public SetCreateRequestDTO(double weight, int reps)
+        {
+            Weight = weight;
+            Reps = reps;
+        }
+
         [Range(0, 2500d)]       // World record for weight is 2422 kg
         public double Weight { get; set; }
 

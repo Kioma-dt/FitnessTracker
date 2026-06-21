@@ -46,8 +46,8 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
                         "Bench Press",
                         new List<SetCreateRequestDTO>
                         {
-                            new SetCreateRequestDTO(),
-                            new SetCreateRequestDTO()
+                            new SetCreateRequestDTO(1, 1),
+                            new SetCreateRequestDTO(1, 1)
                         })
                 },
                 progressPhotos: new List<string>
@@ -96,8 +96,8 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
                         "Bench Press",
                         new List<SetCreateRequestDTO>
                         {
-                            new SetCreateRequestDTO(),
-                            new SetCreateRequestDTO()
+                            new SetCreateRequestDTO(1, 1),
+                            new SetCreateRequestDTO(1, 1)
                         })
                 },
                 progressPhotos: new List<string>
