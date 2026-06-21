@@ -5,6 +5,7 @@ using FitnessTracker.Application.PhotosRemoteStorage;
 using FitnessTracker.Application.StreamImageChecker;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Application.WorkoutOrdering;
+using Imagekit;
 using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,8 @@ namespace FitnessTracker.Application
 
             services.AddScoped<IJwtTokenFactory, IdentityJwtTokenFactory>();
 
+            services.AddSingleton<ImageKitClient>();
+            services.AddScoped<IImageKitClientWrapper, ImageKitClientWrapper>();
             services.AddScoped<IPhotosRemoteStorage, ImageKitRemoteStorage>();
 
             services.AddScoped<IStreamImageChecker, SkiaSharpStreamImageChecker>();

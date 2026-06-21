@@ -7,15 +7,15 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
     public class ImageKitRemoteStorage
         : IPhotosRemoteStorage
     {
+        private readonly IImageKitClientWrapper _client;
+        public ImageKitRemoteStorage(IImageKitClientWrapper imageKitClient)
+        {
+            _client = imageKitClient;
+        }
         public async Task<string> Upload(Stream stream)
         {
             var privateKey = Environment.GetEnvironmentVariable("IMAGEKIT_PRIVATE_KEY") 
                 ?? throw new EnviormnetVariableNotFoundException("IMAGEKIT_PRIVATE_KEY env variable is not set");
-            ImageKitClient client = new()
-            {
-                PrivateKey = privateKey
-            };
-
             FileUploadParams parameters = new()
             {
                 File = stream,
@@ -25,9 +25,7 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
 
             try
             {
-                var response = await client.Files.Upload(parameters);
-
-                var url = response.Url;
+                var url = await _client.UploadOnServer(parameters);
 
                 if (url is null)
                 {
@@ -44,6 +42,23 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
             {
                 throw new PhotoStorageException($"Remote storage returned an error: {ex.Message}");
             }
+        }
+    }
+
+    public interface IImageKitClientWrapper
+    {
+        Task<string?> UploadOnServer(FileUploadParams parameters);
+    }
+    public class ImageKitClientWrapper : IImageKitClientWrapper
+    {
+        private readonly ImageKitClient _client;
+        public ImageKitClientWrapper(ImageKitClient client)
+        {
+            _client = client;
+        }
+        public async Task<string?> UploadOnServer(FileUploadParams parameters)
+        {
+            return (await _client.Files.Upload(parameters)).Url;
         }
     }
 }
