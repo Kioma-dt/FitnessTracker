@@ -33,7 +33,7 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll(
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
@@ -84,6 +84,12 @@ namespace FitnessTracker.API.Controllers
         [Authorize]
         [HttpPost(Name = "CreateWorkout")]
         [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+
         public async Task<IActionResult> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -144,8 +150,15 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
-        public async Task<Results<Ok<WorkoutResponseDTO>, Created<WorkoutResponseDTO>>> Put([FromRoute] string id,
+        [HttpPut("{id}", Name = "FullUpdateWorkout")]
+        [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(WorkoutResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put([FromRoute] string id,
             [FromBody] WorkoutUpdateRequestDTO request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -167,7 +180,7 @@ namespace FitnessTracker.API.Controllers
 
                 var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-                return TypedResults.Created("Smth", workoutResponse);
+                return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
 
             }
 
@@ -187,7 +200,7 @@ namespace FitnessTracker.API.Controllers
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
 
-            return TypedResults.Ok(workoutUpdatedResponse);
+            return Ok(workoutUpdatedResponse);
         }
 
         [Authorize]

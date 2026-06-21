@@ -4,7 +4,7 @@
         : ApiException
     {
         public EntityAlreadyExistsException(string details)
-            : base(412, "Entity Exists", details)
+            : base(409, "Entity Exists", details)
         { }
     }
 }
