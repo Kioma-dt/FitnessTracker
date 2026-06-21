@@ -12,7 +12,7 @@ namespace FitnessTracker.Application.WorkoutOrdering
         IQueryable<Workout> ApplyOrdering(IQueryable<Workout> query, 
             WorkoutOrderingDTO ordering);
     }
-    internal class WorkoutOrderingApplier
+    public class WorkoutOrderingApplier
         : IWorkoutOrderingApplier
     {
         private readonly Dictionary<WorkoutOrderingType, IWorkoutOrder> _orders;
