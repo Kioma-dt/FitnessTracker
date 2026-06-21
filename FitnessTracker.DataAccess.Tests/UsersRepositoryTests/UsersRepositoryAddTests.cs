@@ -3,9 +3,10 @@ using FitnessTracker.Entities;
 using FitnessTracker.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitnessTracker.DataAccess.Tests
+namespace FitnessTracker.DataAccess.Tests.UsersRepositoryTests
 {
-    public class UsersRepositoryTests
+    public class UsersRepositoryAddTests
+        : UsersRepositoryTestsBase
     {
         [Fact]
         public async Task AddAsync_ShouldAddUser_WhenUserNoExists()
@@ -55,7 +56,7 @@ namespace FitnessTracker.DataAccess.Tests
                 PasswordHash = "not_hashed_password"
             };
 
-            await Assert.ThrowsAsync<EntityAlreadyExistsException>(() =>repository.AddAsync(user2));
+            await Assert.ThrowsAsync<EntityAlreadyExistsException>(() => repository.AddAsync(user2));
         }
 
         [Fact]
@@ -77,57 +78,5 @@ namespace FitnessTracker.DataAccess.Tests
             Assert.NotNull(await context.Users.FirstOrDefaultAsync(x => x.Name == "Roman"));
         }
 
-        [Fact]
-        public async Task GetByNameAsync_ShouldReturnUser_WhenUserExists()
-        {
-            using var context = CreateDbContext();
-
-            var repository = new UsersRepository(context);
-
-            var user = new User
-            {
-                Id = "1",
-                Name = "Roman",
-                PasswordHash = "hashed_password"
-            };
-            context.Add(user);
-            await context.SaveChangesAsync();
-
-            var dbUser = await repository.GetByNameAsync("Roman");
-
-            Assert.NotNull(dbUser);
-            Assert.Equal("1", dbUser.Id);
-            Assert.Equal("Roman", dbUser.Name);
-            Assert.Equal("hashed_password", dbUser.PasswordHash);
-        }
-
-        [Fact]
-        public async Task GetByNameAsync_ShouldReturnNull_WhenUserDoesNotExists()
-        {
-            using var context = CreateDbContext();
-
-            var repository = new UsersRepository(context);
-
-            var user = new User
-            {
-                Id = "1",
-                Name = "Roman",
-                PasswordHash = "hashed_password"
-            };
-            context.Add(user);
-            await context.SaveChangesAsync();
-
-            var dbUser = await repository.GetByNameAsync("NotRoman");
-
-            Assert.Null(dbUser);
-        }
-
-        private FitnessTrackerDbContext CreateDbContext()
-        {
-            var options = new DbContextOptionsBuilder<FitnessTrackerDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            return new FitnessTrackerDbContext(options);
-        }
     }
 }
