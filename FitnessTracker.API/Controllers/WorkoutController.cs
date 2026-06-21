@@ -25,7 +25,7 @@ namespace FitnessTracker.API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<Ok<PagedResponseDTO<WorkoutResponseDTO>>> GetAll([FromServices] IWorkoutFilterExpressionBuilder filterExpressionBuilder,
+        public async Task<Ok<PagedResponseDTO<WorkoutResponseDTO>>> GetAll(
             [FromQuery] WorkoutFiltersQueryDTO filtersQuery,
             [FromQuery] WorkoutOrderingQueryDTO orderingQuery,
             [FromQuery] WorkoutPagesQueryDTO pagesQuery) 
