@@ -89,7 +89,9 @@ namespace FirnessTracker.API.Tests.UserControllerTests
 
             var result = await controller.Register(request);
 
-            Assert.Equal(responseDto, result.Value);
+            Assert.IsType<CreatedAtRouteResult>(result);
+            var resultValue = (result as CreatedAtRouteResult)?.Value;
+            Assert.Equal(responseDto, resultValue);
 
             passwordHasherMock.Verify(
                 x => x.HashPassword(request.Password),

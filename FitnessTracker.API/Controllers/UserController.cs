@@ -20,8 +20,13 @@ namespace FitnessTracker.API.Controllers
         IJwtTokenFactory _jwtTokenFactory = jwtTokenFactory;
         IMapper _mapper = mapper;
 
-        [HttpPost("register")]
-        public async Task<Created<UserResponseDTO>> Register([FromBody] RegisterRequestDTO request)
+        [HttpPost("register", Name = "RegisterUser")]
+        [ProducesResponseType(typeof(UserResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
         {
 
             var dbUser = await _usersRepository.GetByNameAsync(request.UserName);
@@ -39,7 +44,7 @@ namespace FitnessTracker.API.Controllers
 
             var userResonse = _mapper.Map<UserResponseDTO>(user);
 
-            return TypedResults.Created("None", userResonse);
+            return CreatedAtRoute("None", userResonse);
         }
 
         [HttpPost("login")]

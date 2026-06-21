@@ -308,7 +308,7 @@ namespace FitnessTracker.API.Controllers
         }
 
         [Authorize]
-        [HttpPatch("{id}/photos")]
+        [HttpPatch("{id}/photos", Name = "AddPhotoToWorkout")]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
