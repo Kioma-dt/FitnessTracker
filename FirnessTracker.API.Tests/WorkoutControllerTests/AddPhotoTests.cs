@@ -63,11 +63,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
+            var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                Mock.Of<IMapper>());
+                eTagGeneratorMock.Object,
+                mapperMock.Object);
 
             var storageMock = new Mock<IPhotosRemoteStorage>();
             var checkerMock = new Mock<IStreamImageChecker>();
@@ -119,11 +122,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
+            var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                Mock.Of<IMapper>());
+                eTagGeneratorMock.Object,
+                mapperMock.Object);
 
             var storageMock = new Mock<IPhotosRemoteStorage>();
             var checkerMock = new Mock<IStreamImageChecker>();
@@ -172,11 +178,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
+            var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                Mock.Of<IMapper>());
+                eTagGeneratorMock.Object,
+                mapperMock.Object);
 
             var storageMock = new Mock<IPhotosRemoteStorage>();
             var checkerMock = new Mock<IStreamImageChecker>();
@@ -237,11 +246,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
         {
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
+            var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
-                Mock.Of<IMapper>());
+                eTagGeneratorMock.Object,
+                mapperMock.Object);
 
             var storageMock = new Mock<IPhotosRemoteStorage>();
             var checkerMock = new Mock<IStreamImageChecker>();

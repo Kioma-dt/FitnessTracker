@@ -145,7 +145,7 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
 
             Assert.IsType<OkObjectResult>(result);
             var or = result as OkObjectResult;
-            Assert.IsType<PagedResponseDTO<WorkoutResponseDTO>>(or.Value);
+            Assert.IsType<PagedResponseDTO<WorkoutResponseDTO>>(or?.Value);
             var resp = or.Value as PagedResponseDTO<WorkoutResponseDTO>;
 
             Assert.Single(resp?.Items ?? new List<WorkoutResponseDTO>());

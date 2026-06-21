@@ -1,4 +1,5 @@
-﻿using FitnessTracker.API.Controllers;
+﻿using FitnessTracker.API.Cache;
+using FitnessTracker.API.Controllers;
 using FitnessTracker.Application.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Responses;
@@ -6,6 +7,7 @@ using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
@@ -22,11 +24,14 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
+
 
             var workoutId = "workout1";
 
@@ -58,11 +63,15 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
+
+
 
             var workout = new Workout
             {
@@ -100,11 +109,20 @@ namespace FirnessTracker.API.Tests.WorkoutControllerTests
             var workoutsRepositoryMock = new Mock<IWorkoutsRepository>();
             var authorizationServiceMock = new Mock<IAuthorizationService>();
             var mapperMock = new Mock<IMapper>();
+            var eTagGeneratorMock = new Mock<IETagGenerator>();
 
             var controller = new WorkoutController(
                 workoutsRepositoryMock.Object,
                 authorizationServiceMock.Object,
+                eTagGeneratorMock.Object,
                 mapperMock.Object);
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+
+
 
             var workout = new Workout
             {
