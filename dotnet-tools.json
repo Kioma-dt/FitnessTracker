@@ -8,6 +8,13 @@
         "dotnet-mapster"
       ],
       "rollForward": false
+    },
+    "dotnet-ef": {
+      "version": "10.0.9",
+      "commands": [
+        "dotnet-ef"
+      ],
+      "rollForward": false
     }
   }
 }

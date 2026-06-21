@@ -16,6 +16,23 @@ services:
         JWT_KEY: ${JWT_KEY}
         IMAGEKIT_PRIVATE_KEY: ${IMAGEKIT_PRIVATE_KEY}
     depends_on:
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+     build:
+         context: .
+         dockerfile: Dockerfile
+         target: build
+     working_dir: /source
+     environment:
+        DB_HOST: ${DB_HOST}
+        DB_PORT: ${DB_PORT}
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASSWORD: ${DB_PASSWORD}
+     command: dotnet ef database update --project FitnessTracker.DataAccess --startup-project FitnessTracker.API
+     depends_on:
       postgres:
         condition: service_healthy
 

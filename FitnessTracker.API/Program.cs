@@ -18,7 +18,7 @@ namespace FitnessTracker.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            DotNetEnv.Env.Load("enviorment.env");
+            //DotNetEnv.Env.Load("enviorment.env");
 
             builder.Configuration.AddEnvironmentVariables();
 
@@ -101,11 +101,11 @@ namespace FitnessTracker.API
             builder.Services.AddProblemDetails();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-            var host = builder.Configuration.GetValue<string>("DB_HOST");
-            var port = builder.Configuration.GetValue<string>("DB_PORT");
-            var db = builder.Configuration.GetValue<string>("DB_NAME");
-            var user = builder.Configuration.GetValue<string>("DB_USER");
-            var password = builder.Configuration.GetValue<string>("DB_PASSWORD");
+            var host = Environment.GetEnvironmentVariable("DB_HOST");
+            var port = Environment.GetEnvironmentVariable("DB_PORT");
+            var db = Environment.GetEnvironmentVariable("DB_NAME");
+            var user = Environment.GetEnvironmentVariable("DB_USER");
+            var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
             if (host is null ||
                 port is null ||
@@ -124,7 +124,7 @@ namespace FitnessTracker.API
                 o =>
                 {
                     o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    o.EnableRetryOnFailure();
+                    o.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null);
                 }));
 
             builder.Services.AddControllers()
