@@ -15,6 +15,8 @@ WORKDIR /source/FitnessTracker.API
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
+RUN apt-get update \
+    && apt-get install -y libfontconfig
 WORKDIR /app
 COPY --from=build /app/publish .
 

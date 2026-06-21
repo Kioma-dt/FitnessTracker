@@ -40,7 +40,7 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
             {
                 throw new ExternalServerAccessException($"Remote storage returned an error: {ex.Message}");
             }
-            catch(ImageKitException ex)
+            catch (ImageKitException ex)
             {
                 throw new PhotoStorageException($"Remote storage returned an error: {ex.Message}");
             }
