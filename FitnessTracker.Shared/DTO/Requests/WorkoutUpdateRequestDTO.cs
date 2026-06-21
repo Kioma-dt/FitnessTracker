@@ -38,6 +38,7 @@ namespace FitnessTracker.Shared.DTO.Requests
 
         [NotFutureDate(
             ErrorMessage = "WorkoutDate should not be in future")]
+        [UtcDate(ErrorMessage = "WorkoutDate should be in UTC format")]
         public DateTime WorkoutDate { get; set; }
 
         [Required]
@@ -47,6 +48,7 @@ namespace FitnessTracker.Shared.DTO.Requests
         public List<ExerciseCreateRequestDTO> Exercises { get; set; }
 
         [MaxLength(1000)]
+        [UrlList(ErrorMessage = "ProgressPhotos should be a list of valid URLs")]
         public List<string> ProgressPhotos { get; set; }
     }
 }
