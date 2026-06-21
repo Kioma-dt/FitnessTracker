@@ -24,6 +24,7 @@ services:
          context: .
          dockerfile: Dockerfile
          target: build
+     container_name: fitness-tracker-migartions
      working_dir: /source
      environment:
         DB_HOST: ${DB_HOST}
