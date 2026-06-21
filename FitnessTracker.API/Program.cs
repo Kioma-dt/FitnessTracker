@@ -18,10 +18,13 @@ namespace FitnessTracker.API
     {
         public static void Main(string[] args)
         {
+            var envState = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             var builder = WebApplication.CreateBuilder(args);
 
-            DotNetEnv.Env.Load("enviorment.env");
-
+            if (envState is not null && envState == "Development")
+            {
+                DotNetEnv.Env.Load("enviorment.env");
+            }
             builder.Configuration.AddEnvironmentVariables();
 
             builder.Services.AddSwaggerGen(options =>
@@ -182,10 +185,11 @@ namespace FitnessTracker.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
 
