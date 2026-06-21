@@ -1,3 +1,4 @@
+using FitnessTracker.API.Authorization;
 using FitnessTracker.API.ExceptionHandler;
 using FitnessTracker.Application;
 using FitnessTracker.DataAccess;
@@ -41,7 +42,16 @@ namespace FitnessTracker.API
                 });
             });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "WorkoutOwner",
+                    policy =>
+                    {
+                        policy.Requirements.Add(
+                            new WorkoutOwnerRequirement());
+                    });
+            });
 
             var authOptions = builder.Configuration.GetSection("Authentication");
             var jwtKey = builder.Configuration.GetValue<string>("JWT_KEY");
@@ -150,7 +160,8 @@ namespace FitnessTracker.API
             builder.Services
                 .AddApplication()
                 .AddMappers()
-                .AddRepositories();
+                .AddRepositories()
+                .AddAuthorizationRequirmentHandlers();
 
             var app = builder.Build();
 

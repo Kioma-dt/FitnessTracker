@@ -15,10 +15,12 @@ namespace FitnessTracker.API.Controllers
     [ApiController]
     [Route("workouts")]
     public class WorkoutController(IWorkoutsRepository workoutsRepository,
+        IAuthorizationService authorizationService,
         IMapper mapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
+        IAuthorizationService _authorizationService = authorizationService;
         IMapper _mapper = mapper;
 
         [Authorize]
@@ -86,9 +88,12 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
 
-            if (workout.UserId != userId)
+            if(!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
