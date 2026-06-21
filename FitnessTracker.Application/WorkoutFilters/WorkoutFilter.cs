@@ -115,7 +115,7 @@ namespace FitnessTracker.Application.WorkoutFilters
                 var constant = Expression.Constant(parsedValue);
                 return Expression.Equal(property, constant);
             }
-            catch (FormatException)
+            catch (ArgumentException)
             {
                 throw new WrongFilterValueFormatException("WorkoutType value not found!");
             }
