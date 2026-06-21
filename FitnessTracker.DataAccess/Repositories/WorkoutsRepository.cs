@@ -159,6 +159,7 @@ namespace FitnessTracker.DataAccess.Repositories
 
             dbWorkout.Title = workoutUpdateDTO.Title ?? dbWorkout.Title;
             dbWorkout.Duration = workoutUpdateDTO.Duration ?? dbWorkout.Duration;
+            dbWorkout.CaloriesBurned = workoutUpdateDTO.CaloriesBurned ?? dbWorkout.CaloriesBurned;
             dbWorkout.Type = workoutUpdateDTO.Type ?? dbWorkout.Type;
             dbWorkout.WorkoutDate = workoutUpdateDTO.WorkoutDate?.ToUniversalTime() ?? dbWorkout.WorkoutDate;
 
