@@ -125,7 +125,13 @@ namespace FitnessTracker.API.Controllers
 
             }
 
-            if (workout.UserId != userId)
+
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
+
+            if (!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
@@ -151,9 +157,12 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
 
-            if (workout.UserId != userId)
+            if (!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
@@ -178,9 +187,12 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
 
-            if (workout.UserId != userId)
+            if (!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
@@ -202,9 +214,12 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
 
-            if (workout.UserId != userId)
+            if (!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
@@ -231,9 +246,12 @@ namespace FitnessTracker.API.Controllers
                 throw new EntityNotFoundException($"No workout with id: {id}");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? String.Empty;
+            var authorizationResult = await _authorizationService.AuthorizeAsync(
+                User,
+                workout,
+                "WorkoutOwner");
 
-            if (workout.UserId != userId)
+            if (!authorizationResult.Succeeded)
             {
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
