@@ -24,7 +24,6 @@ namespace FitnessTracker.Application.Mappers
                 .Ignore(x => x.CreatedAt)
                 .Ignore(x => x.Id!)
                 .Ignore(x => x.User!)
-                .Ignore(x => x.RowVersion)
                 .RequireDestinationMemberSource(true);
             config.NewConfig<ExerciseCreateRequestDTO, Exercise>()
                 .RequireDestinationMemberSource(true);

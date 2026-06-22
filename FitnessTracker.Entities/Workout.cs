@@ -5,8 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FitnessTracker.Entities
 {
     public class Workout 
-        : IDocument,
-        IRowVersionEntity
+        : IDocument
     {
         public string? Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -22,9 +21,6 @@ namespace FitnessTracker.Entities
 
         public List<Exercise> Exercises { get; set; } = new();
         public List<string> ProgressPhotos { get; set; } = new();
-
-        [Timestamp]
-        public uint RowVersion { get; set; }
 
         public Workout()
         {
