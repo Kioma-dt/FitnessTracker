@@ -287,25 +287,21 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status415UnsupportedMediaType)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
-            [FromServices] IStreamImageChecker streamImageChecker,
+        public async Task<IActionResult> AddPhoto(
             string id, 
             IFormFile file)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
+              id));
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
-                workout,
+                workoutOwnerAuthorization,
                 "WorkoutOwner");
 
             if (!authorizationResult.Succeeded)
@@ -313,27 +309,13 @@ namespace FitnessTracker.API.Controllers
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
 
-            if (!file.ContentType.StartsWith("image/"))
-            {
-                throw new UnsuportedFileFormatException("File should be image");
-            }
+            await using var imageStream = file.OpenReadStream();
 
-            using(var streamCheck = file.OpenReadStream()) 
-            {
-                if (!(await streamImageChecker.IsSteamImage(streamCheck)))
-                {
-                    throw new UnprocessableImageException("Erros occuried while decoding image");
-                }
-            }
+            await _mediator.Send(new AddProgressPhotoCommand(
+                id,
+                imageStream));
 
-            using(var stream = file.OpenReadStream())          
-            {
-                var url = await photosRemoteStorage.Upload(stream);
-
-                await _workoutsRepository.AddPhotoAsync(id, url);
-
-                return NoContent();
-            }
+            return NoContent();
         }
     }
 }
