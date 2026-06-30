@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Shared.Exceptions.NotFound;
 
 namespace FitnessTracker.Application.UseCases.Workout.Commands
 {

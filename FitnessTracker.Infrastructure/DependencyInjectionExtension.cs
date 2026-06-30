@@ -26,7 +26,7 @@ namespace FitnessTracker.Application
 
             services.AddSingleton<ImageKitClient>();
             services.AddScoped<IImageKitClientWrapper, ImageKitClientWrapper>();
-            services.AddScoped<IPhotosRemoteStorage, ImageKitRemoteStorage>();
+            services.AddScoped<IImageRemoteStorage, ImageKitRemoteStorage>();
 
             services.AddScoped<IStreamImageChecker, SkiaSharpStreamImageChecker>();
 

@@ -1,8 +1,5 @@
 ﻿using FitnessTracker.Shared.DTO.Application.Workout;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace FitnessTracker.Application.Interfaces.DataSellection.Filtering
 {

@@ -1,7 +1,8 @@
 ﻿using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.User;
-using System.Globalization;
+using FitnessTracker.Shared.Exceptions.Conflict;
+
 namespace FitnessTracker.Application.UseCases.User.Commands
 {
     public record RegisterUserCommand

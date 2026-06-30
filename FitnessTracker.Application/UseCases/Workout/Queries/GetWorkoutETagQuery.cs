@@ -1,8 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.Cache;
 using FitnessTracker.Application.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FitnessTracker.Application.UseCases.Workout.Queries
 {

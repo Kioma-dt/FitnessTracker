@@ -5,12 +5,14 @@ namespace FitnessTracker.Application.Interfaces.Repositories
     public interface IWorkoutsRepository
     {
         Task<Workout?> GetByIdAsync(string id);
-        Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId, 
+        Task<IEnumerable<Workout>> GetAllByUserIdAsync(
+            string userId, 
             int page = 1,
             int pageSize = 10,
             IEnumerable<WorkoutFilterDTO>? filters = null,
             WorkoutOrderingDTO? ordeing = null);
-        Task<int> GetTotalCountByUserAsync(string userId,
+        Task<int> GetTotalCountByUserAsync(
+            string userId,
             IEnumerable<WorkoutFilterDTO>? filters = null);
         Task AddAsync(Workout workout);
         Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO);

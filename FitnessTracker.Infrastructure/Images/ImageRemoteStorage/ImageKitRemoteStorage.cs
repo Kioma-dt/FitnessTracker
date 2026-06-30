@@ -7,7 +7,7 @@ using Imagekit.Models.Files;
 namespace FitnessTracker.Inrastructure.Images.PhotosRemoteStorage
 {
     public class ImageKitRemoteStorage
-        : IPhotosRemoteStorage
+        : IImageRemoteStorage
     {
         private readonly IImageKitClientWrapper _client;
         public ImageKitRemoteStorage(IImageKitClientWrapper imageKitClient)

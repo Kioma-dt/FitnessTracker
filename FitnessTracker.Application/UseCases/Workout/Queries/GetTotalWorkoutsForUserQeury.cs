@@ -1,5 +1,6 @@
 ﻿using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
 
 namespace FitnessTracker.Application.UseCases.Workout.Queries
 {

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FitnessTracker.Application.Interfaces.Authentication
+﻿namespace FitnessTracker.Application.Interfaces.Authentication
 {
     public interface IPasswordHasher
     {
         string HashPassword(string password);
-        bool VerifyPassword(string password, string hash);
+        bool VerifyPassword(
+            string password,
+            string hash);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.Workout;
-using FitnessTracker.Shared.DTO.Responses;
+using FitnessTracker.Shared.Exceptions.NotFound;
 
 namespace FitnessTracker.Application.UseCases.Workout.Commands
 {

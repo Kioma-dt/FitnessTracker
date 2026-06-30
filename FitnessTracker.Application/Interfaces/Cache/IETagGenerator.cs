@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FitnessTracker.Application.Interfaces.Cache
+﻿namespace FitnessTracker.Application.Interfaces.Cache
 {
     public interface IETagGenerator
     {

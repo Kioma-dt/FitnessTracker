@@ -1,8 +1,6 @@
 ﻿using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.Workout;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using FitnessTracker.Shared.Exceptions.NotFound;
 
 namespace FitnessTracker.Application.UseCases.Workout.Queries
 {

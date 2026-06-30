@@ -1,8 +1,7 @@
 ﻿using FitnessTracker.Application.Interfaces.Images;
 using FitnessTracker.Application.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using FitnessTracker.Shared.Exceptions.NotFound;
+using FitnessTracker.Shared.Exceptions.UnpocessableContent;
 
 namespace FitnessTracker.Application.UseCases.Workout.Commands
 {
@@ -16,12 +15,12 @@ namespace FitnessTracker.Application.UseCases.Workout.Commands
     public class AddProgressPhotoCommandHandler
         : IRequestHandler<AddProgressPhotoCommand>
     {
-        IPhotosRemoteStorage _photosRemoteStorage;
+        IImageRemoteStorage _photosRemoteStorage;
         IStreamImageChecker _streamImageChecker;
         IWorkoutsRepository _workoutsRepository;
 
         public AddProgressPhotoCommandHandler(
-            IPhotosRemoteStorage photosRemoteStorage,
+            IImageRemoteStorage photosRemoteStorage,
             IStreamImageChecker streamImageChecker,
             IWorkoutsRepository workoutsRepository)
         {
