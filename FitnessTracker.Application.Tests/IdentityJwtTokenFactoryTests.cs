@@ -1,6 +1,5 @@
-﻿using FitnessTracker.Application.JwtTokenFactory;
-using FitnessTracker.Entities;
-using FitnessTracker.Shared.Exceptions;
+﻿using FitnessTracker.Entities;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

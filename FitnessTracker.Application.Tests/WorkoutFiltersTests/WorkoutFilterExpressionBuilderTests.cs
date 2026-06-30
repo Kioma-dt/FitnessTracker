@@ -1,8 +1,7 @@
-﻿using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Entities;
-using FitnessTracker.Shared.DTO;
+﻿using FitnessTracker.Entities;
+using FitnessTracker.Shared.DTO.Application.Workout;
 using FitnessTracker.Shared.Enums;
-using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
 using Moq;
 using System.Linq.Expressions;
 

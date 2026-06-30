@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-
-namespace FitnessTracker.Shared.Exceptions
+﻿namespace FitnessTracker.Shared.Exceptions
 {
     public class ApiException
         : Exception

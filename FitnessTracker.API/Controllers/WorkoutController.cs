@@ -1,11 +1,13 @@
 ﻿using FitnessTracker.API.Cache;
-using FitnessTracker.Application.PhotosRemoteStorage;
-using FitnessTracker.Application.Repositories;
-using FitnessTracker.Application.StreamImageChecker;
-using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Shared.DTO.Queries;
+using FitnessTracker.Application.Interfaces.Cache;
+using FitnessTracker.Application.UseCases.Workout.Queries;
+using FitnessTracker.Application.UseCases.Workout.Commands;
+using FitnessTracker.API.Authorization;
+using FitnessTracker.Shared.DTO.Queries.Workout;
+using FitnessTracker.Shared.DTO.Requests.Workout;
+using FitnessTracker.Shared.DTO.Responses.Workout;
+using FitnessTracker.Shared.DTO.Application.Workout;
 
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -15,21 +17,26 @@ namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
-    public class WorkoutController(IWorkoutsRepository workoutsRepository,
-        IAuthorizationService authorizationService,
-        IETagGenerator eTagGenerator,
-        IMapper mapper)
+    public class WorkoutController
         : ControllerBase
     {
-        IWorkoutsRepository _workoutsRepository = workoutsRepository;
-        IAuthorizationService _authorizationService = authorizationService;
-        IETagGenerator _eTagGenerator = eTagGenerator;
-        IMapper _mapper = mapper;
+        IWorkoutOwnerAuthorizationService _workoutOwnerAuthorizationService;
+        IMediator _mediator;
+        IMapper _mapper;
+
+        public WorkoutController(
+            IWorkoutOwnerAuthorizationService workoutOwnerAuthorizationService, 
+            IMediator mediator, 
+            IMapper mapper)
+        {
+            _workoutOwnerAuthorizationService = workoutOwnerAuthorizationService;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
 
         [Authorize]
         [HttpGet(Name = "GetAllWorkouts")]
         [ProducesResponseType(typeof(PagedResponseDTO<WorkoutResponseDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -41,11 +48,6 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId is null) 
-            {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
-
             var filters = filtersQuery.ToList();
 
             WorkoutOrderingDTO? ordering = null;
@@ -55,29 +57,24 @@ namespace FitnessTracker.API.Controllers
                     orderingQuery.Descending ?? false);
             }
 
-            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
-
-            var workouts = await _workoutsRepository.GetAllByUserIdAsync(
-                userId, 
+            var workouts = await _mediator.Send(new GetAllWorkoutsForUserQeury(
+                userId,
                 pagesQuery.Page,
                 pagesQuery.PageSize,
                 filters,
-                ordering);
+                ordering));
+
+            var totalWorkouts = await _mediator.Send(new GetTotalWorkoutsForUserQeury(
+                userId,
+                filters));
 
             var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);
-
-            var currentETag = _eTagGenerator.Generate(workoutsResult);
-
-            if (ETagHelper.IsNotModified(Request, currentETag))
-                return StatusCode(StatusCodes.Status304NotModified);
-
-            ETagHelper.SetETag(Response, currentETag);
 
             return Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 workoutsResult.ToList(),
                 pagesQuery.Page,
                 pagesQuery.PageSize,
-                totalWorkouts
+                totalWorkouts.Total
                 ));
         }
 
@@ -93,21 +90,14 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
-            {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
-
             request.SetUserId(userId);
 
-            var workout = _mapper.Map<Workout>(request);
-
-            await _workoutsRepository.AddAsync(workout);
+            var workout = await _mediator.Send(new CreateWorkoutCommand(
+                _mapper.Map<WorkoutCreateDTO>(request)));
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
+            return Created($"api/v1/workouts/{workout.Id}", workoutResponse);
         }
 
         [Authorize]
@@ -121,31 +111,19 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
-
-            if(!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(id));
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            var currentETag = _eTagGenerator.Generate(workout);
+            var currentETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
 
-            if (ETagHelper.IsNotModified(Request, currentETag))
+            if (ETagHelper.IsNotModified(Request, currentETag.ETag))
                 return StatusCode(StatusCodes.Status304NotModified);
 
-            ETagHelper.SetETag(Response, currentETag);
+            ETagHelper.SetETag(Response, currentETag.ETag);
 
             return Ok(workoutResponse);
         }
@@ -159,44 +137,28 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put([FromRoute] string id,
-            [FromBody] WorkoutUpdateRequestDTO request)
+            [FromBody] WorkoutPutRequestDTO request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
+            var isWorkoutExists = await _mediator.Send(new IsWorkoutWithIdExistsQuery(id));
+            if (!isWorkoutExists)
             {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+                var workout = request.MapToWorkoutCreateDTO(id, userId);
 
-            if (workout is null)
-            {
-                workout = _mapper.Map<Workout>(request);
-
-                workout.Id = id;
-
-                await _workoutsRepository.AddAsync(workout);
+                await _mediator.Send(new CreateWorkoutCommand(workout));
 
                 var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-                return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
+                return Created($"api/v1/workouts/{workout.Id}", workoutResponse);
 
             }
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
-
-            var workoutUpdateDTO = _mapper.Map<WorkoutUpdateDTO>(request);
-
-            var workoutUpdated = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
+            var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(
+                id,
+                _mapper.Map<WorkoutUpdateDTO>(request)));
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
 
@@ -214,26 +176,10 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> Patch([FromRoute] string id,
             [FromBody] WorkoutPatchRequestDTO request)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
-
-            var workoutUpdateDTO = _mapper.Map<WorkoutUpdateDTO>(request);
-
-            var workoutUpdated = await _workoutsRepository.UpdateAsync(id,workoutUpdateDTO);
+            var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(id,
+                _mapper.Map<WorkoutUpdateDTO>(request)));
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
 
@@ -250,24 +196,9 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<NoContent> Delete([FromRoute] string id)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
-
-            await _workoutsRepository.DeleteAsync(id);
+            await _mediator.Send(new DeleteWorkoutCommand(id));
 
             return TypedResults.NoContent();
         }
@@ -283,26 +214,11 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> AddExercise([FromRoute] string id, 
             [FromBody] ExerciseCreateRequestDTO request)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
-
-            var exercise = _mapper.Map<Exercise>(request);
-
-            await _workoutsRepository.AddExerciseAsync(id, exercise);
+            await _mediator.Send(new AddExerciseCommand(
+                id,
+                _mapper.Map<ExerciseCreateDTO>(request)));
 
             return NoContent();
         }
@@ -315,53 +231,22 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status415UnsupportedMediaType)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status502BadGateway)]
-        public async Task<IActionResult> AddPhoto([FromServices] IPhotosRemoteStorage photosRemoteStorage,
-            [FromServices] IStreamImageChecker streamImageChecker,
+        public async Task<IActionResult> AddPhoto(
             string id, 
             IFormFile file)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+            await using var imageStream = file.OpenReadStream();
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workout,
-                "WorkoutOwner");
+            await _mediator.Send(new AddProgressPhotoCommand(
+                id,
+                imageStream));
 
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
-
-            if (!file.ContentType.StartsWith("image/"))
-            {
-                throw new UnsuportedFileFormatException("File should be image");
-            }
-
-            using(var streamCheck = file.OpenReadStream()) 
-            {
-                if (!(await streamImageChecker.IsSteamImage(streamCheck)))
-                {
-                    throw new UnprocessableImageException("Erros occuried while decoding image");
-                }
-            }
-
-            using(var stream = file.OpenReadStream())          
-            {
-                var url = await photosRemoteStorage.Upload(stream);
-
-                await _workoutsRepository.AddPhotoAsync(id, url);
-
-                return NoContent();
-            }
+            return NoContent();
         }
     }
 }

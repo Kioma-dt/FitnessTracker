@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FitnessTracker.Shared.DTO.Responses
+﻿namespace FitnessTracker.Shared.DTO.Responses
 {
     public record PagedResponseDTO<T>
     {
@@ -12,7 +8,11 @@ namespace FitnessTracker.Shared.DTO.Responses
         public int TotalPages { get; init; }
         public List<T> Items { get; init; }
 
-        public PagedResponseDTO(List<T> items, int page, int pageSize, int totalRecords)
+        public PagedResponseDTO(
+            List<T> items, 
+            int page, 
+            int pageSize, 
+            int totalRecords)
         {
             Items = items;
             Page = page;

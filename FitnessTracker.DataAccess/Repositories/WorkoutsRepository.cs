@@ -1,8 +1,11 @@
-﻿using FitnessTracker.Application.Repositories;
-using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Application.WorkoutOrdering;
-using FitnessTracker.Shared.DTO;
-using System.Linq.Expressions;
+﻿using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
+using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
+using FitnessTracker.Shared.Exceptions.Conflict;
+using FitnessTracker.Shared.Exceptions.NotFound;
+using FitnessTracker.Shared.Exceptions.BadRequest;
+
 
 namespace FitnessTracker.DataAccess.Repositories
 {
@@ -86,7 +89,8 @@ namespace FitnessTracker.DataAccess.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId,
+        public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(
+            string userId,
             int page = 1,
             int pageSize = 10,
             IEnumerable<WorkoutFilterDTO>? filters = null,
@@ -138,6 +142,7 @@ namespace FitnessTracker.DataAccess.Repositories
                 var filterExpression = _filterExpressionBuilder.BuildFilterExpression(filters);
                 query = query.Where(filterExpression);
             }
+
             return await query.CountAsync();
         }
 
@@ -147,7 +152,9 @@ namespace FitnessTracker.DataAccess.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO)
+        public async Task<Workout> UpdateAsync(
+            string id,
+            WorkoutUpdateDTO workoutUpdateDTO)
         {
             var dbWorkout = await _dbContext.Workouts
                 .FirstOrDefaultAsync(x => x.Id == id);

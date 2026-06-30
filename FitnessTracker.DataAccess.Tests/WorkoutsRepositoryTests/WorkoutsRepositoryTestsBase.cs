@@ -1,8 +1,5 @@
-﻿using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Application.WorkoutOrdering;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Moq;
-using Superpower.Model;
 
 namespace FitnessTracker.DataAccess.Tests.WorkoutsRepositoryTests
 {

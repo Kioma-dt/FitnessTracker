@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="10.0.10" />
+    <PackageReference Include="Mapster.Async" Version="10.0.10" />
+    <PackageReference Include="Mapster.Core" Version="10.0.10" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Mapster.EFCore" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

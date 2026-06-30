@@ -2,9 +2,13 @@
 
 namespace FitnessTracker.DataAccess
 {
-    public class FitnessTrackerDbContext(DbContextOptions<FitnessTrackerDbContext> options)
-        : DbContext(options)
+    public class FitnessTrackerDbContext
+        : DbContext
     {
+        public FitnessTrackerDbContext(DbContextOptions<FitnessTrackerDbContext> options)
+            :base(options)
+        {}
+
         public DbSet<User> Users {  get; set; }
         public DbSet<Workout> Workouts { get; set; }
 

@@ -9,24 +9,16 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.2.0" />
-    <PackageReference Include="Mapster" Version="10.0.8" />
-    <PackageReference Include="Mapster.Async" Version="10.0.8" />
-    <PackageReference Include="Mapster.Core" Version="10.0.8" />
-    <PackageReference Include="Mapster.DependencyInjection" Version="10.0.8" />
-    <PackageReference Include="Mapster.EFCore" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
     <ProjectReference Include="..\FitnessTracker.DataAccess\FitnessTracker.DataAccess.csproj" />
     <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Infrastructure\FitnessTracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Mapping\FitnessTracker.Mapping.csproj" />
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
   </ItemGroup>
 

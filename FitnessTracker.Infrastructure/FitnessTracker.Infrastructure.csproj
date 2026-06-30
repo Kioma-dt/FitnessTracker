@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Imagekit" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Bcl.Cryptography" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.19.1" />
+    <PackageReference Include="SkiaSharp" Version="4.148.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.148.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Mapping\FitnessTracker.Mapping.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

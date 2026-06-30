@@ -5,12 +5,13 @@
     <File Path="docker-compose.yaml" />
     <File Path="Dockerfile" />
   </Folder>
-  <Project Path="FirnessTracker.API.Tests/FirnessTracker.API.Tests.csproj" Id="ae5eb6ad-d76b-4c66-b968-61d65aeecc22" />
   <Project Path="FitnessTracker.API/FitnessTracker.API.csproj" />
-  <Project Path="FitnessTracker.Application.Tests/FitnessTracker.Application.Tests.csproj" Id="b702eb1c-8210-4e77-b463-5ee6b4a039e0" />
+  <Project Path="FitnessTracker.Application.Tests/FitnessTracker.Infrastructure.Tests.csproj" Id="b702eb1c-8210-4e77-b463-5ee6b4a039e0" />
   <Project Path="FitnessTracker.Application/FitnessTracker.Application.csproj" Id="66d45b2b-76ec-4257-a0ff-6705edfa0eb0" />
   <Project Path="FitnessTracker.DataAccess.Tests/FitnessTracker.DataAccess.Tests.csproj" Id="d74fda5c-56a6-4cc2-a729-a57edbdeec07" />
   <Project Path="FitnessTracker.DataAccess/FitnessTracker.DataAccess.csproj" Id="5f9cd225-5f00-4885-a8e7-fe905f052aed" />
   <Project Path="FitnessTracker.Entities/FitnessTracker.Entities.csproj" Id="38b077e7-b1ee-42b5-9ab0-06051a2e4620" />
+  <Project Path="FitnessTracker.Infrastructure/FitnessTracker.Infrastructure.csproj" Id="78f07b34-8aad-44de-aec2-81fc80d828d1" />
+  <Project Path="FitnessTracker.Mapping/FitnessTracker.Mapping.csproj" Id="c815141b-3d52-485a-acc5-cea750ab1ace" />
   <Project Path="FitnessTracker.Shared/FitnessTracker.Shared.csproj" Id="00b48885-f790-4ff9-9d20-ff46bedc8cfa" />
 </Solution>

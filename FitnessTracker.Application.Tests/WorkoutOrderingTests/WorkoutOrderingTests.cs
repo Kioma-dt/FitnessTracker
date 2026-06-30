@@ -1,5 +1,4 @@
-﻿using FitnessTracker.Application.WorkoutOrdering;
-using FitnessTracker.Entities;
+﻿using FitnessTracker.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

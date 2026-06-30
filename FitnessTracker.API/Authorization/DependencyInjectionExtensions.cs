@@ -9,6 +9,8 @@ namespace FitnessTracker.API.Authorization
         {
             services.AddScoped<IAuthorizationHandler, WorkoutOwnerHandler>();
 
+            services.AddScoped<IWorkoutOwnerAuthorizationService, WorkoutOwnerAuthorizationService>();
+
             return services;
         }
     }

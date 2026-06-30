@@ -1,8 +1,6 @@
-﻿using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Application.WorkoutOrdering;
-using FitnessTracker.DataAccess.Repositories;
+﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Entities;
-using FitnessTracker.Shared.DTO;
+using FitnessTracker.Shared.DTO.Application.Workout;
 using FitnessTracker.Shared.Enums;
 using Moq;
 

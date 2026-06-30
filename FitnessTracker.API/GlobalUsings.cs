@@ -1,7 +1,8 @@
-﻿global using FitnessTracker.Entities;
-global using FitnessTracker.Shared.Enums;
-global using FitnessTracker.Shared.Exceptions;
-global using FitnessTracker.Shared.DTO.Requests;
+﻿global using FitnessTracker.Shared.Exceptions;
 global using FitnessTracker.Shared.DTO.Responses;
-global using FitnessTracker.Shared.DTO;
-global using FitnessTracker.Application.Mappers;
+global using FitnessTracker.Shared.DTO.Authorization;
+global using FitnessTracker.Application.Interfaces.Repositories;
+global using FitnessTracker.Mapping;
+
+global using MediatR;
+global using MapsterMapper;

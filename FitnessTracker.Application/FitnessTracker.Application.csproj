@@ -7,39 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
-    <PackageReference Include="Imagekit" Version="6.1.0" />
-    <PackageReference Include="Mapster" Version="10.0.8" />
-    <PackageReference Include="Mapster.Async" Version="10.0.8" />
-    <PackageReference Include="Mapster.Core" Version="10.0.8" />
-    <PackageReference Include="Mapster.DependencyInjection" Version="10.0.8" />
-    <PackageReference Include="Mapster.EFCore" Version="10.0.8" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.19.1" />
-    <PackageReference Include="SkiaSharp" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
-    <PackageReference Include="System.Drawing.Common" Version="10.0.9" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Mapping\FitnessTracker.Mapping.csproj" />
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
   </ItemGroup>
-
-	<Target Name="Mapster" AfterTargets="AfterBuild">
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet tool restore" />
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster model -a &quot;$(TargetDir)$(ProjectName).dll&quot;" />
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster extension -a &quot;$(TargetDir)$(ProjectName).dll&quot;" />
-		<Exec WorkingDirectory="$(ProjectDir)" Command="dotnet mapster mapper -a &quot;$(TargetDir)$(ProjectName).dll&quot;" />
-	</Target>
-
-	<ItemGroup>
-		<Generated Include="**\*.g.cs" />
-	</ItemGroup>
-	<Target Name="CleanGenerated">
-		<Delete Files="@(Generated)" />
-	</Target>
 
 </Project>

@@ -2,7 +2,8 @@
 
 namespace FitnessTracker.Shared.ValidationAttributes
 {
-    public class NotFutureDateAttribute : ValidationAttribute
+    public class NotFutureDateAttribute 
+        : ValidationAttribute
     {
         public override bool IsValid(object? value)
         {

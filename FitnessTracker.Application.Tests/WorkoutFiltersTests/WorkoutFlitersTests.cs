@@ -1,7 +1,6 @@
-﻿using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Entities;
+﻿using FitnessTracker.Entities;
 using FitnessTracker.Shared.Enums;
-using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.Shared.Exceptions.BadRequest;
 using System.Linq.Expressions;
 using System.Reflection.Metadata;
 

@@ -1,7 +1,5 @@
-﻿using FitnessTracker.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Shared.Exceptions.Conflict;
 
 namespace FitnessTracker.DataAccess.Repositories
 {
