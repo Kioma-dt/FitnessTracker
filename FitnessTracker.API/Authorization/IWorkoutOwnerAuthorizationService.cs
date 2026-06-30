@@ -1,6 +1,6 @@
-﻿using FitnessTracker.Application.Interfaces.Cache;
-using FitnessTracker.Application.UseCases.Workout.Queries;
-using FitnessTracker.Inrastructure.Cache;
+﻿using FitnessTracker.Application.UseCases.Workout.Queries;
+using FitnessTracker.Shared.Exceptions.Forbiden;
+
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;

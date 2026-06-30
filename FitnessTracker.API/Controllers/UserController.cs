@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MapsterMapper;
-using FitnessTracker.Application.Interfaces.Authentication;
-using FitnessTracker.Application.UseCases.User.Commands;
+﻿using FitnessTracker.Application.UseCases.User.Commands;
 using FitnessTracker.Application.UseCases.User.Queries;
 using FitnessTracker.Shared.DTO.Requests.User;
 using FitnessTracker.Shared.DTO.Responses.User;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -38,7 +37,7 @@ namespace FitnessTracker.API.Controllers
 
             var userResonse = _mapper.Map<UserResponseDTO>(user);
 
-            return CreatedAtRoute("None", userResonse);
+            return Created("None", userResonse);
         }
 
         [HttpPost("login", Name = "Login")]

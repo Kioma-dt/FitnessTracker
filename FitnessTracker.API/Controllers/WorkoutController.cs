@@ -1,12 +1,5 @@
 ﻿using FitnessTracker.API.Cache;
-using FitnessTracker.Application.Interfaces.Images;
 using FitnessTracker.Application.Interfaces.Cache;
-
-using MapsterMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using FitnessTracker.Application.UseCases.Workout.Queries;
 using FitnessTracker.Application.UseCases.Workout.Commands;
 using FitnessTracker.API.Authorization;
@@ -15,24 +8,31 @@ using FitnessTracker.Shared.DTO.Requests.Workout;
 using FitnessTracker.Shared.DTO.Responses.Workout;
 using FitnessTracker.Shared.DTO.Application.Workout;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
 namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("workouts")]
-    public class WorkoutController(IWorkoutsRepository workoutsRepository,
-        IAuthorizationService authorizationService,
-        IWorkoutOwnerAuthorizationService workoutOwnerAuthorizationService,
-        IETagGenerator eTagGenerator,
-        IMediator mediator,
-        IMapper mapper)
+    public class WorkoutController
         : ControllerBase
     {
-        IWorkoutsRepository _workoutsRepository = workoutsRepository;
-        IAuthorizationService _authorizationService = authorizationService;
-        IWorkoutOwnerAuthorizationService _workoutOwnerAuthorizationService = workoutOwnerAuthorizationService;
-        IETagGenerator _eTagGenerator = eTagGenerator;
-        IMediator _mediator = mediator;
-        IMapper _mapper = mapper;
+        IWorkoutOwnerAuthorizationService _workoutOwnerAuthorizationService;
+        IMediator _mediator;
+        IMapper _mapper;
+
+        public WorkoutController(
+            IWorkoutOwnerAuthorizationService workoutOwnerAuthorizationService, 
+            IMediator mediator, 
+            IMapper mapper)
+        {
+            _workoutOwnerAuthorizationService = workoutOwnerAuthorizationService;
+            _mediator = mediator;
+            _mapper = mapper;
+        }
 
         [Authorize]
         [HttpGet(Name = "GetAllWorkouts")]

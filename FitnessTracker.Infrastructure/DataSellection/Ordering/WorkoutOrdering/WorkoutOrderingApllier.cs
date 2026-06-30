@@ -1,5 +1,7 @@
 ﻿using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
 using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
+
 using System.Linq.Expressions;
 
 namespace FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders

@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.DataAccess;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
 
 using Microsoft.EntityFrameworkCore;
 
