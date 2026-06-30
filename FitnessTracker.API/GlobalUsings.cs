@@ -10,4 +10,6 @@ global using FitnessTracker.Application.Interfaces.Repositories;
 global using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
 global using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
 global using FitnessTracker.Mapping;
+global using FitnessTracker.API.DependencyInjectionExtensions;
+
 global using MediatR;
