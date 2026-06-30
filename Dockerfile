@@ -10,6 +10,7 @@ COPY FitnessTracker.DataAccess/*.csproj ./FitnessTracker.DataAccess/
 COPY FitnessTracker.DataAccess.Tests/*.csproj ./FitnessTracker.DataAccess.Tests/
 COPY FitnessTracker.Entities/*.csproj ./FitnessTracker.Entities/
 COPY FitnessTracker.Shared/*.csproj ./FitnessTracker.Shared/
+COPY FitnessTracker.Mapping/*.csproj ./FitnessTracker.Mapping/
 
 RUN dotnet restore
 

@@ -1,9 +1,4 @@
-﻿using FitnessTracker.Shared.DTO;
-using FitnessTracker.Shared.DTO.Requests;
-using FitnessTracker.Shared.DTO.Responses;
-using Mapster;
-
-namespace FitnessTracker.Application.Mappers
+﻿namespace FitnessTracker.Mapping
 {
     public class RegisterMapper
         : IRegister
