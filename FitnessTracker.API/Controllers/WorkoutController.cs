@@ -30,7 +30,6 @@ namespace FitnessTracker.API.Controllers
         [Authorize]
         [HttpGet(Name = "GetAllWorkouts")]
         [ProducesResponseType(typeof(PagedResponseDTO<WorkoutResponseDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
@@ -42,11 +41,6 @@ namespace FitnessTracker.API.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (userId is null) 
-            {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
-
             var filters = filtersQuery.ToList();
 
             WorkoutOrderingDTO? ordering = null;
@@ -56,29 +50,24 @@ namespace FitnessTracker.API.Controllers
                     orderingQuery.Descending ?? false);
             }
 
-            var totalWorkouts = await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
-
-            var workouts = await _workoutsRepository.GetAllByUserIdAsync(
-                userId, 
+            var workouts = await _mediator.Send(new GetAllWorkoutsForUserQeury(
+                userId,
                 pagesQuery.Page,
                 pagesQuery.PageSize,
                 filters,
-                ordering);
+                ordering));
+
+            var totalWorkouts = await _mediator.Send(new GetTotalWorkoutsForUserQeury(
+                userId,
+                filters));
 
             var workoutsResult = _mapper.Map<IEnumerable<WorkoutResponseDTO>>(workouts);
-
-            var currentETag = _eTagGenerator.Generate(workoutsResult);
-
-            if (ETagHelper.IsNotModified(Request, currentETag))
-                return StatusCode(StatusCodes.Status304NotModified);
-
-            ETagHelper.SetETag(Response, currentETag);
 
             return Ok(new PagedResponseDTO<WorkoutResponseDTO>(
                 workoutsResult.ToList(),
                 pagesQuery.Page,
                 pagesQuery.PageSize,
-                totalWorkouts
+                totalWorkouts.Total
                 ));
         }
 
