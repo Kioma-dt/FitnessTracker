@@ -2,19 +2,19 @@
 
 namespace FitnessTracker.Application.UseCases.Workout.Commands
 {
-    public record AddWorkoutCommand
+    public record CreateWorkoutCommand
     (
         WorkoutCreateDTO Workout
     )
         : IRequest<WorkoutDTO>;
 
-    public class AddWorkoutCommandHandler
-        : IRequestHandler<AddWorkoutCommand, WorkoutDTO>
+    public class CreateWorkoutCommandHandler
+        : IRequestHandler<CreateWorkoutCommand, WorkoutDTO>
     {
         IWorkoutsRepository _workoutsRepository;
         IMapper _mapper;
 
-        public AddWorkoutCommandHandler(
+        public CreateWorkoutCommandHandler(
             IWorkoutsRepository workoutsRepository, 
             IMapper mapper)
         {
@@ -23,7 +23,7 @@ namespace FitnessTracker.Application.UseCases.Workout.Commands
         }
 
         public async Task<WorkoutDTO> Handle(
-            AddWorkoutCommand request, 
+            CreateWorkoutCommand request, 
             CancellationToken cancellationToken)
         {
             if (request.Workout.UserId is null)

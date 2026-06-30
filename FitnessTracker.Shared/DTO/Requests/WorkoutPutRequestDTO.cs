@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FitnessTracker.Shared.DTO.Requests
 {
-    public record WorkoutUpdateRequestDTO
+    public record WorkoutPutRequestDTO
     {
-        public WorkoutUpdateRequestDTO(
+        public WorkoutPutRequestDTO(
             string title, 
             WorkoutType type, 
             int durationInMinutes,

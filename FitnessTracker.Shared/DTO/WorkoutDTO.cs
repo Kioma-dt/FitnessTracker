@@ -3,6 +3,11 @@ using FitnessTracker.Shared.Enums;
 
 namespace FitnessTracker.Shared.DTO
 {
+    public record UpdatedWorkoutDTO
+    (
+        bool IsUpdated,
+        WorkoutDTO Workout
+    );
     public record WorkoutDTO
     (
         string Title,
