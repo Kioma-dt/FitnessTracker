@@ -15,5 +15,5 @@ namespace FitnessTracker.Shared.DTO.Responses
         DateTime WorkoutDate,
         List<ExerciseResponseDTO> Exercises,
         List<string> ProgressPhotos
-        );
+    );
 }

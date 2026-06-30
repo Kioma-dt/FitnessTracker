@@ -3,5 +3,6 @@
     public record ExerciseResponseDTO
     (
         string Name,
-        List<SetResponseDTO> Sets);
+        List<SetResponseDTO> Sets
+    );
 }

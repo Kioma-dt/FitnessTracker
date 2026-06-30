@@ -180,8 +180,7 @@ namespace FitnessTracker.API
                 .AddInfrastructure()
                 .AddMappers()
                 .AddRepositories()
-                .AddAuthorizationRequirmentHandlers()
-                .AddETagCache();
+                .AddAuthorizationRequirmentHandlers();
 
             var app = builder.Build();
 

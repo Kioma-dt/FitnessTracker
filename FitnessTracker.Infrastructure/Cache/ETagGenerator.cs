@@ -1,13 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿using FitnessTracker.Application.Interfaces.Cache;
+
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
-namespace FitnessTracker.API.Cache
+namespace FitnessTracker.Inrastructure.Cache
 {
-    public interface IETagGenerator
-    {
-        string Generate(object value);
-    }
     public class ETagGenerator
         : IETagGenerator
     {

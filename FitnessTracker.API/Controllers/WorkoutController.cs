@@ -1,5 +1,6 @@
 ﻿using FitnessTracker.API.Cache;
 using FitnessTracker.Application.Interfaces.Images;
+using FitnessTracker.Application.Interfaces.Cache;
 using FitnessTracker.Shared.DTO.Queries;
 
 using MapsterMapper;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using FitnessTracker.Application.UseCases.Workout.Queries;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -15,12 +17,14 @@ namespace FitnessTracker.API.Controllers
     public class WorkoutController(IWorkoutsRepository workoutsRepository,
         IAuthorizationService authorizationService,
         IETagGenerator eTagGenerator,
+        IMediator mediator,
         IMapper mapper)
         : ControllerBase
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
         IAuthorizationService _authorizationService = authorizationService;
         IETagGenerator _eTagGenerator = eTagGenerator;
+        IMediator _mediator = mediator;
         IMapper _mapper = mapper;
 
         [Authorize]
@@ -118,16 +122,14 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
+                id));
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
-                workout,
+                workoutOwnerAuthorization,
                 "WorkoutOwner");
 
             if(!authorizationResult.Succeeded)
@@ -137,12 +139,13 @@ namespace FitnessTracker.API.Controllers
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            var currentETag = _eTagGenerator.Generate(workout);
+            var currentETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
 
-            if (ETagHelper.IsNotModified(Request, currentETag))
+            if (ETagHelper.IsNotModified(Request, currentETag.ETag))
                 return StatusCode(StatusCodes.Status304NotModified);
 
-            ETagHelper.SetETag(Response, currentETag);
+            ETagHelper.SetETag(Response, currentETag.ETag);
 
             return Ok(workoutResponse);
         }

@@ -9,12 +9,12 @@ namespace FitnessTracker.API.Authorization
     }
 
     public class WorkoutOwnerHandler
-        : AuthorizationHandler<WorkoutOwnerRequirement, Workout>
+        : AuthorizationHandler<WorkoutOwnerRequirement, WorkoutOwnerAuthorizationDTO>
     {
         protected override Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             WorkoutOwnerRequirement requirement,
-            Workout resource)
+            WorkoutOwnerAuthorizationDTO resource)
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier);
 

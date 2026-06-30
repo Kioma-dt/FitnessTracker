@@ -1,4 +1,6 @@
-﻿namespace FitnessTracker.Mapping
+﻿using FitnessTracker.Shared.DTO.Authorization;
+
+namespace FitnessTracker.Mapping
 {
     public class RegisterMapper
         : IRegister
@@ -11,6 +13,23 @@
             config.NewConfig<Exercise, ExerciseResponseDTO>()
                 .RequireDestinationMemberSource(true);
             config.NewConfig<Set, SetResponseDTO>()
+                .RequireDestinationMemberSource(true);
+
+            config.NewConfig<WorkoutDTO, WorkoutOwnerAuthorizationDTO>();
+
+            config.NewConfig<WorkoutDTO, WorkoutResponseDTO>()
+                .Map(dto => dto.DurationInMinutes, x => (int)x.Duration.TotalMinutes)
+                .RequireDestinationMemberSource(true);
+            config.NewConfig<ExerciseDTO, ExerciseResponseDTO>()
+                .RequireDestinationMemberSource(true);
+            config.NewConfig<SetDTO, SetResponseDTO>()
+                .RequireDestinationMemberSource(true);
+
+            config.NewConfig<Workout, WorkoutDTO>()
+                .RequireDestinationMemberSource(true);
+            config.NewConfig<Exercise, ExerciseDTO>()
+                .RequireDestinationMemberSource(true);
+            config.NewConfig<Set, SetDTO>()
                 .RequireDestinationMemberSource(true);
 
             config.NewConfig<WorkoutCreateRequestDTO, Workout>()

@@ -1,9 +1,11 @@
 ﻿using FitnessTracker.Application.Interfaces.Authentication;
+using FitnessTracker.Application.Interfaces.Cache;
 using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
 using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
 using FitnessTracker.Application.Interfaces.Images;
 using FitnessTracker.Inrastructure.Authentication.JwtTokenFactory;
 using FitnessTracker.Inrastructure.Authentication.PasswordHasher;
+using FitnessTracker.Inrastructure.Cache;
 using FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters;
 using FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders;
 using FitnessTracker.Inrastructure.Images.PhotosRemoteStorage;
@@ -40,6 +42,8 @@ namespace FitnessTracker.Application
             services.AddScoped<IWorkoutOrder, WorkoutOrderByBurnedCalories>();
 
             services.AddScoped<IWorkoutOrderingApplier, WorkoutOrderingApplier>();
+
+            services.AddScoped<IETagGenerator, ETagGenerator>();
             return services;
         }
     }

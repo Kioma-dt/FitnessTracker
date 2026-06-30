@@ -18,4 +18,8 @@
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Workout\Commands\" />
+  </ItemGroup>
+
 </Project>
