@@ -227,16 +227,14 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<NoContent> Delete([FromRoute] string id)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
+               id));
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
-                workout,
+                workoutOwnerAuthorization,
                 "WorkoutOwner");
 
             if (!authorizationResult.Succeeded)
@@ -244,7 +242,7 @@ namespace FitnessTracker.API.Controllers
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
 
-            await _workoutsRepository.DeleteAsync(id);
+            await _mediator.Send(new DeleteWorkoutCommand(id));
 
             return TypedResults.NoContent();
         }
@@ -260,16 +258,14 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> AddExercise([FromRoute] string id, 
             [FromBody] ExerciseCreateRequestDTO request)
         {
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
+               id));
 
-            if (workout is null)
-            {
-                throw new EntityNotFoundException($"No workout with id: {id}");
-            }
+            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
 
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
-                workout,
+                workoutOwnerAuthorization,
                 "WorkoutOwner");
 
             if (!authorizationResult.Succeeded)
@@ -277,10 +273,9 @@ namespace FitnessTracker.API.Controllers
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
 
-            var exercise = _mapper.Map<Exercise>(request);
-
-            await _workoutsRepository.AddExerciseAsync(id, exercise);
-
+            await _mediator.Send(new AddExerciseCommand(
+                id,
+                _mapper.Map<ExerciseCreateDTO>(request)));
             return NoContent();
         }
 
