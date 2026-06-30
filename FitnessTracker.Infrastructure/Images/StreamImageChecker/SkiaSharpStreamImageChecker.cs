@@ -1,6 +1,6 @@
-﻿using FitnessTracker.Application.Interfaces;
+﻿using FitnessTracker.Application.Interfaces.Images;
 using SkiaSharp;
-namespace FitnessTracker.Application.StreamImageChecker
+namespace FitnessTracker.Inrastructure.Images.StreamImageChecker
 {
     public class SkiaSharpStreamImageChecker
         : IStreamImageChecker

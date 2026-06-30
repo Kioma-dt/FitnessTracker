@@ -1,9 +1,4 @@
-﻿using FitnessTracker.Application.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FitnessTracker.DataAccess.Repositories
+﻿namespace FitnessTracker.DataAccess.Repositories
 {
     public class UsersRepository
         : IUsersRepository

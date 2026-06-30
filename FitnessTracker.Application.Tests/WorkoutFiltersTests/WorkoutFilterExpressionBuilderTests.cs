@@ -1,5 +1,4 @@
-﻿using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Entities;
+﻿using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO;
 using FitnessTracker.Shared.Enums;
 using FitnessTracker.Shared.Exceptions;

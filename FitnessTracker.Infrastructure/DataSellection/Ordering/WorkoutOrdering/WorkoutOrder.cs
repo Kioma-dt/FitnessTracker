@@ -1,10 +1,6 @@
-﻿using FitnessTracker.Shared.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
+﻿using System.Linq.Expressions;
 
-namespace FitnessTracker.Application.WorkoutOrdering
+namespace FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders
 {
     public interface IWorkoutOrder
     {

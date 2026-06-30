@@ -1,5 +1,5 @@
 ﻿using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.Interfaces;
+using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Requests;

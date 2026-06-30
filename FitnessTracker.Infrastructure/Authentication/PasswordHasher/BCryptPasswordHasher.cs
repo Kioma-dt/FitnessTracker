@@ -1,9 +1,6 @@
-﻿using FitnessTracker.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FitnessTracker.Application.Interfaces.Authentication;
 
-namespace FitnessTracker.Application.PasswordHasher
+namespace FitnessTracker.Inrastructure.Authentication.PasswordHasher
 {
     public class BCryptPasswordHasher
         : IPasswordHasher

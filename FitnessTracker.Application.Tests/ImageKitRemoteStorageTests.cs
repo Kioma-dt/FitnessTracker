@@ -1,10 +1,7 @@
 ﻿using FitnessTracker.Shared.Exceptions;
-using FitnessTracker.Application.PhotosRemoteStorage;
 using Imagekit.Exceptions;
-using Imagekit;
 using Imagekit.Models.Files;
 using Moq;
-using Xunit;
 
 namespace FitnessTracker.Application.Tests
 {

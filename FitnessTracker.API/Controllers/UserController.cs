@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
 using MapsterMapper;
-using FitnessTracker.Application.Interfaces;
 using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Application.Interfaces.Authentication;
 
 namespace FitnessTracker.API.Controllers
 {

@@ -1,22 +1,30 @@
-﻿using FitnessTracker.Application.Interfaces;
+﻿using FitnessTracker.Application.Interfaces.Authentication;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace FitnessTracker.Application.JwtTokenFactory
+namespace FitnessTracker.Inrastructure.Authentication.JwtTokenFactory
 {
-    public class IdentityJwtTokenFactory(IConfiguration config)
+    public class IdentityJwtTokenFactory
         : IJwtTokenFactory
     {
-        IConfiguration _config = config;
+        IConfiguration _config;
+
+        public IdentityJwtTokenFactory(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public string Create(User user)
         {
             if(user.Id is null || user.Name is null)
             {
                 throw new ArgumentException("User id or user name should not be null when creating jwt token");
             }
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace FitnessTracker.Application.WorkoutFilters
+namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
 {
     public interface IWorkoutFilter
     {
@@ -12,7 +12,8 @@ namespace FitnessTracker.Application.WorkoutFilters
         Expression BuildExpression(ParameterExpression parameter, string value);
     }
 
-    public class FromDateWorkoutFilter : IWorkoutFilter
+    public class FromDateWorkoutFilter 
+        : IWorkoutFilter
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.FromDate;
 
@@ -34,7 +35,8 @@ namespace FitnessTracker.Application.WorkoutFilters
         }
     }
 
-    public class ToDateWorkoutFilter : IWorkoutFilter
+    public class ToDateWorkoutFilter 
+        : IWorkoutFilter
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.ToDate;
 
@@ -56,7 +58,8 @@ namespace FitnessTracker.Application.WorkoutFilters
         }
     }
 
-    public class MinDurationWorkoutFilter : IWorkoutFilter
+    public class MinDurationWorkoutFilter 
+        : IWorkoutFilter
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.MinDuration;
 
@@ -78,7 +81,8 @@ namespace FitnessTracker.Application.WorkoutFilters
         }
     }
 
-    public class MaxDurationWorkoutFilter : IWorkoutFilter
+    public class MaxDurationWorkoutFilter
+        : IWorkoutFilter
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.MaxDuration;
 
@@ -100,7 +104,8 @@ namespace FitnessTracker.Application.WorkoutFilters
         }
     }
 
-    public class TypeWorkoutFilter : IWorkoutFilter
+    public class TypeWorkoutFilter 
+        : IWorkoutFilter
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.WorkoutType;
 

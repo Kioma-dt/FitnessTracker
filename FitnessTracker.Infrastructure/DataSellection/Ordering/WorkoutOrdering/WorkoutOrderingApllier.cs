@@ -1,10 +1,8 @@
-﻿using FitnessTracker.Shared.DTO;
-using FitnessTracker.Shared.Enums;
-using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
+﻿using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
 
 using System.Linq.Expressions;
 
-namespace FitnessTracker.Application.WorkoutOrdering
+namespace FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders
 {
     public class WorkoutOrderingApplier
         : IWorkoutOrderingApplier

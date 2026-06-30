@@ -1,9 +1,8 @@
-﻿using FitnessTracker.Application.Interfaces;
-using Imagekit;
+﻿using FitnessTracker.Application.Interfaces.Images;
 using Imagekit.Exceptions;
 using Imagekit.Models.Files;
 
-namespace FitnessTracker.Application.PhotosRemoteStorage
+namespace FitnessTracker.Inrastructure.Images.PhotosRemoteStorage
 {
     public class ImageKitRemoteStorage
         : IPhotosRemoteStorage
@@ -43,23 +42,6 @@ namespace FitnessTracker.Application.PhotosRemoteStorage
             {
                 throw new PhotoStorageException($"Remote storage returned an error: {ex.Message}");
             }
-        }
-    }
-
-    public interface IImageKitClientWrapper
-    {
-        Task<string?> UploadOnServer(FileUploadParams parameters);
-    }
-    public class ImageKitClientWrapper : IImageKitClientWrapper
-    {
-        private readonly ImageKitClient _client;
-        public ImageKitClientWrapper(ImageKitClient client)
-        {
-            _client = client;
-        }
-        public async Task<string?> UploadOnServer(FileUploadParams parameters)
-        {
-            return (await _client.Files.Upload(parameters)).Url;
         }
     }
 }

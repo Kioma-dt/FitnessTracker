@@ -1,19 +1,21 @@
-﻿using FitnessTracker.Application.Interfaces;
+﻿using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
 using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
-using FitnessTracker.Application.JwtTokenFactory;
-using FitnessTracker.Application.PasswordHasher;
-using FitnessTracker.Application.PhotosRemoteStorage;
-using FitnessTracker.Application.StreamImageChecker;
-using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Application.WorkoutOrdering;
+using FitnessTracker.Application.Interfaces.Images;
+using FitnessTracker.Inrastructure.Authentication.JwtTokenFactory;
+using FitnessTracker.Inrastructure.Authentication.PasswordHasher;
+using FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters;
+using FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders;
+using FitnessTracker.Inrastructure.Images.PhotosRemoteStorage;
+using FitnessTracker.Inrastructure.Images.StreamImageChecker;
+
 using Imagekit;
 using Microsoft.Extensions.DependencyInjection;
 namespace FitnessTracker.Application
 {
     public static class DependencyInjectionExtension
     {
-        public static IServiceCollection AddApplication(this
+        public static IServiceCollection AddInfrastructure(this
             IServiceCollection services)
         {
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();

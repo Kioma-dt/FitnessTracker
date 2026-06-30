@@ -1,10 +1,5 @@
-﻿using FitnessTracker.Application.Interfaces.Repositories;
-using FitnessTracker.Application.PasswordHasher;
-using FitnessTracker.DataAccess.Repositories;
+﻿using FitnessTracker.DataAccess.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FitnessTracker.DataAccess
 {

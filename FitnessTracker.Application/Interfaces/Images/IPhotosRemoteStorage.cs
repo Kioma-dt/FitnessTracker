@@ -1,4 +1,4 @@
-﻿namespace FitnessTracker.Application.Interfaces
+﻿namespace FitnessTracker.Application.Interfaces.Images
 {
     public interface IPhotosRemoteStorage
     {

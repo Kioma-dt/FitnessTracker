@@ -1,8 +1,4 @@
-﻿using FitnessTracker.Application.Interfaces.Repositories;
-using FitnessTracker.Application.WorkoutFilters;
-using FitnessTracker.Application.WorkoutOrdering;
-using FitnessTracker.Shared.DTO;
-using System.Linq.Expressions;
+﻿using FitnessTracker.Shared.DTO;
 
 namespace FitnessTracker.DataAccess.Repositories
 {

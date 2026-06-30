@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
     <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Infrastructure\FitnessTracker.Infrastructure.csproj" />
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
   </ItemGroup>
 

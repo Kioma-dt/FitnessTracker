@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FitnessTracker.Application\FitnessTracker.Application.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Entities\FitnessTracker.Entities.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Mapping\FitnessTracker.Mapping.csproj" />
+    <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -176,7 +176,7 @@ namespace FitnessTracker.API
                 });
 
             builder.Services
-                .AddApplication()
+                .AddInfrastructure()
                 .AddMappers()
                 .AddRepositories()
                 .AddAuthorizationRequirmentHandlers()

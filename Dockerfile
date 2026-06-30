@@ -5,6 +5,7 @@ COPY *.slnx .
 COPY FitnessTracker.API/*.csproj ./FitnessTracker.API/
 COPY FirnessTracker.API.Tests/*.csproj ./FirnessTracker.API.Tests/
 COPY FitnessTracker.Application/*.csproj ./FitnessTracker.Application/
+COPY FitnessTracker.Infrastructure/*.csproj ./FitnessTracker.Infrastructure/
 COPY FitnessTracker.Application.Tests/*.csproj ./FitnessTracker.Application.Tests/
 COPY FitnessTracker.DataAccess/*.csproj ./FitnessTracker.DataAccess/
 COPY FitnessTracker.DataAccess.Tests/*.csproj ./FitnessTracker.DataAccess.Tests/

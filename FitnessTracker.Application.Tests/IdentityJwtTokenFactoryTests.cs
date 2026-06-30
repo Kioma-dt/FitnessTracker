@@ -1,5 +1,4 @@
-﻿using FitnessTracker.Application.JwtTokenFactory;
-using FitnessTracker.Entities;
+﻿using FitnessTracker.Entities;
 using FitnessTracker.Shared.Exceptions;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
