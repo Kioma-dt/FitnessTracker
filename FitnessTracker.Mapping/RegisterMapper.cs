@@ -47,6 +47,7 @@ namespace FitnessTracker.Mapping
             config.NewConfig<WorkoutCreateRequestDTO, WorkoutCreateDTO>()
                 .Map(x => x.Duration, dto => TimeSpan.FromMinutes(dto.DurationInMinutes))
                 .Map(x => x.UserId, dto => dto.GetUserId())
+                .Ignore(x => x.Id)
                 .RequireDestinationMemberSource(true);
             config.NewConfig<ExerciseCreateRequestDTO, ExerciseCreateDTO>()
                 .RequireDestinationMemberSource(true);
@@ -55,7 +56,7 @@ namespace FitnessTracker.Mapping
 
             config.NewConfig<WorkoutCreateDTO, Workout>()
                 .Ignore(x => x.CreatedAt)
-                .Ignore(x => x.Id!)
+                .Map(x => x.Id, dto => dto.Id ?? Guid.NewGuid().ToString())
                 .Ignore(x => x.User!)
                 .RequireDestinationMemberSource(true);
             config.NewConfig<ExerciseCreateDTO, Exercise>()
@@ -63,6 +64,11 @@ namespace FitnessTracker.Mapping
             config.NewConfig<SetCreateDTO, Set>()
                 .RequireDestinationMemberSource(true);
 
+            config.NewConfig<WorkoutPutRequestDTO, WorkoutCreateDTO>()
+                .Map(x => x.Duration, dto => TimeSpan.FromMinutes(dto.DurationInMinutes))
+                .Ignore(x => x.Id)
+                .Ignore(x => x.UserId)
+                .RequireDestinationMemberSource(true);
             config.NewConfig<WorkoutPutRequestDTO, WorkoutUpdateDTO>()
                 .Map(x => x.Duration, dto => TimeSpan.FromMinutes(dto.DurationInMinutes))
                 .RequireDestinationMemberSource(true);

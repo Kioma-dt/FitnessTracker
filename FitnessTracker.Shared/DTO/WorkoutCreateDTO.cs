@@ -4,6 +4,7 @@ namespace FitnessTracker.Shared.DTO
 {
     public record WorkoutCreateDTO
     (
+        string? Id,
         string Title,
         WorkoutType Type,
         string? UserId,

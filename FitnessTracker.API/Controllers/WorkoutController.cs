@@ -144,22 +144,14 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> Put([FromRoute] string id,
             [FromBody] WorkoutPutRequestDTO request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
+            var isWorkoutExists = await _mediator.Send(new IsWorkoutWithIdExistsQuery(id));
+            if (!isWorkoutExists)
             {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var workout = await _workoutsRepository.GetByIdAsync(id);
+                var workout = request.MapToWorkoutCreateDTO(id, userId);
 
-            if (workout is null)
-            {
-                workout = _mapper.Map<Workout>(request);
-
-                workout.Id = id;
-
-                await _workoutsRepository.AddAsync(workout);
+                await _mediator.Send(new CreateWorkoutCommand(workout));
 
                 var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
@@ -167,9 +159,14 @@ namespace FitnessTracker.API.Controllers
 
             }
 
+            var dbWorkout = await _mediator.Send(new GetWorkoutByIdQuery(
+               id));
+
+            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(dbWorkout);
+
             var authorizationResult = await _authorizationService.AuthorizeAsync(
                 User,
-                workout,
+                workoutOwnerAuthorization,
                 "WorkoutOwner");
 
             if (!authorizationResult.Succeeded)
@@ -177,9 +174,9 @@ namespace FitnessTracker.API.Controllers
                 throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
             }
 
-            var workoutUpdateDTO = _mapper.Map<WorkoutUpdateDTO>(request);
-
-            var workoutUpdated = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
+            var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(
+                id,
+                _mapper.Map<WorkoutUpdateDTO>(request)));
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
 
