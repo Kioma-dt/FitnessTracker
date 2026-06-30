@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
-using FitnessTracker.Application.PasswordHasher;
-using FitnessTracker.Application.Repositories;
-using FitnessTracker.Application.JwtTokenFactory;
 using MapsterMapper;
+using FitnessTracker.Application.Interfaces;
+using FitnessTracker.Application.Interfaces.Repositories;
 
 namespace FitnessTracker.API.Controllers
 {

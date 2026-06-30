@@ -1,4 +1,5 @@
-﻿using Imagekit;
+﻿using FitnessTracker.Application.Interfaces;
+using Imagekit;
 using Imagekit.Exceptions;
 using Imagekit.Models.Files;
 

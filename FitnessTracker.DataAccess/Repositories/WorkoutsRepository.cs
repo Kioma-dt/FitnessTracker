@@ -1,4 +1,4 @@
-﻿using FitnessTracker.Application.Repositories;
+﻿using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Application.WorkoutOrdering;
 using FitnessTracker.Shared.DTO;

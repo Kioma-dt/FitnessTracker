@@ -1,5 +1,5 @@
-﻿using FitnessTracker.Application.PasswordHasher;
-using FitnessTracker.Application.Repositories;
+﻿using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Application.PasswordHasher;
 using FitnessTracker.DataAccess.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;

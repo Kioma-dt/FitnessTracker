@@ -1,4 +1,4 @@
-﻿namespace FitnessTracker.Application.JwtTokenFactory
+﻿namespace FitnessTracker.Application.Interfaces
 {
     public interface IJwtTokenFactory
     {

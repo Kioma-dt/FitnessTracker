@@ -4,4 +4,8 @@ global using FitnessTracker.Shared.Exceptions;
 global using FitnessTracker.Shared.DTO.Requests;
 global using FitnessTracker.Shared.DTO.Responses;
 global using FitnessTracker.Shared.DTO;
+global using FitnessTracker.Application.Interfaces;
+global using FitnessTracker.Application.Interfaces.Repositories;
+global using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
+global using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
 global using FitnessTracker.Mapping;

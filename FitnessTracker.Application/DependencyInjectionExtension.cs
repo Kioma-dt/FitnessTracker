@@ -1,4 +1,7 @@
-﻿using FitnessTracker.Application.JwtTokenFactory;
+﻿using FitnessTracker.Application.Interfaces;
+using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
+using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
+using FitnessTracker.Application.JwtTokenFactory;
 using FitnessTracker.Application.PasswordHasher;
 using FitnessTracker.Application.PhotosRemoteStorage;
 using FitnessTracker.Application.StreamImageChecker;

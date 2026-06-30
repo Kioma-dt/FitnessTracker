@@ -1,6 +1,6 @@
 ﻿using FitnessTracker.API.Cache;
 using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Requests;
 using FitnessTracker.Shared.Exceptions;

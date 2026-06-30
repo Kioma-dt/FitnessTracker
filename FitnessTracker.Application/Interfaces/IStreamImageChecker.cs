@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FitnessTracker.Application.StreamImageChecker
+namespace FitnessTracker.Application.Interfaces
 {
     public interface IStreamImageChecker
     {

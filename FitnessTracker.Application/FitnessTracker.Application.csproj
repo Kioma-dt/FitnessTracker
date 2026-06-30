@@ -28,8 +28,4 @@
     <ProjectReference Include="..\FitnessTracker.Shared\FitnessTracker.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

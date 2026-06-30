@@ -1,6 +1,6 @@
 ﻿using FitnessTracker.Shared.DTO;
 using System.Linq.Expressions;
-namespace FitnessTracker.Application.Repositories
+namespace FitnessTracker.Application.Interfaces.Repositories
 {
     public interface IWorkoutsRepository
     {

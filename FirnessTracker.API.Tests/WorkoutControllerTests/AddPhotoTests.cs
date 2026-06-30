@@ -1,8 +1,7 @@
 ﻿using FitnessTracker.API.Cache;
 using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.PhotosRemoteStorage;
-using FitnessTracker.Application.Repositories;
-using FitnessTracker.Application.StreamImageChecker;
+using FitnessTracker.Application.Interfaces;
+using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.Exceptions;
 using MapsterMapper;

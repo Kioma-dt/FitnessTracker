@@ -1,5 +1,4 @@
 ﻿using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.API.Cache;
 using FitnessTracker.Shared.Exceptions;
@@ -7,6 +6,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Moq;
 using System.Security.Claims;
+using FitnessTracker.Application.Interfaces.Repositories;
 
 
 namespace FirnessTracker.API.Tests.WorkoutControllerTests

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FitnessTracker.Application.PasswordHasher
+namespace FitnessTracker.Application.Interfaces
 {
     public interface IPasswordHasher
     {

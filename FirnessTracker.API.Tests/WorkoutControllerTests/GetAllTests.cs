@@ -1,5 +1,4 @@
 ﻿using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.Repositories;
 using FitnessTracker.Application.WorkoutFilters;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using FitnessTracker.Application.Interfaces.Repositories;
 
 
 namespace FirnessTracker.API.Tests.WorkoutControllerTests

@@ -1,4 +1,4 @@
-﻿namespace FitnessTracker.Application.Repositories
+﻿namespace FitnessTracker.Application.Interfaces.Repositories
 {
     public interface IUsersRepository
     {

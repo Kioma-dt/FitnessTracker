@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using FitnessTracker.Application.Interfaces;
+using SkiaSharp;
 namespace FitnessTracker.Application.StreamImageChecker
 {
     public class SkiaSharpStreamImageChecker

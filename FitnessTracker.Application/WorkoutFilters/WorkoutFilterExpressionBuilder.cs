@@ -1,17 +1,12 @@
 ﻿using FitnessTracker.Shared.DTO;
 using FitnessTracker.Shared.Enums;
-using System;
-using System.Collections.Generic;
+using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
+
 using System.Linq.Expressions;
-using System.Text;
+
 
 namespace FitnessTracker.Application.WorkoutFilters
 {
-    public interface IWorkoutFilterExpressionBuilder
-    {
-        Expression<Func<Workout, bool>> BuildFilterExpression(IEnumerable<WorkoutFilterDTO> filters); 
-    }
-
     public class WorkoutFilterExpressionBuilder 
         : IWorkoutFilterExpressionBuilder
     {

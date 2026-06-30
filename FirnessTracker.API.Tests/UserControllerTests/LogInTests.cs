@@ -1,7 +1,6 @@
 ﻿using FitnessTracker.API.Controllers;
-using FitnessTracker.Application.JwtTokenFactory;
-using FitnessTracker.Application.PasswordHasher;
-using FitnessTracker.Application.Repositories;
+using FitnessTracker.Application.Interfaces;
+using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.DTO.Requests;
 using FitnessTracker.Shared.DTO.Responses;

@@ -1,4 +1,4 @@
-﻿using FitnessTracker.Application.Repositories;
+﻿using FitnessTracker.Application.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Text;
