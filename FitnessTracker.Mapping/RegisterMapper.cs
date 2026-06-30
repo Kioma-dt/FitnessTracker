@@ -43,6 +43,8 @@
                 .RequireDestinationMemberSource(true);
             config.NewConfig<UserDTO, UserResponseDTO>()
                 .RequireDestinationMemberSource(true);
+            config.NewConfig<UserTokenDTO, UserTokenResponseDTO>()
+                .RequireDestinationMemberSource(true);
 
         }
     }

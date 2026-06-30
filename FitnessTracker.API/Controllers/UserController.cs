@@ -2,6 +2,7 @@
 using MapsterMapper;
 using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.UseCases.User.Commands;
+using FitnessTracker.Application.UseCases.User.Queries;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -49,30 +50,13 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            var user = await _usersRepository.GetByNameAsync(request.UserName);
+            var token = await _mediator.Send(new LogInUserQuery(
+                request.UserName,
+                request.Password));
 
-            if (user is null)
-            {
-                throw new LoginException($"No User With Name: {request.UserName}");
-            }
+            var tokenResonse = _mapper.Map<UserTokenResponseDTO>(token);
 
-            if (user.PasswordHash is null)
-            {
-                throw new LoginException($"User :{request.UserName} has no password");
-            }
-
-            if (!_passwordHasher.VerifyPassword(request.Password,
-                 user.PasswordHash
-            ))
-            {
-                throw new LoginException("Wrong Password");
-            }
-
-            var jwtToken = _jwtTokenFactory.Create(user);
-
-            var userResonse = _mapper.Map<UserResponseDTO>(user);
-
-            return Ok(new UserTokenResponseDTO(jwtToken, userResonse));
+            return Ok(tokenResonse);
         }
     }
 }
