@@ -1,5 +1,7 @@
 ﻿using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
 using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
+
 using System.Linq.Expressions;
 
 

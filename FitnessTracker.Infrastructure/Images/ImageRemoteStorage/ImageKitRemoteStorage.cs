@@ -1,4 +1,6 @@
 ﻿using FitnessTracker.Application.Interfaces.Images;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
+
 using Imagekit.Exceptions;
 using Imagekit.Models.Files;
 

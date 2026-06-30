@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.Authentication;
+using FitnessTracker.Shared.Exceptions.InternalServerError;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

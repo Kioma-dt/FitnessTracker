@@ -5,7 +5,7 @@
         string? Id,
         string Title,
         WorkoutType Type,
-        string UserId,
+        string? UserId,
         TimeSpan Duration,
         int CaloriesBurned,
         DateTime WorkoutDate,

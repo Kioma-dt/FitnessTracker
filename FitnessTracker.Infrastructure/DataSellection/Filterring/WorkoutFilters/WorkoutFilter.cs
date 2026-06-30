@@ -1,15 +1,15 @@
-﻿using FitnessTracker.Shared.Enums;
-using System;
-using System.Collections.Generic;
+﻿using FitnessTracker.Shared.Exceptions.BadRequest;
+
 using System.Linq.Expressions;
-using System.Text;
 
 namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
 {
     public interface IWorkoutFilter
     {
         WorkoutFilterType FilterType { get; }
-        Expression BuildExpression(ParameterExpression parameter, string value);
+        Expression BuildExpression(
+            ParameterExpression parameter, 
+            string value);
     }
 
     public class FromDateWorkoutFilter 
@@ -17,7 +17,9 @@ namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.FromDate;
 
-        public Expression BuildExpression(ParameterExpression parameter, string value)
+        public Expression BuildExpression(
+            ParameterExpression parameter,
+            string value)
         {
             try
             {
@@ -40,7 +42,9 @@ namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.ToDate;
 
-        public Expression BuildExpression(ParameterExpression parameter, string value)
+        public Expression BuildExpression(
+            ParameterExpression parameter, 
+            string value)
         {
             try
             {
@@ -63,7 +67,9 @@ namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.MinDuration;
 
-        public Expression BuildExpression(ParameterExpression parameter, string value)
+        public Expression BuildExpression(
+            ParameterExpression parameter, 
+            string value)
         {
             try
             {
@@ -86,7 +92,9 @@ namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.MaxDuration;
 
-        public Expression BuildExpression(ParameterExpression parameter, string value)
+        public Expression BuildExpression(
+            ParameterExpression parameter,
+            string value)
         {
             try
             {
@@ -109,7 +117,9 @@ namespace FitnessTracker.Inrastructure.DataSellection.Filterring.WorkoutFilters
     {
         public WorkoutFilterType FilterType => WorkoutFilterType.WorkoutType;
 
-        public Expression BuildExpression(ParameterExpression parameter, string value)
+        public Expression BuildExpression(
+            ParameterExpression parameter, 
+            string value)
         {
             try
             {
