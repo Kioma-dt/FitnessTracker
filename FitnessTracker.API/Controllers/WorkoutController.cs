@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FitnessTracker.Application.UseCases.Workout.Queries;
+using FitnessTracker.Application.UseCases.Workout.Commands;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -83,21 +84,14 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> CreateWorkout([FromBody] WorkoutCreateRequestDTO request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (userId is null)
-            {
-                throw new NoInfoInJWTTokenExeption("No user id in JWT token");
-            }
-
             request.SetUserId(userId);
 
-            var workout = _mapper.Map<Workout>(request);
-
-            await _workoutsRepository.AddAsync(workout);
+            var workout = await _mediator.Send(new AddWorkoutCommand(
+                _mapper.Map<WorkoutCreateDTO>(request)));
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-            return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
+            return Created($"api/v1/workouts/{workout.Id}", workoutResponse);
         }
 
         [Authorize]
@@ -169,7 +163,7 @@ namespace FitnessTracker.API.Controllers
 
                 var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
-                return CreatedAtRoute($"api/v1/workouts/{workout.Id}", workoutResponse);
+                return Created($"api/v1/workouts/{workout.Id}", workoutResponse);
 
             }
 

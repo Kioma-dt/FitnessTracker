@@ -56,7 +56,7 @@ namespace FitnessTracker.Shared.DTO.Requests
         [UrlList(ErrorMessage = "ProgressPhotos should be a list of valid URLs")]
         public List<string> ProgressPhotos { get; set; }
 
-        public void SetUserId(string userId)
+        public void SetUserId(string? userId)
         {
             _userId = userId;
         }

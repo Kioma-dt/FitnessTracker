@@ -5,7 +5,6 @@ namespace FitnessTracker.Shared.DTO
 {
     public record WorkoutDTO
     (
-        string Id,
         string Title,
         WorkoutType Type,
         string UserId,
@@ -13,7 +12,8 @@ namespace FitnessTracker.Shared.DTO
         int CaloriesBurned,
         DateTime WorkoutDate,
         List<ExerciseDTO> Exercises,
-        List<string> ProgressPhotos
+        List<string> ProgressPhotos,
+        string Id
     );
 
     public record ExerciseDTO
