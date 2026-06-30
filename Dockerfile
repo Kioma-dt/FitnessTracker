@@ -15,6 +15,7 @@ COPY FitnessTracker.Mapping/*.csproj ./FitnessTracker.Mapping/
 
 RUN dotnet restore
 
+
 COPY . .
 WORKDIR /source/FitnessTracker.API
 RUN dotnet publish -c Release -o /app/publish --no-restore
