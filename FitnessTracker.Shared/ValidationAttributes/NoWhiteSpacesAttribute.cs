@@ -5,7 +5,8 @@ using System.Text;
 
 namespace FitnessTracker.Shared.ValidationAttributes
 {
-    public class NoWhiteSpacesAttribute : ValidationAttribute
+    public class NoWhiteSpacesAttribute 
+        : ValidationAttribute
     {
         public override bool IsValid(object? value)
         {

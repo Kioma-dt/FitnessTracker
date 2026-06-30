@@ -1,4 +1,4 @@
-﻿using FitnessTracker.Shared.Exceptions;
+﻿using FitnessTracker.Shared.Exceptions.InternalServerError;
 using Imagekit.Exceptions;
 using Imagekit.Models.Files;
 using Moq;

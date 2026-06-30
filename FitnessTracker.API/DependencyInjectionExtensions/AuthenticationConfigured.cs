@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FitnessTracker.Shared.Exceptions.InternalServerError;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -14,6 +15,13 @@ namespace FitnessTracker.API.DependencyInjectionExtensions
         {
             var authOptions = configuration.GetSection("Authentication");
             var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+
+            if (authOptions is null
+                || authOptions["Issuer"] is null
+                || authOptions["Audience"] is null)
+            {
+                throw new ConfigurationSectionNotFoundException("No configuration params for authentication");
+            }
 
             if (jwtKey is null)
             {

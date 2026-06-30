@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FitnessTracker.Shared.DTO.Cache
+﻿namespace FitnessTracker.Shared.DTO.Cache
 {
     public record ETagDTO
     (

@@ -1,7 +1,7 @@
 ﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Entities;
 using FitnessTracker.Shared.Enums;
-using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.Shared.Exceptions.NotFound;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessTracker.DataAccess.Tests.WorkoutsRepositoryTests

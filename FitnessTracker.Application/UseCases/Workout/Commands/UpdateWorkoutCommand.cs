@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Shared.DTO.Application.Workout;
 using FitnessTracker.Shared.DTO.Responses;
 
 namespace FitnessTracker.Application.UseCases.Workout.Commands

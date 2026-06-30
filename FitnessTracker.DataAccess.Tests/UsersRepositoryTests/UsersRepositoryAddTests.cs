@@ -1,6 +1,6 @@
 ﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Entities;
-using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.Shared.Exceptions.Conflict;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessTracker.DataAccess.Tests.UsersRepositoryTests

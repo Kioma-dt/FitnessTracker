@@ -1,5 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.DataSellection.Filtering;
-
+using FitnessTracker.Shared.DTO.Application.Workout;
 using System.Linq.Expressions;
 
 

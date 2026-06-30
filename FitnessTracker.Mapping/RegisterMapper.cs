@@ -1,4 +1,9 @@
-﻿using FitnessTracker.Shared.DTO.Authorization;
+﻿using FitnessTracker.Shared.DTO.Application.User;
+using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.DTO.Authorization;
+using FitnessTracker.Shared.DTO.Requests.Workout;
+using FitnessTracker.Shared.DTO.Responses.User;
+using FitnessTracker.Shared.DTO.Responses.Workout;
 
 namespace FitnessTracker.Mapping
 {

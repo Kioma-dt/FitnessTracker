@@ -2,7 +2,8 @@
 
 namespace FitnessTracker.Shared.ValidationAttributes
 {
-    public class UrlListAttribute : ValidationAttribute
+    public class UrlListAttribute 
+        : ValidationAttribute
     {
         public override bool IsValid(object? value)
         {

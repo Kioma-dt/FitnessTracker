@@ -1,5 +1,6 @@
 ﻿using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Shared.DTO.Application.User;
 using System;
 using System.Collections.Generic;
 using System.Text;

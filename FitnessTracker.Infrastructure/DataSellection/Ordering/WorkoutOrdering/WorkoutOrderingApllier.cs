@@ -1,5 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.DataSellection.Ordering;
-
+using FitnessTracker.Shared.DTO.Application.Workout;
 using System.Linq.Expressions;
 
 namespace FitnessTracker.Inrastructure.DataSellection.Ordering.WorkoutOrders

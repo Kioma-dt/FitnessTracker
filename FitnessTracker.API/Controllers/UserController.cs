@@ -3,6 +3,8 @@ using MapsterMapper;
 using FitnessTracker.Application.Interfaces.Authentication;
 using FitnessTracker.Application.UseCases.User.Commands;
 using FitnessTracker.Application.UseCases.User.Queries;
+using FitnessTracker.Shared.DTO.Requests.User;
+using FitnessTracker.Shared.DTO.Responses.User;
 
 namespace FitnessTracker.API.Controllers
 {

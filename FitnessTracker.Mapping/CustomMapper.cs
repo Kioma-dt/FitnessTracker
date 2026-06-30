@@ -1,4 +1,7 @@
-﻿namespace FitnessTracker.Mapping
+﻿using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.DTO.Requests.Workout;
+
+namespace FitnessTracker.Mapping
 {
     public static class CustomMapperExtensions
     {

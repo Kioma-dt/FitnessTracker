@@ -1,4 +1,4 @@
-﻿using FitnessTracker.Shared.DTO;
+﻿using FitnessTracker.Shared.DTO.Application.Workout;
 
 namespace FitnessTracker.DataAccess.Repositories
 {

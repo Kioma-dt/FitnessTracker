@@ -1,8 +1,8 @@
 ﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Entities;
-using FitnessTracker.Shared.DTO;
+using FitnessTracker.Shared.DTO.Application.Workout;
 using FitnessTracker.Shared.Enums;
-using FitnessTracker.Shared.Exceptions;
+using FitnessTracker.Shared.Exceptions.BadRequest;
 using Moq;
 
 namespace FitnessTracker.DataAccess.Tests.WorkoutsRepositoryTests
