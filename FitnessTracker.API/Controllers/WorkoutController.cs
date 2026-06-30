@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using FitnessTracker.Application.UseCases.Workout.Queries;
 using FitnessTracker.Application.UseCases.Workout.Commands;
+using FitnessTracker.API.Authorization;
 
 namespace FitnessTracker.API.Controllers
 {
@@ -17,6 +18,7 @@ namespace FitnessTracker.API.Controllers
     [Route("workouts")]
     public class WorkoutController(IWorkoutsRepository workoutsRepository,
         IAuthorizationService authorizationService,
+        IWorkoutOwnerAuthorizationService workoutOwnerAuthorizationService,
         IETagGenerator eTagGenerator,
         IMediator mediator,
         IMapper mapper)
@@ -24,6 +26,7 @@ namespace FitnessTracker.API.Controllers
     {
         IWorkoutsRepository _workoutsRepository = workoutsRepository;
         IAuthorizationService _authorizationService = authorizationService;
+        IWorkoutOwnerAuthorizationService _workoutOwnerAuthorizationService = workoutOwnerAuthorizationService;
         IETagGenerator _eTagGenerator = eTagGenerator;
         IMediator _mediator = mediator;
         IMapper _mapper = mapper;
@@ -105,20 +108,9 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] string id)
         {
-            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
-                id));
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if(!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            var workout = await _mediator.Send(new GetWorkoutByIdQuery(id));
 
             var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
