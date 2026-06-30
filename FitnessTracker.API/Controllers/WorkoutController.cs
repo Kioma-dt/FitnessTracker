@@ -151,20 +151,7 @@ namespace FitnessTracker.API.Controllers
 
             }
 
-            var dbWorkout = await _mediator.Send(new GetWorkoutByIdQuery(
-               id));
-
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(dbWorkout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
             var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(
                 id,
@@ -186,20 +173,7 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> Patch([FromRoute] string id,
             [FromBody] WorkoutPatchRequestDTO request)
         {
-            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
-               id));
-
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
             var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(id,
                 _mapper.Map<WorkoutUpdateDTO>(request)));
@@ -219,20 +193,7 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<NoContent> Delete([FromRoute] string id)
         {
-            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
-               id));
-
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
             await _mediator.Send(new DeleteWorkoutCommand(id));
 
@@ -250,24 +211,12 @@ namespace FitnessTracker.API.Controllers
         public async Task<IActionResult> AddExercise([FromRoute] string id, 
             [FromBody] ExerciseCreateRequestDTO request)
         {
-            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
-               id));
-
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
             await _mediator.Send(new AddExerciseCommand(
                 id,
                 _mapper.Map<ExerciseCreateDTO>(request)));
+
             return NoContent();
         }
 
@@ -286,20 +235,7 @@ namespace FitnessTracker.API.Controllers
             string id, 
             IFormFile file)
         {
-            var workout = await _mediator.Send(new GetWorkoutByIdQuery(
-              id));
-
-            var workoutOwnerAuthorization = _mapper.Map<WorkoutOwnerAuthorizationDTO>(workout);
-
-            var authorizationResult = await _authorizationService.AuthorizeAsync(
-                User,
-                workoutOwnerAuthorization,
-                "WorkoutOwner");
-
-            if (!authorizationResult.Succeeded)
-            {
-                throw new AccessDeniedException($"You don't have rights for workout with id: {id}");
-            }
+            await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
 
             await using var imageStream = file.OpenReadStream();
 
