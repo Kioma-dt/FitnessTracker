@@ -5,7 +5,6 @@
     <File Path="docker-compose.yaml" />
     <File Path="Dockerfile" />
   </Folder>
-  <Project Path="FirnessTracker.API.Tests/FirnessTracker.API.Tests.csproj" Id="ae5eb6ad-d76b-4c66-b968-61d65aeecc22" />
   <Project Path="FitnessTracker.API/FitnessTracker.API.csproj" />
   <Project Path="FitnessTracker.Application.Tests/FitnessTracker.Infrastructure.Tests.csproj" Id="b702eb1c-8210-4e77-b463-5ee6b4a039e0" />
   <Project Path="FitnessTracker.Application/FitnessTracker.Application.csproj" Id="66d45b2b-76ec-4257-a0ff-6705edfa0eb0" />

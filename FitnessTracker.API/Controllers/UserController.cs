@@ -1,23 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MapsterMapper;
-using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Application.Interfaces.Authentication;
+using FitnessTracker.Application.UseCases.User.Commands;
 
 namespace FitnessTracker.API.Controllers
 {
     [ApiController]
     [Route("user")]
-    public class UserController(IUsersRepository usersRepository,
-        IPasswordHasher passwordHasher,
-        IJwtTokenFactory jwtTokenFactory,
-        IMapper mapper)
+    public class UserController
         : ControllerBase
     {
-        IUsersRepository _usersRepository = usersRepository;
-        IPasswordHasher _passwordHasher = passwordHasher;
-        IJwtTokenFactory _jwtTokenFactory = jwtTokenFactory;
-        IMapper _mapper = mapper;
+        IUsersRepository _usersRepository;
+        IPasswordHasher _passwordHasher;
+        IJwtTokenFactory _jwtTokenFactory;
+        IMapper _mapper;
+        IMediator _mediator;
+
+        public UserController(IUsersRepository usersRepository, IPasswordHasher passwordHasher, IJwtTokenFactory jwtTokenFactory, IMapper mapper, IMediator mediator)
+        {
+            _usersRepository = usersRepository;
+            _passwordHasher = passwordHasher;
+            _jwtTokenFactory = jwtTokenFactory;
+            _mapper = mapper;
+            _mediator = mediator;
+        }
 
         [HttpPost("register", Name = "RegisterUser")]
         [ProducesResponseType(typeof(UserResponseDTO), StatusCodes.Status201Created)]
@@ -27,19 +33,9 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
         {
-
-            var dbUser = await _usersRepository.GetByNameAsync(request.UserName);
-
-            if (dbUser is not null)
-            {
-                throw new EntityAlreadyExistsException($"User With Name: {request.UserName} already exists");
-            }
-
-            var passwordHash = _passwordHasher.HashPassword(request.Password);
-
-            var user = new User(request.UserName, passwordHash);
-
-            await _usersRepository.AddAsync(user);
+            var user = await _mediator.Send(new RegisterUserCommand(
+                request.UserName,
+                request.Password));
 
             var userResonse = _mapper.Map<UserResponseDTO>(user);
 

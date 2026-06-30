@@ -39,7 +39,9 @@
                     .RequireDestinationMemberSource(true);
 
 
-            config.NewConfig<User, UserResponseDTO>()
+            config.NewConfig<User, UserDTO>()
+                .RequireDestinationMemberSource(true);
+            config.NewConfig<UserDTO, UserResponseDTO>()
                 .RequireDestinationMemberSource(true);
 
         }
