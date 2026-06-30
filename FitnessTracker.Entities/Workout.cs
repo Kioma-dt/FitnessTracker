@@ -28,7 +28,8 @@ namespace FitnessTracker.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
-        public Workout(string userId, 
+        public Workout(
+            string userId, 
             string title,
             WorkoutType type,
             TimeSpan duration, 
@@ -66,7 +67,9 @@ namespace FitnessTracker.Entities
 
         public Exercise() { }
 
-        public Exercise(string name, List<Set>? sets = null)
+        public Exercise(
+            string name,
+            List<Set>? sets = null)
             :this()
         {
             Name = name;

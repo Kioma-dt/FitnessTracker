@@ -18,7 +18,9 @@ namespace FitnessTracker.Entities
             CreatedAt = DateTime.UtcNow;
         }
 
-        public User(string name, string passwordHash)
+        public User(
+            string name, 
+            string passwordHash)
             : this()
         {
             Name = name;
