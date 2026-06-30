@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Design;
+﻿using FitnessTracker.Shared.Exceptions.InternalServerError;
+
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace FitnessTracker.DataAccess
 {

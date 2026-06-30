@@ -1,4 +1,7 @@
-﻿namespace FitnessTracker.DataAccess.Repositories
+﻿using FitnessTracker.Application.Interfaces.Repositories;
+using FitnessTracker.Shared.Exceptions.Conflict;
+
+namespace FitnessTracker.DataAccess.Repositories
 {
     public class UsersRepository
         : IUsersRepository

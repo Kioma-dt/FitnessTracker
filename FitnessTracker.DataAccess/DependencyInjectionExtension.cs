@@ -1,4 +1,6 @@
 ﻿using FitnessTracker.DataAccess.Repositories;
+using FitnessTracker.Application.Interfaces.Repositories;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FitnessTracker.DataAccess
