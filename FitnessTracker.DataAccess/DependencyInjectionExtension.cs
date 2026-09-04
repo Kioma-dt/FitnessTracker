@@ -1,6 +1,6 @@
 ﻿using FitnessTracker.DataAccess.Repositories;
 using FitnessTracker.Application.Interfaces.Repositories;
-
+using FitnessTracker.DataAccess.Repositories.Cached;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FitnessTracker.DataAccess
@@ -11,7 +11,8 @@ namespace FitnessTracker.DataAccess
             IServiceCollection services)
         {
             services.AddScoped<IUsersRepository, UsersRepository>();
-            services.AddScoped<IWorkoutsRepository, WorkoutsRepository>();
+            services.AddScoped<WorkoutsRepository>();
+            services.AddScoped<IWorkoutsRepository, CachedWorkoutsRepository>();
             return services;
         }
     }
