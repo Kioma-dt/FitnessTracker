@@ -42,6 +42,7 @@ namespace FitnessTracker.Mapping
 
             config.NewConfig<WorkoutCreateDTO, Workout>()
                 .Ignore(x => x.CreatedAt)
+                .Ignore(x => x.UpdatedAt)
                 .Map(x => x.Id, dto => dto.Id ?? Guid.NewGuid().ToString())
                 .Ignore(x => x.User!)
                 .RequireDestinationMemberSource(true);
