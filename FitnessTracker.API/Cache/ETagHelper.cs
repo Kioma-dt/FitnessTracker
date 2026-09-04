@@ -13,5 +13,6 @@
             var clientETag = request.Headers.IfNoneMatch.ToString().Trim('"');
             return !string.IsNullOrWhiteSpace(clientETag) && clientETag == currentETag;
         }
+         
     }
 }
