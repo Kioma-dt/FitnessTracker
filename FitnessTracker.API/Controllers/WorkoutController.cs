@@ -151,10 +151,14 @@ namespace FitnessTracker.API.Controllers
                 var workoutResponse = _mapper.Map<WorkoutResponseDTO>(workout);
 
                 return Created($"api/v1/workouts/{workout.Id}", workoutResponse);
-
             }
 
             await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
+            
+            var currentETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
+            
+            ETagHelper.ValidateIfMatch(Request, currentETag.ETag);
 
             var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(
                 id,
