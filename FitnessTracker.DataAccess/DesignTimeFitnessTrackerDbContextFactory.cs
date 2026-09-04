@@ -9,7 +9,7 @@ namespace FitnessTracker.DataAccess
     {
         public FitnessTrackerDbContext CreateDbContext(string[] args)
         {
-            DotNetEnv.Env.TraversePath().Load("designtime.env");
+            DotNetEnv.Env.TraversePath().Load();
 
             var host = Environment.GetEnvironmentVariable("DB_HOST");
             var port = Environment.GetEnvironmentVariable("DB_PORT");

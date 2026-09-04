@@ -7,17 +7,14 @@ using FitnessTracker.API.DependencyInjectionExtensions;
 
 namespace FitnessTracker.API
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
-            var envState = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            DotNetEnv.Env.TraversePath().Load();
+            
             var builder = WebApplication.CreateBuilder(args);
-
-            if (envState is not null && envState == "Development")
-            {
-                DotNetEnv.Env.Load("enviorment.env");
-            }
+            
             builder.Configuration.AddEnvironmentVariables();
 
             builder.Services.AddSwaggerGenConfugured();

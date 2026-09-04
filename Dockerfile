@@ -3,7 +3,6 @@ WORKDIR /source
 
 COPY *.slnx .
 COPY FitnessTracker.API/*.csproj ./FitnessTracker.API/
-COPY FirnessTracker.API.Tests/*.csproj ./FirnessTracker.API.Tests/
 COPY FitnessTracker.Application/*.csproj ./FitnessTracker.Application/
 COPY FitnessTracker.Infrastructure/*.csproj ./FitnessTracker.Infrastructure/
 COPY FitnessTracker.Application.Tests/*.csproj ./FitnessTracker.Application.Tests/
@@ -14,6 +13,7 @@ COPY FitnessTracker.Shared/*.csproj ./FitnessTracker.Shared/
 COPY FitnessTracker.Mapping/*.csproj ./FitnessTracker.Mapping/
 
 RUN dotnet restore
+RUN dotnet tool restore
 
 
 COPY . .
