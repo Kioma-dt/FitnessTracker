@@ -27,6 +27,8 @@ namespace FitnessTracker.API
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
             builder.Services.AddFitnessTrackerDbContextConfigured();
+            
+            builder.Services.AddRedisConfigured();
 
             builder.Services.AddControllersConfigured();
 
