@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.Application.Interfaces.Cache;
+using FitnessTracker.Entities.Abstractions;
 
 using System.Security.Cryptography;
 using System.Text;
@@ -11,10 +12,18 @@ namespace FitnessTracker.Inrastructure.Cache
     {
         public string Generate(object value)
         {
-            var json = JsonSerializer.Serialize(value);
+            string stamp;
+            if (value is Document document)
+            {
+                stamp = document.UpdatedAt.ToString();
+            }
+            else
+            {
+                stamp = JsonSerializer.Serialize(value);
+            }
 
             var bytes = SHA256.HashData(
-                Encoding.UTF8.GetBytes(json)
+                Encoding.UTF8.GetBytes(stamp)
             );
             
             return Convert.ToBase64String(bytes);
