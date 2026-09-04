@@ -12,6 +12,9 @@ namespace FitnessTracker.DataAccess.Configuration
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
 
+            builder.Property(x => x.UpdatedAt)
+                .IsRequired();
+
             builder.HasOne(x => x.User)
                 .WithMany(x => x.Workouts)
                 .HasForeignKey(x => x.UserId)

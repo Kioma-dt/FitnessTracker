@@ -11,6 +11,9 @@ namespace FitnessTracker.DataAccess.Configuration
 
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
+            
+            builder.Property(x => x.UpdatedAt)
+                .IsRequired();
 
             builder.Property(x => x.Name)
                 .HasMaxLength(256)
