@@ -1,4 +1,7 @@
-﻿namespace FitnessTracker.API.Cache
+﻿using FitnessTracker.Shared.Exceptions.PreconditionFailed;
+using FitnessTracker.Shared.Exceptions.PreconditionRequired;
+
+namespace FitnessTracker.API.Cache
 {
     public static class ETagHelper
     {
@@ -13,6 +16,20 @@
             var clientETag = request.Headers.IfNoneMatch.ToString().Trim('"');
             return !string.IsNullOrWhiteSpace(clientETag) && clientETag == currentETag;
         }
-         
+
+        public static void ValidateIfMatch(HttpResponse response, string currentETag)
+        {
+            var ifMatch = response.Headers.IfMatch.ToString()?.Trim('"');
+            
+            if (string.IsNullOrWhiteSpace(ifMatch))
+            {
+                throw new NoIfMatchException("If-Match header is required for this operation");
+            }
+
+            if (ifMatch != "*" && ifMatch != currentETag)
+            {
+                throw new ResourceHasBeenModifiedException("Fetch the latest version of this resource");
+            }
+        }
     }
 }
