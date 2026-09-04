@@ -5,11 +5,8 @@ using System.ComponentModel.DataAnnotations;
 namespace FitnessTracker.Entities
 {
     public class Workout 
-        : IDocument
+        : Document
     {
-        public string? Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-
         public string? UserId { get; set; }
         public User? User { get; set; }
 
@@ -23,9 +20,8 @@ namespace FitnessTracker.Entities
         public List<string> ProgressPhotos { get; set; } = new();
 
         public Workout()
+            :base()
         {
-            Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.UtcNow;
         }
 
         public Workout(

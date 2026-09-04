@@ -3,19 +3,16 @@
 namespace FitnessTracker.Entities
 {
     public class User
-        : IDocument
+        : Document
     {
-        public string? Id { get; set; }
-        public DateTime CreatedAt { get;  set; }
         public string? Name { get; set; }
         public string? PasswordHash { get; set; }
 
         public List<Workout> Workouts { get; set; } = new();
 
         public User()
+            : base()
         {
-            Id = Guid.NewGuid().ToString();
-            CreatedAt = DateTime.UtcNow;
         }
 
         public User(
