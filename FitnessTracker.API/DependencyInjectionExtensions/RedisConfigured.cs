@@ -19,7 +19,7 @@ public static class RedisConfigured
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = connectionString;
-            options.InstanceName = "fitness";
+            options.InstanceName = "fitness:";
         });
         return services;
     }
