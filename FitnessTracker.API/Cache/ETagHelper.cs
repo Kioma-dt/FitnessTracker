@@ -17,9 +17,9 @@ namespace FitnessTracker.API.Cache
             return !string.IsNullOrWhiteSpace(clientETag) && clientETag == currentETag;
         }
 
-        public static void ValidateIfMatch(HttpResponse response, string currentETag)
+        public static void ValidateIfMatch(HttpRequest request, string currentETag)
         {
-            var ifMatch = response.Headers.IfMatch.ToString()?.Trim('"');
+            var ifMatch = request.Headers.IfMatch.ToString()?.Trim('"');
             
             if (string.IsNullOrWhiteSpace(ifMatch))
             {

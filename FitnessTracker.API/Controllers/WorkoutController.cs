@@ -177,7 +177,12 @@ namespace FitnessTracker.API.Controllers
             [FromBody] WorkoutPatchRequestDTO request)
         {
             await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
-
+            
+            var currentETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
+            
+            ETagHelper.ValidateIfMatch(Request, currentETag.ETag);
+            
             var workoutUpdated = await _mediator.Send(new UpdateWorkoutCommand(id,
                 _mapper.Map<WorkoutUpdateDTO>(request)));
 
