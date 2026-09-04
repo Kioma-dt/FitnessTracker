@@ -214,10 +214,17 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status428PreconditionRequired)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<NoContent> Delete([FromRoute] string id)
         {
             await _workoutOwnerAuthorizationService.CheckWorkoutOwner(id, User);
+            
+            var currentETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
+            
+            ETagHelper.ValidateIfMatch(Request, currentETag.ETag);
 
             await _mediator.Send(new DeleteWorkoutCommand(id));
 
