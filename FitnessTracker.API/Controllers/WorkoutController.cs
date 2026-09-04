@@ -135,6 +135,8 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status428PreconditionRequired)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put([FromRoute] string id,
             [FromBody] WorkoutPutRequestDTO request)
@@ -165,6 +167,10 @@ namespace FitnessTracker.API.Controllers
                 _mapper.Map<WorkoutUpdateDTO>(request)));
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
+            
+            var newETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
+            ETagHelper.SetETag(Response, newETag.ETag);
 
             return Ok(workoutUpdatedResponse);
         }
@@ -176,6 +182,8 @@ namespace FitnessTracker.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status412PreconditionFailed)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status428PreconditionRequired)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Patch([FromRoute] string id,
             [FromBody] WorkoutPatchRequestDTO request)
@@ -191,7 +199,11 @@ namespace FitnessTracker.API.Controllers
                 _mapper.Map<WorkoutUpdateDTO>(request)));
 
             var workoutUpdatedResponse = _mapper.Map<WorkoutResponseDTO>(workoutUpdated);
-
+            
+            var newETag = await _mediator.Send(new GetWorkoutETagQuery(
+                id));
+            ETagHelper.SetETag(Response, newETag.ETag);
+            
             return Ok(workoutUpdatedResponse);
         }
 
