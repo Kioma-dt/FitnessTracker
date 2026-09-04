@@ -1,4 +1,5 @@
 ﻿using FitnessTracker.DataAccess.Configuration;
+using FitnessTracker.DataAccess.Interceptors;
 
 namespace FitnessTracker.DataAccess
 {
@@ -11,6 +12,11 @@ namespace FitnessTracker.DataAccess
 
         public DbSet<User> Users {  get; set; }
         public DbSet<Workout> Workouts { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder config)
+        {
+            config.AddInterceptors(new AuditingSaveChangesInterceptor());
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
