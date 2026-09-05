@@ -48,7 +48,15 @@ public class CachedWorkoutsRepository
         IEnumerable<WorkoutFilterDTO>? filters = null,
         WorkoutOrderingDTO? ordeing = null)
     {
-        var key = BuildRedisStringGetAll(userId, page, pageSize, filters, ordeing);
+        var version = await _cache.GetStringAsync($"workouts:{userId}:version");
+
+        if (version is null)
+        {
+            version = "1";
+            await _cache.SetStringAsync($"workouts:{userId}:version", version);
+        }
+        
+        var key = BuildRedisKeyGetAll(userId, page, pageSize, filters, ordeing, version);
         
         var cached = await _cache.GetStringAsync(key);
 
@@ -72,15 +80,88 @@ public class CachedWorkoutsRepository
         return workouts;
     }
 
-    static string BuildRedisStringGetAll(
+    public async Task<int> GetTotalCountByUserAsync(
+        string userId, 
+        IEnumerable<WorkoutFilterDTO>? filters = null)
+    {
+        return await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
+    }
+
+    public async Task AddAsync(Workout workout)
+    {
+        await _workoutsRepository.AddAsync(workout);
+
+        await _cache.RemoveAsync($"workout:{workout.Id}");
+
+        var version = await _cache.GetStringAsync($"workouts:{workout.UserId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{workout.UserId}:version", version);
+    }
+
+    public async Task<Workout> UpdateAsync(
+        string id, 
+        WorkoutUpdateDTO workoutUpdateDTO)
+    {
+        var workout = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
+
+        await _cache.RemoveAsync($"workout:{id}");
+        
+        var version = await _cache.GetStringAsync($"workouts:{workout.UserId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{workout.UserId}:version", version);
+
+        return workout;
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        var workout = await _workoutsRepository.GetByIdAsync(id);
+        await _workoutsRepository.DeleteAsync(id);
+
+        await _cache.RemoveAsync($"workout:{id}");
+        
+        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+    }
+
+    public async Task AddPhotoAsync(
+        string id, 
+        string photo)
+    {
+        var workout = await _workoutsRepository.GetByIdAsync(id);
+        await _workoutsRepository.AddPhotoAsync(id, photo);
+        
+        await _cache.RemoveAsync($"workout:{id}");
+        
+        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+    }
+
+    public async Task AddExerciseAsync(string id, Exercise exercise)
+    {
+        var workout = await _workoutsRepository.GetByIdAsync(id);
+        await _workoutsRepository.AddExerciseAsync(id, exercise);
+        
+        await _cache.RemoveAsync($"workout:{id}");
+        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+    }
+    
+    
+    static string BuildRedisKeyGetAll(
         string userId,
         int page,
         int pageSize,
         IEnumerable<WorkoutFilterDTO>? filters,
-        WorkoutOrderingDTO? ordering)
+        WorkoutOrderingDTO? ordering,
+        string version)
     {
         var resultString = new StringBuilder("workouts");
         resultString.Append($":{userId}");
+        resultString.Append($":v{version}");
         resultString.Append($":page={page}");
         resultString.Append($":pageSize={pageSize}");
 
@@ -98,53 +179,5 @@ public class CachedWorkoutsRepository
         }
 
         return resultString.ToString();
-    }
-
-    public async Task<int> GetTotalCountByUserAsync(
-        string userId, 
-        IEnumerable<WorkoutFilterDTO>? filters = null)
-    {
-        return await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
-    }
-
-    public async Task AddAsync(Workout workout)
-    {
-        await _workoutsRepository.AddAsync(workout);
-
-        await _cache.RemoveAsync($"workout:{workout.Id}");
-    }
-
-    public async Task<Workout> UpdateAsync(
-        string id, 
-        WorkoutUpdateDTO workoutUpdateDTO)
-    {
-        var workout = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
-
-        await _cache.RemoveAsync($"workout:{id}");
-
-        return workout;
-    }
-
-    public async Task DeleteAsync(string id)
-    {
-        await _workoutsRepository.DeleteAsync(id);
-
-        await _cache.RemoveAsync($"workout:{id}");
-    }
-
-    public async Task AddPhotoAsync(
-        string id, 
-        string photo)
-    {
-        await _workoutsRepository.AddPhotoAsync(id, photo);
-        
-        await _cache.RemoveAsync($"workout:{id}");
-    }
-
-    public async Task AddExerciseAsync(string id, Exercise exercise)
-    {
-        await _workoutsRepository.AddExerciseAsync(id, exercise);
-        
-        await _cache.RemoveAsync($"workout:{id}");
     }
 }
