@@ -84,7 +84,30 @@ public class CachedWorkoutsRepository
         string userId, 
         IEnumerable<WorkoutFilterDTO>? filters = null)
     {
-        return await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
+        var version = await _cache.GetStringAsync($"workouts:{userId}:version");
+
+        if (version is null)
+        {
+            version = "1";
+            await _cache.SetStringAsync($"workouts:{userId}:version", version);
+        }
+        
+        var key = BuildRedisKeyGetTotalCount(userId, filters, version);
+        
+        var cached = await _cache.GetStringAsync(key);
+
+        if (cached is not null)
+        {
+            return int.Parse(cached);
+        }
+
+        var count = await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
+        
+        await _cache.SetStringAsync(
+            key,
+            count.ToString());
+        
+        return count;
     }
 
     public async Task AddAsync(Workout workout)
@@ -178,6 +201,26 @@ public class CachedWorkoutsRepository
             resultString.Append($":orderBy={ordering.OrderBy}:descending={ordering.Descending}");
         }
 
+        return resultString.ToString();
+    }
+    
+    static string BuildRedisKeyGetTotalCount(
+        string userId,
+        IEnumerable<WorkoutFilterDTO>? filters,
+        string version)
+    {
+        var resultString = new StringBuilder("workouts");
+        resultString.Append($":{userId}");
+        resultString.Append($":v{version}");
+
+        if (filters is not null)
+        {
+            foreach (var filter in  filters)
+            {
+                resultString.Append($":{filter.FilterType}={filter.FilterValue}");
+            }
+        }
+        
         return resultString.ToString();
     }
 }
