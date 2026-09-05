@@ -21,7 +21,6 @@ public class CachedWorkoutsRepository
     
     public async Task<Workout?> GetByIdAsync(string id)
     {
-        
         var cached = await _cache.GetStringAsync($"workout:{id}");
 
         if (cached is not null)
@@ -47,33 +46,51 @@ public class CachedWorkoutsRepository
         throw new NotImplementedException();
     }
 
-    public Task<int> GetTotalCountByUserAsync(string userId, IEnumerable<WorkoutFilterDTO>? filters = null)
+    public Task<int> GetTotalCountByUserAsync(
+        string userId, 
+        IEnumerable<WorkoutFilterDTO>? filters = null)
     {
         throw new NotImplementedException();
     }
 
-    public Task AddAsync(Workout workout)
+    public async Task AddAsync(Workout workout)
     {
-        throw new NotImplementedException();
+        await _workoutsRepository.AddAsync(workout);
+
+        await _cache.RemoveAsync($"workout:{workout.Id}");
     }
 
-    public Task<Workout> UpdateAsync(string id, WorkoutUpdateDTO workoutUpdateDTO)
+    public async Task<Workout> UpdateAsync(
+        string id, 
+        WorkoutUpdateDTO workoutUpdateDTO)
     {
-        throw new NotImplementedException();
+        var workout = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
+
+        await _cache.RemoveAsync($"workout:{id}");
+
+        return workout;
     }
 
-    public Task DeleteAsync(string id)
+    public async Task DeleteAsync(string id)
     {
-        throw new NotImplementedException();
+        await _workoutsRepository.DeleteAsync(id);
+
+        await _cache.RemoveAsync($"workout:{id}");
     }
 
-    public Task AddPhotoAsync(string id, string photo)
+    public async Task AddPhotoAsync(
+        string id, 
+        string photo)
     {
-        throw new NotImplementedException();
+        await _workoutsRepository.AddPhotoAsync(id, photo);
+        
+        await _cache.RemoveAsync($"workout:{id}");
     }
 
-    public Task AddExerciseAsync(string id, Exercise exercise)
+    public async Task AddExerciseAsync(string id, Exercise exercise)
     {
-        throw new NotImplementedException();
+        await _workoutsRepository.AddExerciseAsync(id, exercise);
+        
+        await _cache.RemoveAsync($"workout:{id}");
     }
 }

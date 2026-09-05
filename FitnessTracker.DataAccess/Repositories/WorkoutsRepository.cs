@@ -46,7 +46,9 @@ namespace FitnessTracker.DataAccess.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddExerciseAsync(string id, Exercise exercise)
+        public async Task AddExerciseAsync(
+            string id, 
+            Exercise exercise)
         {
             var dbWorkout = await _dbContext.Workouts
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -60,7 +62,9 @@ namespace FitnessTracker.DataAccess.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddPhotoAsync(string id, string photo)
+        public async Task AddPhotoAsync(
+            string id, 
+            string photo)
         {
             var dbWorkout = await _dbContext.Workouts
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -131,7 +135,8 @@ namespace FitnessTracker.DataAccess.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetTotalCountByUserAsync(string userId,
+        public async Task<int> GetTotalCountByUserAsync(
+            string userId,
             IEnumerable<WorkoutFilterDTO>? filters = null)
         {
             IQueryable<Workout> query = _dbContext.Workouts
