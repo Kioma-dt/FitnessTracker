@@ -2,7 +2,9 @@ using System.Text;
 using System.Text.Json;
 using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.Workout;
+using FitnessTracker.Shared.Options.Redis;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 
 namespace FitnessTracker.DataAccess.Repositories.Cached;
 
@@ -10,14 +12,17 @@ public class CachedWorkoutsRepository
     : IWorkoutsRepository
 {
     readonly WorkoutsRepository _workoutsRepository;
+    readonly RedisTTLOptions _ttlOptions;
     readonly  IDistributedCache _cache;
 
     public CachedWorkoutsRepository(
         WorkoutsRepository workoutsRepository,
+        IOptions<RedisTTLOptions> ttlOptions,
         IDistributedCache cache)
     {
         _workoutsRepository = workoutsRepository;
         _cache = cache;
+        _ttlOptions = ttlOptions.Value;
     }
     
     public async Task<Workout?> GetByIdAsync(string id)
@@ -35,7 +40,11 @@ public class CachedWorkoutsRepository
         {
             await _cache.SetStringAsync(
                 $"workout:{id}",
-                JsonSerializer.Serialize(workout));
+                JsonSerializer.Serialize(workout),
+                new DistributedCacheEntryOptions()
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(_ttlOptions.WorkoutSeconds)
+                });
         }
         
         return workout;
@@ -53,7 +62,8 @@ public class CachedWorkoutsRepository
         if (version is null)
         {
             version = "1";
-            await _cache.SetStringAsync($"workouts:{userId}:version", version);
+            await _cache.SetStringAsync(
+                $"workouts:{userId}:version", version);
         }
         
         var key = BuildRedisKeyGetAll(userId, page, pageSize, filters, ordeing, version);
@@ -75,7 +85,11 @@ public class CachedWorkoutsRepository
 
         await _cache.SetStringAsync(
             key,
-            JsonSerializer.Serialize(workouts));
+            JsonSerializer.Serialize(workouts),
+            new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(_ttlOptions.WorkoutsCollectionSeconds)
+            });
         
         return workouts;
     }
@@ -105,7 +119,11 @@ public class CachedWorkoutsRepository
         
         await _cache.SetStringAsync(
             key,
-            count.ToString());
+            count.ToString(),
+            new DistributedCacheEntryOptions()
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(_ttlOptions.WorkoutsCollectionSeconds)
+            });
         
         return count;
     }
@@ -116,9 +134,7 @@ public class CachedWorkoutsRepository
 
         await _cache.RemoveAsync($"workout:{workout.Id}");
 
-        var version = await _cache.GetStringAsync($"workouts:{workout.UserId}:version");
-        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
-        await _cache.SetStringAsync($"workouts:{workout.UserId}:version", version);
+        await IncrementVersion(workout.UserId!);
     }
 
     public async Task<Workout> UpdateAsync(
@@ -128,11 +144,8 @@ public class CachedWorkoutsRepository
         var workout = await _workoutsRepository.UpdateAsync(id, workoutUpdateDTO);
 
         await _cache.RemoveAsync($"workout:{id}");
+        await IncrementVersion(workout!.UserId!);
         
-        var version = await _cache.GetStringAsync($"workouts:{workout.UserId}:version");
-        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
-        await _cache.SetStringAsync($"workouts:{workout.UserId}:version", version);
-
         return workout;
     }
 
@@ -142,10 +155,7 @@ public class CachedWorkoutsRepository
         await _workoutsRepository.DeleteAsync(id);
 
         await _cache.RemoveAsync($"workout:{id}");
-        
-        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
-        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
-        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+        await IncrementVersion(workout!.UserId!);
     }
 
     public async Task AddPhotoAsync(
@@ -156,10 +166,7 @@ public class CachedWorkoutsRepository
         await _workoutsRepository.AddPhotoAsync(id, photo);
         
         await _cache.RemoveAsync($"workout:{id}");
-        
-        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
-        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
-        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+        await IncrementVersion(workout!.UserId!);
     }
 
     public async Task AddExerciseAsync(string id, Exercise exercise)
@@ -168,9 +175,7 @@ public class CachedWorkoutsRepository
         await _workoutsRepository.AddExerciseAsync(id, exercise);
         
         await _cache.RemoveAsync($"workout:{id}");
-        var version = await _cache.GetStringAsync($"workouts:{workout!.UserId}:version");
-        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
-        await _cache.SetStringAsync($"workouts:{workout!.UserId}:version", version);
+        await IncrementVersion(workout!.UserId!);
     }
     
     
@@ -222,5 +227,12 @@ public class CachedWorkoutsRepository
         }
         
         return resultString.ToString();
+    }
+
+    async Task IncrementVersion(string userId)
+    {
+        var version = await _cache.GetStringAsync($"workouts:{userId}:version");
+        version = version is not null ? (int.Parse(version) + 1).ToString() : "1";
+        await _cache.SetStringAsync($"workouts:{userId}:version", version);
     }
 }

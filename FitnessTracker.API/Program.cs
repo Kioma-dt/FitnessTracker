@@ -17,6 +17,8 @@ namespace FitnessTracker.API
             
             builder.Configuration.AddEnvironmentVariables();
 
+            builder.Services.ConfigureMyOptions(builder.Configuration);
+
             builder.Services.AddSwaggerGenConfugured();
 
             builder.Services.AddAuthorizationConfigured();
