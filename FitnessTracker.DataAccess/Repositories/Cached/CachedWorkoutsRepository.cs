@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using FitnessTracker.Application.Interfaces.Repositories;
 using FitnessTracker.Shared.DTO.Application.Workout;
@@ -40,17 +41,70 @@ public class CachedWorkoutsRepository
         return workout;
     }
 
-    public Task<IEnumerable<Workout>> GetAllByUserIdAsync(string userId, int page = 1, int pageSize = 10, IEnumerable<WorkoutFilterDTO>? filters = null,
+    public async Task<IEnumerable<Workout>> GetAllByUserIdAsync(
+        string userId, 
+        int page = 1, 
+        int pageSize = 10,
+        IEnumerable<WorkoutFilterDTO>? filters = null,
         WorkoutOrderingDTO? ordeing = null)
     {
-        throw new NotImplementedException();
+        var key = BuildRedisStringGetAll(userId, page, pageSize, filters, ordeing);
+        
+        var cached = await _cache.GetStringAsync(key);
+
+        if (cached is not null)
+        {
+            return JsonSerializer.Deserialize<List<Workout>>(cached)
+                ?? new List<Workout>();
+        }
+        
+        var workouts = await _workoutsRepository.GetAllByUserIdAsync(
+            userId, 
+            page, 
+            pageSize, 
+            filters, 
+            ordeing);
+
+        await _cache.SetStringAsync(
+            key,
+            JsonSerializer.Serialize(workouts));
+        
+        return workouts;
     }
 
-    public Task<int> GetTotalCountByUserAsync(
+    static string BuildRedisStringGetAll(
+        string userId,
+        int page,
+        int pageSize,
+        IEnumerable<WorkoutFilterDTO>? filters,
+        WorkoutOrderingDTO? ordering)
+    {
+        var resultString = new StringBuilder("workouts");
+        resultString.Append($":{userId}");
+        resultString.Append($":page={page}");
+        resultString.Append($":pageSize={pageSize}");
+
+        if (filters is not null)
+        {
+            foreach (var filter in  filters)
+            {
+                resultString.Append($":{filter.FilterType}={filter.FilterValue}");
+            }
+        }
+
+        if (ordering is not null)
+        {
+            resultString.Append($":orderBy={ordering.OrderBy}:descending={ordering.Descending}");
+        }
+
+        return resultString.ToString();
+    }
+
+    public async Task<int> GetTotalCountByUserAsync(
         string userId, 
         IEnumerable<WorkoutFilterDTO>? filters = null)
     {
-        throw new NotImplementedException();
+        return await _workoutsRepository.GetTotalCountByUserAsync(userId, filters);
     }
 
     public async Task AddAsync(Workout workout)
