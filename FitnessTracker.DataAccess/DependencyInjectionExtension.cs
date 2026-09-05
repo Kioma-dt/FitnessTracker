@@ -10,7 +10,8 @@ namespace FitnessTracker.DataAccess
         public static IServiceCollection AddRepositories(this
             IServiceCollection services)
         {
-            services.AddScoped<IUsersRepository, UsersRepository>();
+            services.AddScoped<UsersRepository>();
+            services.AddScoped<IUsersRepository, CachedUsersRepository>();
             services.AddScoped<WorkoutsRepository>();
             services.AddScoped<IWorkoutsRepository, CachedWorkoutsRepository>();
             return services;
